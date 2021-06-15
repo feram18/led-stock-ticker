@@ -36,8 +36,8 @@ First, clone this repository. Using the `--recursive` flag will install the rgbm
 [rpi-rgb-led-matrix] library. This library is being used to render the data onto the LED matrix.
 
 ```sh
-git clone --recursive https://github.com/feram18/LED-stock-ticker.git
-cd LED-stock-ticker
+git clone --recursive https://github.com/feram18/led-stock-ticker.git
+cd led-stock-ticker
 chmod +x install.sh
 ./install.sh
 ```
@@ -45,7 +45,7 @@ chmod +x install.sh
 Secondly, you'll need to create an account at [Twelve Data] to get your free API key. 
 
 ## Usage
-From the `/LED-stock-ticker` directory run the following command (include additional [flags](#Flags) as necessary):
+From the `/led-stock-ticker` directory run the following command (include additional [flags](#Flags) as necessary):
 
 `sudo python main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2 --led-cols=64`.
 
