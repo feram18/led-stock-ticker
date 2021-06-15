@@ -1,0 +1,71 @@
+{
+    "coords": {
+        "loading": {
+            "title": {
+                "x": 1,
+                "y": 14
+            },
+            "text": {
+                "x": 1,
+                "y": 22
+            },
+            "version": {
+                "x": 40,
+                "y": 32
+            }
+        },
+        "date": {
+            "x": 1,
+            "y": 14
+        },
+        "time": {
+            "x": 1,
+            "y": 24
+        },
+        "stock": {
+            "name": {
+                "x": 1,
+                "y": 6
+            },
+            "symbol": {
+                "x": 1,
+                "y": 15
+            },
+            "price": {
+                "x": 1,
+                "y": 15
+            },
+            "value_and_pct_change": {
+                "x": 1,
+                "y": 23
+            }
+        }
+    },
+    "fonts": {
+        "tom_thumb": {
+            "path": "rpi-rgb-led-matrix/fonts/tom-thumb.bdf",
+            "width": 4,
+            "height": 6
+        },
+        "4x6": {
+            "path": "rpi-rgb-led-matrix/fonts/4x6.bdf",
+            "width": 4,
+            "height": 6
+        },
+        "5x8": {
+            "path": "rpi-rgb-led-matrix/fonts/5x8.bdf",
+            "width": 5,
+            "height": 8
+        },
+        "6x9": {
+            "path": "rpi-rgb-led-matrix/fonts/6x9.bdf",
+            "width": 6,
+            "height": 9
+        },
+        "cherry": {
+            "path": "assets/fonts/cherry-10-b.bdf",
+            "width": 6,
+            "height": 8
+        }
+    }
+}

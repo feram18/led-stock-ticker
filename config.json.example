@@ -1,0 +1,16 @@
+{
+  "api_key": "your_api_key",
+
+  "symbols": [
+      "TSLA",
+      "AAPL",
+      "MSFT",
+      "BTC/USD"
+  ],
+
+  "country": "US"
+  "currency": "USD",
+  "timezone": "EST",
+  "time_format": "12h",
+  "debug": true
+}
