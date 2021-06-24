@@ -8,7 +8,7 @@
       "BTC/USD"
   ],
 
-  "country": "US"
+  "country": "US",
   "currency": "USD",
   "timezone": "EST",
   "time_format": "12h",
