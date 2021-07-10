@@ -1,17 +1,26 @@
 from rgbmatrix import RGBMatrixOptions, graphics
 import argparse
-import debug
+import logging
 import json
 import os
 
 
 def get_file(path):
+    """
+    Read file
+    :param path: str
+    :return: file: File
+    """
     dir = os.path.dirname(__file__)
     return os.path.join(dir, path)
 
 
-# Return JSON from file
 def read_json(filename):
+    """
+    Read JSON file, and return JSON object.
+    :param filename: str
+    :return: j: json
+    """
     j = {}
     path = get_file(filename)
     if os.path.isfile(path):
@@ -19,51 +28,83 @@ def read_json(filename):
     return j
 
 
-# Determines if text will go off-screen
 def text_offscreen(text, canvas_width, font_width):
+    """
+    Determines if text will go off-screen
+    :param text: str
+    :param canvas_width: int
+    :param font_width: int
+    :return: offscreen: boolean
+    """
     return len(text) > canvas_width/font_width
 
 
-# Returns x-coord to align text to center of matrix
 def align_center(text, center_pos, font_width):
+    """
+    Calculate x-coord to align text to center of matrix
+    :param text: str
+    :param center_pos: int
+    :param font_width: int
+    :return: x_coord: int
+    """
     return abs(center_pos - ((len(text) * font_width) / 2))
 
 
-# Returns x-coord to align text to right of matrix
 def align_right(text, right_limit, font_width):
+    """
+    Calculates x-coord to align text to right of matrix
+    :param text: str
+    :param right_limit: int
+    :param font_width: int
+    :return: x_coord: int
+    """
     return abs(right_limit - (len(text) * font_width))
 
 
-# TODO: Complete util function
-# Returns y-coord to align text to center of matrix
-# def align_center_vertically(center_pos, font_height):
-#     return abs(center_pos - font_height)
+def align_center_vertically(center_pos, font_height):
+    """
+    Returns y-coord to align text to center of matrix
+    :param center_pos: int
+    :param font_height: int
+    :return: y_coord: int
+    """
+    return abs(center_pos + (font_height / 2))
 
 
-# Return Color object from JSON
 def load_color(colors):
+    """
+    Convert RGB values from JSON into Color object
+    :param colors: JSON
+    :return: color: Color
+    """
     try:
         return graphics.Color(colors["r"], colors["g"], colors["b"])
-    except Exception as e:
-        debug.warning("Could not read colors. Setting color to default White")
-        debug.warning(e)
+    except Exception:
+        logging.warning("Could not read colors. Setting color to default White")
         return graphics.Color(255, 255, 255)
 
 
-# Return Font object
 def load_font(path):
+    """
+    Return Font object from given path
+    :param path: str
+    :return: font: Font
+    """
     font = graphics.Font()
     try:
         font.LoadFont(path)
-    except Exception as e:
-        debug.warning("Could not load font. Setting font to default 4x6")
-        debug.warning(e)
+    except Exception:
+        logging.warning("Could not load font. Setting font to default 4x6")
         font.LoadFont("matrix/fonts/4x6.bdf")
+
     return font
 
 
-# Parse CLI arguments to configure matrix
 def args():
+    """
+    Parse command line arguments to configure matrix
+    :return: parsed_arguments: ArgumentParser
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--led-rows",
@@ -151,6 +192,11 @@ def args():
 
 
 def led_matrix_options(args):
+    """
+    Set RGB LED matrix options from parsed arguments
+    :param args: ArgumentParser
+    :return: options: RGBMatrixOptions
+    """
     options = RGBMatrixOptions()
 
     if args.led_gpio_mapping is not None:
@@ -169,8 +215,8 @@ def led_matrix_options(args):
     try:
         options.pixel_mapper_config = args.led_pixel_mapper
     except AttributeError:
-        debug.warning("Your compiled RGB Matrix Library is out of date.")
-        debug.warning("The --led-pixel-mapper argument will not work until it is updated.")
+        logging.warning("Your compiled RGB Matrix Library is out of date.")
+        logging.warning("The --led-pixel-mapper argument will not work until it is updated.")
 
     if args.led_show_refresh:
         options.show_refresh_rate = 1

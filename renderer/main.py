@@ -1,10 +1,8 @@
-from clock import ClockRenderer
-from stock import StockRenderer
+from constants import REFRESH_DELAY
+from .ticker import TickerRenderer
+from .clock import ClockRenderer
 import time
 import sys
-
-SHORT_DELAY = 5.0
-ROTATION_DELAY = 15.0
 
 
 class MainRenderer:
@@ -19,10 +17,10 @@ class MainRenderer:
                 clock_renderer = ClockRenderer(self.matrix, self.canvas, self.data)
                 clock_renderer.render()
 
-                self.data.refresh_symbols()
-                time.sleep(SHORT_DELAY)
+                self.data.refresh_tickers()
+                time.sleep(REFRESH_DELAY)
 
-                StockRenderer(self.matrix, self.canvas, self.data).render()
+                TickerRenderer(self.matrix, self.canvas, self.data).render()
 
                 # Refresh data for next run
                 clock_renderer.refresh()

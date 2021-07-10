@@ -32,12 +32,12 @@ sudo apt-get install git python-pip
 
 **Installation**
 
-First, clone this repository. Using the `--recursive` flag will install the rgbmatrix binaries, which come from hzeller's 
-[rpi-rgb-led-matrix] library. This library is being used to render the data onto the LED matrix.
+First, clone this repository. Using the `--recursive` flag will install the rgbmatrix binaries, which come from
+hzeller's [rpi-rgb-led-matrix] library. This library is being used to render the data onto the LED matrix.
 
 ```sh
-git clone --recursive https://github.com/feram18/LED-stock-ticker.git
-cd LED-stock-ticker
+git clone --recursive https://github.com/feram18/led-stock-ticker.git
+cd led-stock-ticker
 chmod +x install.sh
 ./install.sh
 ```
@@ -45,9 +45,9 @@ chmod +x install.sh
 Secondly, you'll need to create an account at [Twelve Data] to get your free API key. 
 
 ## Usage
-From the `/LED-stock-ticker` directory run the following command (include additional [flags](#Flags) as necessary):
+From the `/led-stock-ticker` directory run the following command (include additional [flags](#Flags) as necessary):
 
-`sudo python main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2 --led-cols=64`.
+`sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2 --led-cols=64`.
 
 Running as root is necessary in order for the matrix to render.
 
@@ -59,7 +59,7 @@ Edit the generated `config.json` file to add your API key, and other default val
   "api_key"         String    An API key is required for the application to work.
                               You can get a free API key at twelvedata.com.
 
-  "symbols"         Array     Pass an array of symbols. Maximum limit of 8.
+  "tickers"         Array     Pass an array of tickers. Maximum limit of 8.
                               Example: ["TSLA", "AMZN", "MSFT"].
                               When adding a cryptocurrency, add the currency next to the symbol.
                               Example: "BTC/USD", "ETH/EUR".
@@ -70,8 +70,6 @@ Edit the generated `config.json` file to add your API key, and other default val
   "timezone"        String    Timezone where you are located. Example: "UTC", "EST"
   "time_format"     String    Sets the preferred hour format for displaying time.
                               Accepted values are "12h" or "24h".
-  "debug"           Bool      Enables debugging messages to be displayed in the console when running the software.
-
 ```
 
 ### Flags
@@ -111,13 +109,13 @@ This application is dependent on [Twelve Data]'s API relaying accurate and updat
 
 ## Limitations
 [Twelve Data]'s Basic (free) tier only allows for 8 API requests per minute, with a maximum of 800 API requests a day.
-Assuming that the board will be in use during regular trading hours (9:30 AM to 4:00 PM EST - U.S. stock market), 
-the software will refresh the price data at least every 90 seconds. This is to ensure the API's request limit is not exceeded
-while real-time prices are available (regular stock market trading hours).
+Assuming that the board will be in use during regular trading hours (9:30 AM to 4:00 PM EST - U.S. stock market), the 
+software will calculate an appropriate refresh rate to ensure the API's request limit is not exceeded while real-time 
+prices are available (regular stock market trading hours).
 
-[comment]: <> (In addition, [Twelve Data] only provides real-time prices during regular trading hours, meaning that the API does not)
-
-[comment]: <> (reflect changes in the price happening after hours &#40;between 4:00 PM and 9:30 AM EST&#41;.)
+The refresh rate will depend on (1) the time you initiate the software, and (2) the number of symbols you have indicated
+on your `config.json` file. For example, if you start the software at 09:30AM, and there is only one symbol, the price 
+will be updated every ~30 seconds, whereas if you have eight symbols, the prices will be updated every ~4 minutes.
 
 ## License
 GNU General Public License v3.0

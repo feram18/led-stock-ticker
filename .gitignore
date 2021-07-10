@@ -1,4 +1,11 @@
-config.json
+# User-customized files
+config/*
+
+# Log Files
+led-stock-ticker.log
+
+# Submodules
+rpi-rgb-led-matrix
 
 ### C ###
 # Prerequisites

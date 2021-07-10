@@ -1,13 +1,10 @@
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from data.matrix_config import MatrixConfig
+from constants import SCRIPT_NAME, SCRIPT_VERSION
 from utils import args, led_matrix_options
 from renderer.main import MainRenderer
 from renderer.loading import Loading
+from data.config import Config
 from data.data import Data
-import debug
-
-SCRIPT_NAME = "LED-Stock-Ticker"
-SCRIPT_VERSION = "0.0.1"
 
 # Get CLI arguments
 args = args()
@@ -18,12 +15,11 @@ matrixOptions = led_matrix_options(args)
 # Initialize the matrix
 matrix = RGBMatrix(options=matrixOptions)
 
-# Print some basic info on startup
-debug.info("{} - v{} ({}x{})".format(SCRIPT_NAME, SCRIPT_VERSION, matrix.width, matrix.height))
+# Print script details on startup
+print(f"{SCRIPT_NAME} - {SCRIPT_VERSION} ({matrix.width}x{matrix.height})")
 
 # Read scoreboard options from config.json if it exists
-config = MatrixConfig(matrix.width, matrix.height)
-debug.set_debug_status(config)
+config = Config(matrix.width, matrix.height)
 
 # Display loading screen
 Loading(matrix, config).render()
