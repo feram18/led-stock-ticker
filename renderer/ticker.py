@@ -97,7 +97,7 @@ class TickerRenderer:
             self.finished_scrolling = False
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-    # Set Stock/Cryptocurrency data
+    # Set Ticker's data
     def set_data(self, ticker):
         self.name = ticker.name
         self.name_y = self.coords["name"]["y"]
@@ -111,7 +111,7 @@ class TickerRenderer:
         self.price_y = self.coords["price"]["y"]
 
         self.value_and_pct_change = "{} {}".format(ticker.value_change, ticker.percentage_change)
-        self.value_x = u.align_center(self.value_and_pct_change, (self.canvas.width/2), self.FONT_TOM_THUMB["width"])
+        self.value_x = u.align_center(self.value_and_pct_change, (self.canvas.width / 2), self.FONT_TOM_THUMB["width"])
         self.value_y = self.coords["value_and_pct_change"]["y"]
 
         self.value_indicator_color = self.set_indicator_color(float(ticker.value_change))
@@ -120,20 +120,30 @@ class TickerRenderer:
         return graphics.DrawText(self.canvas, self.primary_font, self.name_x, self.name_y, self.main_color, self.name)
 
     def __render_ticker(self):
-        graphics.DrawText(self.canvas, self.large_font, self.ticker_x, self.ticker_y, self.main_color, self.ticker_)
+        return graphics.DrawText(self.canvas,
+                                 self.large_font,
+                                 self.ticker_x,
+                                 self.ticker_y,
+                                 self.main_color,
+                                 self.ticker_)
 
     def __render_price(self):
-        graphics.DrawText(self.canvas, self.primary_font, self.price_x, self.price_y, self.main_color, self.price)
+        return graphics.DrawText(self.canvas,
+                                 self.primary_font,
+                                 self.price_x,
+                                 self.price_y,
+                                 self.main_color,
+                                 self.price)
 
     def __render_value_and_pct_change(self):
-        graphics.DrawText(self.canvas,
-                          self.primary_font,
-                          self.value_x,
-                          self.value_y,
-                          self.value_indicator_color,
-                          self.value_and_pct_change)
+        return graphics.DrawText(self.canvas,
+                                 self.primary_font,
+                                 self.value_x,
+                                 self.value_y,
+                                 self.value_indicator_color,
+                                 self.value_and_pct_change)
 
-    def __update_text_position(self, full_name_x, pos):
+    def __update_text_position(self, full_name_x: int, pos: int) -> int:
         """
         Update x-coord on scrolling text
         :param full_name_x: int
@@ -145,7 +155,7 @@ class TickerRenderer:
         else:
             return full_name_x - 1
 
-    def format_ticker(self, ticker):
+    def format_ticker(self, ticker: str) -> str:
         """
         Format cryptocurrency to remove currency value from it.
         i.e. BTC/USD -> BTC
@@ -158,7 +168,7 @@ class TickerRenderer:
         else:
             return ticker
 
-    def set_indicator_color(self, value_change):
+    def set_indicator_color(self, value_change: float):
         """
         Determines if value has increased or decreased, and returns Color object to match.
         i.e. Red if value has decreased, Green if color has increased.

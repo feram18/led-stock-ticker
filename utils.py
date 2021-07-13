@@ -1,25 +1,26 @@
 from rgbmatrix import RGBMatrixOptions, graphics
+from constants import DEFAULT_FONT_PATH
 import argparse
 import logging
 import json
 import os
 
 
-def get_file(path):
+def get_file(path: str) -> str:
     """
     Read file
     :param path: str
-    :return: file: File
+    :return: abs_file_path: str
     """
     dir = os.path.dirname(__file__)
     return os.path.join(dir, path)
 
 
-def read_json(filename):
+def read_json(filename: str) -> dict:
     """
     Read JSON file, and return JSON object.
     :param filename: str
-    :return: j: json
+    :return: j: dict
     """
     j = {}
     path = get_file(filename)
@@ -28,7 +29,7 @@ def read_json(filename):
     return j
 
 
-def text_offscreen(text, canvas_width, font_width):
+def text_offscreen(text: str, canvas_width: int, font_width: int) -> bool:
     """
     Determines if text will go off-screen
     :param text: str
@@ -36,10 +37,10 @@ def text_offscreen(text, canvas_width, font_width):
     :param font_width: int
     :return: offscreen: boolean
     """
-    return len(text) > canvas_width/font_width
+    return len(text) > canvas_width / font_width
 
 
-def align_center(text, center_pos, font_width):
+def align_center(text: str, center_pos: int, font_width: int) -> int:
     """
     Calculate x-coord to align text to center of matrix
     :param text: str
@@ -47,10 +48,10 @@ def align_center(text, center_pos, font_width):
     :param font_width: int
     :return: x_coord: int
     """
-    return abs(center_pos - ((len(text) * font_width) / 2))
+    return abs(center_pos - (len(text) * font_width) // 2)
 
 
-def align_right(text, right_limit, font_width):
+def align_right(text: str, right_limit: int, font_width: int) -> int:
     """
     Calculates x-coord to align text to right of matrix
     :param text: str
@@ -61,17 +62,17 @@ def align_right(text, right_limit, font_width):
     return abs(right_limit - (len(text) * font_width))
 
 
-def align_center_vertically(center_pos, font_height):
+def align_center_vertically(center_pos: int, font_height: int) -> int:
     """
     Returns y-coord to align text to center of matrix
     :param center_pos: int
     :param font_height: int
     :return: y_coord: int
     """
-    return abs(center_pos + (font_height / 2))
+    return abs(center_pos + font_height // 2)
 
 
-def load_color(colors):
+def load_color(colors: dict):
     """
     Convert RGB values from JSON into Color object
     :param colors: JSON
@@ -79,12 +80,12 @@ def load_color(colors):
     """
     try:
         return graphics.Color(colors["r"], colors["g"], colors["b"])
-    except Exception:
+    except ValueError:
         logging.warning("Could not read colors. Setting color to default White")
         return graphics.Color(255, 255, 255)
 
 
-def load_font(path):
+def load_font(path: str):
     """
     Return Font object from given path
     :param path: str
@@ -93,10 +94,9 @@ def load_font(path):
     font = graphics.Font()
     try:
         font.LoadFont(path)
-    except Exception:
-        logging.warning("Could not load font. Setting font to default 4x6")
-        font.LoadFont("matrix/fonts/4x6.bdf")
-
+    except FileNotFoundError:
+        logging.warning(f"Could not load font at {path}. Setting font to default 4x6")
+        font.LoadFont(DEFAULT_FONT_PATH)
     return font
 
 

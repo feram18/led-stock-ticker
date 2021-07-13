@@ -5,13 +5,14 @@ import sys
 
 
 class Config:
+    # Set Log file configuration
     logging.basicConfig(filename='led-stock-ticker.log',
                         filemode='w',
                         format='%(asctime)s:%(levelname)s:%(message)s',
                         datefmt='%m/%d/%Y %I:%M:%S %p',
                         level=logging.DEBUG)
 
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int):
         self.config = self.load_config()
 
         # Matrix dimensions
@@ -37,27 +38,29 @@ class Config:
         self.time_format = self.config["time_format"]
 
         # Check options validity or set default values
+        self.check_apikey()
+        self.check_tickers()
         self.check_country()
         self.check_currency()
         self.check_timezone()
         self.check_time_format()
 
-    def load_config(self):
+    def load_config(self) -> dict:
         """
         Load configuration file
-        :return: config: JSON
+        :return: config: dict
         """
         try:
             config = read_json(constants.CONFIG_FILE)
             return config
         except FileNotFoundError:
-            logging.error("Config file not found. Make sure you have a config.json file setup.")
+            logging.error("Config.json file not found.")
             sys.exit(1)
 
-    def load_layout(self):
+    def load_layout(self) -> dict:
         """
         Load layout configuration file
-        :return: layout: JSON
+        :return: layout: dict
         """
         try:
             layout = constants.LAYOUT_FILE.format(self.width, self.height)
@@ -66,10 +69,10 @@ class Config:
             logging.error(f"w{self.width}h{self.height}.json file does not exist.")
             sys.exit(1)
 
-    def load_colors(self):
+    def load_colors(self) -> dict:
         """
         Load colors configuration file
-        :return: colors: JSON
+        :return: colors: dict
         """
         try:
             colors = read_json(constants.COLORS_FILE)
@@ -78,13 +81,23 @@ class Config:
             logging.error(f"{constants.COLORS_FILE} does not exist.")
             sys.exit(1)
 
-    def check_preferred_tickers(self):
+    def check_apikey(self):
+        """
+        Verify if TwelveData API key is valid.
+        """
+        if self.api_key is None or len(self.api_key) < 32:
+            logging.error(f"API key {self.api_key} is not valid")
+            print("Invalid API key. Check your config.json file."
+                  "If you do not have an API key, you can get a free one at twelvedata.com/register")
+            sys.exit(1)
+
+    def check_tickers(self):
         """
         Determine if tickers on config are an instance of a list (several tickers) or a single instance of a string
         (i.e. One ticker). Else, set tickers list to default values (TSLA, AMZN, AAPL, MSFT).
         """
         if not isinstance(self.tickers, str) and not isinstance(self.tickers, list):
-            logging.warning(f"Symbols should be an array of tickers or a single ticker string."
+            logging.warning("Symbols should be an array of tickers or a single ticker string."
                             "Using default preferred_tickers, {}".format(constants.DEFAULT_TICKERS))
             self.tickers = constants.DEFAULT_TICKERS
 

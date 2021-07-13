@@ -18,13 +18,14 @@ matrix = RGBMatrix(options=matrixOptions)
 # Print script details on startup
 print(f"{SCRIPT_NAME} - {SCRIPT_VERSION} ({matrix.width}x{matrix.height})")
 
-# Read scoreboard options from config.json if it exists
+# Read software preferences from config.json
 config = Config(matrix.width, matrix.height)
 
-# Display loading screen
+# Render loading splash screen
 Loading(matrix, config).render()
 
 # Fetch initial data
 data = Data(config)
 
+# Begin rendering screen rotation
 MainRenderer(matrix, data).render()

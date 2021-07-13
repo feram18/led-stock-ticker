@@ -51,13 +51,13 @@ class ClockRenderer:
     def __render_time(self):
         return graphics.DrawText(self.canvas, self.time_font, self.time_x, self.time_y, self.time_color, self.time)
 
-    def get_time(self):
+    def get_time(self) -> str:
         if self.time_format == "24h":
             return time.strftime(TWENTY_FOUR_HOURS_DATE_FORMAT)
         else:
             return time.strftime(TWELVE_HOURS_DATE_FORMAT)
 
-    def get_date(self):
+    def get_date(self) -> str:
         return time.strftime(DATE_FORMAT)
 
     def refresh(self):

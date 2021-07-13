@@ -41,14 +41,14 @@ class Data:
             for ticker in self.tickers:
                 ticker.update_data()
 
-    def calc_total_tickers(self):
+    def calc_total_tickers(self) -> int:
         """
         Calculate the total number of tickers on config file
         :return: total_tickers: int
         """
         return len(self.config.tickers)
 
-    def calc_time_of_use(self):
+    def calc_time_of_use(self) -> float:
         """
         Determine amount of time (in minutes) that new data will need to be updated.
         (i.e. Amount of time between current time, and 4:00 PM EST, when prices are no longer updated)
@@ -59,7 +59,7 @@ class Data:
         time_delta = end_time - self.time_app_started
         return time_delta.total_seconds() / 60
 
-    def calc_update_rate(self):
+    def calc_update_rate(self) -> float:
         """
         Determine rate at which software will fetch new data from API
         :return: update_rate: float
@@ -74,22 +74,22 @@ class Data:
         else:
             return 90.0
 
-    def current_ticker(self):
+    def current_ticker(self) -> int:
         """
         Determine the index of the ticker
         :return: index: int
         """
         return self.tickers[self.current_ticker_index]
 
-    def advance_to_next(self):
+    def advance_to_next(self) -> int:
         """
         Increase index to the following ticker in the list
-        :return: ticker: Ticker
+        :return: ticker: int
         """
         self.current_ticker_index = self.next_ticker_index()
         return self.current_ticker()
 
-    def next_ticker_index(self):
+    def next_ticker_index(self) -> int:
         """
         Returns the index of the next ticker in the list
         :return: counter: int
