@@ -6,6 +6,13 @@ import sys
 
 
 class MainRenderer:
+    """
+    Handle the rendering of different boards (Clock, Ticker)
+
+    Properties:
+        matrix      RGBMatrix instance
+        data        Data instance
+    """
     def __init__(self, matrix, data):
         self.matrix = matrix
         self.canvas = matrix.CreateFrameCanvas()

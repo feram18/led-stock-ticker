@@ -6,6 +6,12 @@ import time
 
 
 class Data:
+    """
+    Data to be displayed on matrix
+
+    Properties:
+        config      Config instance
+    """
     def __init__(self, config):
         self.config = config
 
@@ -69,10 +75,10 @@ class Data:
         max_rpm = available_requests / self.time_of_use  # Maximum number of requests per minute
         update_rate = round((self.total_tickers / max_rpm) * 60, 2)  # In seconds
 
-        if update_rate > 90.0:
+        if update_rate > 40.0:
             return update_rate
         else:
-            return 90.0
+            return 40.0
 
     def current_ticker(self) -> int:
         """

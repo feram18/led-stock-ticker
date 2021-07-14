@@ -1,7 +1,7 @@
-import constants
 from requests import RequestException
 from datetime import datetime
 from pytz import timezone
+import constants
 import requests
 import logging
 import time
@@ -9,6 +9,15 @@ import sys
 
 
 class Ticker:
+    """
+    Class to represent a Ticker object
+
+    Properties:
+        api_key         String containing TwelveData API key
+        ticker          Ticker string
+        country         Country string
+        update_rate     Float value of update frequency (in seconds)
+    """
     def __init__(self, api_key: str, ticker: str, country: str, update_rate: float):
         self.api_key = api_key
 
@@ -177,7 +186,7 @@ class Ticker:
         """
         Returns Boolean value to determine if the stock's data should be updated.
         i.e. If 2 minutes (120 seconds) have passed since data was last fetched, update is needed.
-        :return:
+        :return: should_update: bool
         """
         if not self.weekend() and not self.after_hours():
             current_time = time.time()
@@ -186,20 +195,22 @@ class Ticker:
         else:
             return False
 
-    def after_hours(self) -> bool:
+    @staticmethod
+    def after_hours() -> bool:
         """
         Determine if current time is not between 09:30 AM and 04:00 PM EST range (Regular stock market hours).
-        :return: after_hours: boolean
+        :return: after_hours: bool
         """
         current_time = datetime.now(timezone(constants.EASTERN_TZ))  # Current time in EST
         open_market = current_time.replace(hour=9, minute=30, second=0, microsecond=0)  # 09:30 AM EST
         close_market = current_time.replace(hour=16, minute=0, second=0, microsecond=0)  # 04:00 PM EST
         return current_time < open_market or current_time > close_market
 
-    def weekend(self) -> bool:
+    @staticmethod
+    def weekend() -> bool:
         """
         Determine if today is a weekend day
-        :return: weekend: boolean
+        :return: weekend: bool
         """
         week_day_no = datetime.today().weekday()
         return week_day_no > 5  # 5 Sat, 6 Sun

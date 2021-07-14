@@ -4,6 +4,13 @@ import utils as u
 
 
 class Loading:
+    """
+    Render a splash screen while tickers' data is being fetched
+
+    Properties:
+        matrix        RGBMatrix instance
+        config        Config instance
+    """
     def __init__(self, matrix, config):
         self.matrix = matrix
         self.canvas = matrix.CreateFrameCanvas()

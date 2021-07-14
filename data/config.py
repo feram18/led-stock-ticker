@@ -5,6 +5,13 @@ import sys
 
 
 class Config:
+    """
+    Configuration class
+
+    Properties:
+        width       Matrix width (pixel count)
+        height      Matrix height (pixel count)
+    """
     # Set Log file configuration
     logging.basicConfig(filename='led-stock-ticker.log',
                         filemode='w',
@@ -45,17 +52,14 @@ class Config:
         self.check_timezone()
         self.check_time_format()
 
-    def load_config(self) -> dict:
+    @staticmethod
+    def load_config() -> dict:
         """
         Load configuration file
         :return: config: dict
         """
-        try:
-            config = read_json(constants.CONFIG_FILE)
-            return config
-        except FileNotFoundError:
-            logging.error("Config.json file not found.")
-            sys.exit(1)
+        config = read_json(constants.CONFIG_FILE)
+        return config
 
     def load_layout(self) -> dict:
         """
@@ -69,7 +73,8 @@ class Config:
             logging.error(f"w{self.width}h{self.height}.json file does not exist.")
             sys.exit(1)
 
-    def load_colors(self) -> dict:
+    @staticmethod
+    def load_colors() -> dict:
         """
         Load colors configuration file
         :return: colors: dict
@@ -98,7 +103,7 @@ class Config:
         """
         if not isinstance(self.tickers, str) and not isinstance(self.tickers, list):
             logging.warning("Symbols should be an array of tickers or a single ticker string."
-                            "Using default preferred_tickers, {}".format(constants.DEFAULT_TICKERS))
+                            f"Using default preferred_tickers, {constants.DEFAULT_TICKERS}")
             self.tickers = constants.DEFAULT_TICKERS
 
         if isinstance(self.tickers, str):
@@ -110,6 +115,7 @@ class Config:
         Determine if country is an instance of a string. Else, set to default value (US).
         """
         if self.country is None or not isinstance(self.country, str):
+            logging.warning(f"Setting country to {constants.DEFAULT_COUNTRY}")
             self.country = constants.DEFAULT_COUNTRY
 
     def check_currency(self):
@@ -117,6 +123,7 @@ class Config:
         Determine if currency value is an instance of a string. Else, set to default value (USD).
         """
         if self.currency is None or not isinstance(self.currency, str):
+            logging.warning(f"Setting currency to {constants.DEFAULT_CURRENCY}")
             self.currency = constants.DEFAULT_CURRENCY
 
     def check_timezone(self):
@@ -124,6 +131,7 @@ class Config:
         Determine if timezone value is an instance of a string. Else, set to default value (EST).
         """
         if self.timezone is None or not isinstance(self.timezone, str):
+            logging.warning(f"Setting timezone to {constants.DEFAULT_TIMEZONE}")
             self.timezone = constants.DEFAULT_TIMEZONE
 
     def check_time_format(self):
@@ -131,4 +139,5 @@ class Config:
         Determine if time format is an accepted value (12h or 24h). Else, set to default value (12h).
         """
         if self.time_format is None or self.time_format.lower() != ("12h" or "24h"):
+            logging.warning(f"Setting time format to {constants.DEFAULT_TIME_FORMAT}")
             self.time_format = constants.DEFAULT_TIME_FORMAT

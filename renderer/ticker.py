@@ -1,10 +1,18 @@
-from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 from rgbmatrix import graphics
-import utils as u
+from utils import load_color, load_font, text_offscreen, align_center, align_right, update_text_position
+from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 import time
 
 
 class TickerRenderer:
+    """
+    Render Tickers
+
+    Properties:
+        matrix      RGBMatrix instance
+        canvas      Canvas associated with matrix
+        data        Data instance
+    """
     def __init__(self, matrix, canvas, data):
         self.matrix = matrix
         self.canvas = canvas
@@ -14,26 +22,27 @@ class TickerRenderer:
 
         # Load colors
         self.colors = data.config.colors["ticker"]
-        self.main_color = u.load_color(self.colors["main"])
-        self.secondary_color = u.load_color(self.colors["secondary"])
+        self.main_color = load_color(self.colors["main"])
+        self.secondary_color = load_color(self.colors["secondary"])
 
         # Load fonts
         self.fonts = data.config.layout["fonts"]
 
         self.FONT_TOM_THUMB = self.fonts["tom_thumb"]
-        self.primary_font = u.load_font(self.FONT_TOM_THUMB["path"])
+        self.primary_font = load_font(self.FONT_TOM_THUMB["path"])
 
         self.FONT_4X6 = self.fonts["4x6"]
-        self.secondary_font = u.load_font(self.FONT_4X6["path"])
+        self.secondary_font = load_font(self.FONT_4X6["path"])
 
         self.FONT_6X9 = self.fonts["6x9"]
-        self.large_font = u.load_font(self.FONT_6X9["path"])
+        self.large_font = load_font(self.FONT_6X9["path"])
 
         # Stock/Cryptocurrency data
         self.tickers = data.tickers
 
         self.currency = data.config.currency
 
+        # Set Strings and Coords
         self.name = None
         self.name_x = None
         self.name_y = None
@@ -59,7 +68,7 @@ class TickerRenderer:
             self.set_data(ticker)
             self.canvas.Clear()
 
-            if u.text_offscreen(self.name, self.canvas.width, self.FONT_TOM_THUMB["width"]):
+            if text_offscreen(self.name, self.canvas.width, self.FONT_TOM_THUMB["width"]):
                 time_started = time.time()
                 first_run = True
                 self.name_x = 1
@@ -79,12 +88,12 @@ class TickerRenderer:
 
                     time.sleep(TEXT_SCROLL_SPEED)
 
-                    self.name_x = self.__update_text_position(self.name_x, pos)
+                    self.name_x = update_text_position(self.canvas.width, self.name_x, pos)
 
                     if time.time() - time_started >= ROTATION_RATE:
                         self.finished_scrolling = True
             else:
-                self.name_x = u.align_center(self.name, (self.canvas.width / 2), self.FONT_TOM_THUMB["width"])
+                self.name_x = align_center(self.name, self.canvas.width / 2, self.FONT_TOM_THUMB["width"])
 
                 # Render elements
                 self.__render_full_name()
@@ -106,12 +115,12 @@ class TickerRenderer:
         self.ticker_x = self.coords["ticker"]["x"]
         self.ticker_y = self.coords["ticker"]["y"]
 
-        self.price = "${}".format(ticker.current_price)
-        self.price_x = u.align_right(self.price, self.canvas.width, self.FONT_TOM_THUMB["width"])
+        self.price = f"${ticker.current_price}"
+        self.price_x = align_right(self.price, self.canvas.width, self.FONT_TOM_THUMB["width"])
         self.price_y = self.coords["price"]["y"]
 
-        self.value_and_pct_change = "{} {}".format(ticker.value_change, ticker.percentage_change)
-        self.value_x = u.align_center(self.value_and_pct_change, (self.canvas.width / 2), self.FONT_TOM_THUMB["width"])
+        self.value_and_pct_change = f"{ticker.value_change} {ticker.percentage_change}"
+        self.value_x = align_center(self.value_and_pct_change, self.canvas.width / 2, self.FONT_TOM_THUMB["width"])
         self.value_y = self.coords["value_and_pct_change"]["y"]
 
         self.value_indicator_color = self.set_indicator_color(float(ticker.value_change))
@@ -143,18 +152,6 @@ class TickerRenderer:
                                  self.value_indicator_color,
                                  self.value_and_pct_change)
 
-    def __update_text_position(self, full_name_x: int, pos: int) -> int:
-        """
-        Update x-coord on scrolling text
-        :param full_name_x: int
-        :param pos: int
-        :return: x_coord: int
-        """
-        if full_name_x + pos < 1:
-            return self.canvas.width
-        else:
-            return full_name_x - 1
-
     def format_ticker(self, ticker: str) -> str:
         """
         Format cryptocurrency to remove currency value from it.
@@ -176,6 +173,6 @@ class TickerRenderer:
         :return: value_indicator_color: Color
         """
         if value_change < 0:
-            return u.load_color(self.colors["decrease"])
+            return load_color(self.colors["decrease"])
         else:
-            return u.load_color(self.colors["increase"])
+            return load_color(self.colors["increase"])

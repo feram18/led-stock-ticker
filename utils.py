@@ -72,6 +72,20 @@ def align_center_vertically(center_pos: int, font_height: int) -> int:
     return abs(center_pos + font_height // 2)
 
 
+def update_text_position(canvas_width: int, text_x: int, curr_pos: int) -> int:
+    """
+    Update x-coord on scrolling text
+    :param canvas_width: int
+    :param text_x: int
+    :param curr_pos: int
+    :return: x_coord: int
+    """
+    if text_x + curr_pos < 1:
+        return canvas_width
+    else:
+        return text_x - 1
+
+
 def load_color(colors: dict):
     """
     Convert RGB values from JSON into Color object

@@ -5,6 +5,14 @@ import time
 
 
 class ClockRenderer:
+    """
+    Render date and time
+
+    Properties:
+        matrix      RGBMatrix instance
+        canvas      Canvas associated with matrix
+        data        Data instance
+    """
     def __init__(self, matrix, canvas, data):
         self.matrix = matrix
         self.canvas = canvas
@@ -52,12 +60,13 @@ class ClockRenderer:
         return graphics.DrawText(self.canvas, self.time_font, self.time_x, self.time_y, self.time_color, self.time)
 
     def get_time(self) -> str:
-        if self.time_format == "24h":
+        if self.time_format is "24h":
             return time.strftime(TWENTY_FOUR_HOURS_DATE_FORMAT)
         else:
             return time.strftime(TWELVE_HOURS_DATE_FORMAT)
 
-    def get_date(self) -> str:
+    @staticmethod
+    def get_date() -> str:
         return time.strftime(DATE_FORMAT)
 
     def refresh(self):
