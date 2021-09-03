@@ -1,11 +1,11 @@
-# User-customized files
-config/*
+# User-customized layout files
+config/layout/*
 
 # Log Files
 led-stock-ticker.log
 
 # Submodules
-rpi-rgb-led-matrix
+rpi-rgb-led-matrix/*
 
 ### C ###
 # Prerequisites
@@ -62,18 +62,8 @@ Mkfile.old
 dkms.conf
 
 ### C++ ###
-# Prerequisites
-
 # Compiled Object files
 *.slo
-
-# Precompiled Headers
-
-# Linker files
-
-# Debugger Files
-
-# Compiled Dynamic libraries
 
 # Fortran module files
 *.mod
@@ -81,8 +71,6 @@ dkms.conf
 
 # Compiled Static libraries
 *.lai
-
-# Executables
 
 ### CMake ###
 CMakeLists.txt.user
@@ -174,19 +162,6 @@ Temporary Items
 .idea/**/gradle.xml
 .idea/**/libraries
 
-# Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
-# auto-import.
-# .idea/artifacts
-# .idea/compiler.xml
-# .idea/jarRepositories.xml
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
-
 # CMake
 cmake-build-*/
 
@@ -221,12 +196,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 ### PyCharm Patch ###
-# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
-
-# *.iml
-# modules.xml
-# .idea/misc.xml
-# *.ipr
 
 # Sonarlint plugin
 # https://plugins.jetbrains.com/plugin/7973-sonarlint
@@ -255,8 +224,6 @@ fabric.properties
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 
 # Distribution / packaging
 .Python
@@ -287,7 +254,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit tests / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -335,16 +302,6 @@ ipython_config.py
 
 # pyenv
 .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# poetry
-#poetry.lock
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
