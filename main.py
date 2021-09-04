@@ -1,31 +1,56 @@
-from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from constants import SCRIPT_NAME, SCRIPT_VERSION
+import sys
+import logging
+from rgbmatrix import RGBMatrix
+from constants import SCRIPT_NAME
 from utils import args, led_matrix_options
+from version import __version__
+from config.config import Config
+from data.data import Data
 from renderer.main import MainRenderer
 from renderer.loading import Loading
-from data.config import Config
-from data.data import Data
 
-# Get CLI arguments
-args = args()
 
-# Check for LED configuration arguments
-matrixOptions = led_matrix_options(args)
+def main(matrix_):
+    # Print script details on startup
+    print(f'\U0001F4CA {SCRIPT_NAME} - v{__version__} ({matrix_.width}x{matrix_.height})')
 
-# Initialize the matrix
-matrix = RGBMatrix(options=matrixOptions)
+    # Read software preferences from config.json
+    config = Config(matrix_.width, matrix_.height)
 
-# Print script details on startup
-print(f"{SCRIPT_NAME} - {SCRIPT_VERSION} ({matrix.width}x{matrix.height})")
+    # Render loading splash screen
+    Loading(matrix_, config).render()
 
-# Read software preferences from config.json
-config = Config(matrix.width, matrix.height)
+    # Fetch initial data
+    data = Data(config)
 
-# Render loading splash screen
-Loading(matrix, config).render()
+    # Begin rendering screen rotation
+    MainRenderer(matrix_, data).render()
 
-# Fetch initial data
-data = Data(config)
 
-# Begin rendering screen rotation
-MainRenderer(matrix, data).render()
+if __name__ == '__main__':
+    # Get logging level
+    if '--debug' in sys.argv:
+        log_level = logging.DEBUG
+        sys.argv.remove('--debug')
+    else:
+        log_level = logging.WARNING
+
+    # Set logger configuration
+    logging.basicConfig(filename='led-stock-ticker.log',
+                        filemode='w',
+                        format='%(asctime)s %(levelname)s: %(message)s',
+                        datefmt='%m/%d/%Y %I:%M:%S %p',
+                        level=log_level)
+
+    # Check for led configuration arguments
+    matrixOptions = led_matrix_options(args())
+
+    # Initialize the matrix
+    matrix = RGBMatrix(options=matrixOptions)
+
+    try:
+        main(matrix)
+    except Exception as e:
+        logging.exception(SystemExit(e))
+    finally:
+        matrix.Clear()
