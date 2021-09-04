@@ -1,0 +1,46 @@
+arch:
+  arm64
+
+os:
+  linux
+
+dist:
+  focal
+
+language:
+  python
+
+python:
+  - 3.6
+  - 3.7
+  - 3.8
+
+virtualenv:
+  system-site-packages: true
+
+addons:
+  apt:
+    packages:
+      - git
+      - python3-pip
+
+before_install:
+  - chmod +x install.sh
+
+install:
+  - pip3 install -r dev-requirements.txt
+  - ./install.sh
+
+script:
+  - python3 -m pytest
+
+branches:
+  only:
+    - master
+
+notifications:
+  email:
+    recipients:
+      - ${EMAIL}
+    on_success: never
+    on_failure: always
