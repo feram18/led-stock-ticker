@@ -1,77 +1,63 @@
-from constants import SCRIPT_NAME, SCRIPT_VERSION, LOADING_STR
-from rgbmatrix import graphics
-import utils as u
+from rgbmatrix.graphics import DrawText
+from version import __version__
+from constants import LOGO_IMAGE
+from utils import align_text_center, load_font, load_image, center_image
+from data.color import Color
 
 
 class Loading:
     """
     Render a splash screen while tickers' data is being fetched
 
-    Properties:
-        matrix        RGBMatrix instance
-        config        Config instance
+    Arguments:
+        matrix (rgbmatrix.RGBMatrix):           RGBMatrix instance
+        config (data.Config):                   Config instance
+
+    Attributes:
+        canvas (rgbmatrix.Canvas):              Canvas associated with matrix
+        logo(PIL.Image):                        Software logo image
+        color (rgbmatrix.graphics.Color):       Color instance
+        font (rgbmatrix.graphics.Font):         Font instance
+        logo_x_offset (int):                    Logo image x-coord
+        logo_y_offset (int):                    Logo image y-coord
+        version_x (int):                        Version text x-coord
+        version_y (int):                        Version text y-coord
     """
+
     def __init__(self, matrix, config):
         self.matrix = matrix
+        self.config = config
         self.canvas = matrix.CreateFrameCanvas()
 
-        # Load colors
-        self.colors = config.colors["loading"]
+        # Load logo
+        self.logo = load_image(LOGO_IMAGE, (28, 28))
 
-        self.title_color = u.load_color(self.colors["title"])
-        self.loading_color = u.load_color(self.colors["text"])
-        self.version_color = u.load_color(self.colors["version"])
+        # Load color
+        self.color = Color.ORANGE
 
-        # Load fonts
-        self.fonts = config.layout["fonts"]
+        # Load font
+        self.font = load_font(self.config.layout['fonts']['4x6'])
 
-        self.FONT_TOM_THUMB = self.fonts["tom_thumb"]
-        self.primary_font = u.load_font(self.FONT_TOM_THUMB["path"])
+        self.logo_x_offset, self.logo_y_offset = center_image(self.canvas.width,
+                                                              self.canvas.height,
+                                                              self.logo.size[0],
+                                                              self.logo.size[1])
 
-        self.FONT_4X6 = self.fonts["4x6"]
-        self.secondary_font = u.load_font(self.FONT_4X6["path"])
-
-        # Load coords
-        self.coords = config.layout["coords"]["loading"]
-
-        self.title_x = u.align_center(SCRIPT_NAME, (self.canvas.width / 2), self.FONT_TOM_THUMB["width"])
-        self.title_y = self.coords["title"]["y"]
-
-        self.loading_x = u.align_center(LOADING_STR, (self.canvas.width / 2), self.FONT_4X6["width"])
-        self.loading_y = self.coords["text"]["y"]
-
-        self.version_x = u.align_right(SCRIPT_VERSION, self.canvas.width, self.FONT_4X6["width"])
-        self.version_y = self.coords["version"]["y"]
+        self.version_x = align_text_center(string=__version__,
+                                           canvas_width=self.canvas.width,
+                                           font_width=self.font.baseline - 1)[0]
+        self.version_y = self.canvas.height
 
     def render(self):
         self.canvas.Clear()
 
-        self.__render_title()
-        self.__render_loading_text()
-        self.__render_version()
+        self.render_logo()
+        self.render_version()
 
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-    def __render_title(self):
-        return graphics.DrawText(self.canvas,
-                                 self.primary_font,
-                                 self.title_x,
-                                 self.title_y,
-                                 self.title_color,
-                                 SCRIPT_NAME)
+    def render_version(self):
+        return DrawText(self.canvas, self.font, self.version_x, self.version_y, self.color, __version__)
 
-    def __render_loading_text(self):
-        return graphics.DrawText(self.canvas,
-                                 self.secondary_font,
-                                 self.loading_x,
-                                 self.loading_y,
-                                 self.loading_color,
-                                 LOADING_STR)
-
-    def __render_version(self):
-        return graphics.DrawText(self.canvas,
-                                 self.secondary_font,
-                                 self.version_x,
-                                 self.version_y,
-                                 self.version_color,
-                                 SCRIPT_VERSION)
+    def render_logo(self):
+        return self.canvas.SetImage(self.logo, self.logo_x_offset, self.logo_y_offset)

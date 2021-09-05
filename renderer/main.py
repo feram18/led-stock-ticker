@@ -1,35 +1,44 @@
-from constants import REFRESH_DELAY
-from .ticker import TickerRenderer
-from .clock import ClockRenderer
 import time
-import sys
+from constants import ROTATION_RATE
+from renderer.ticker import TickerRenderer
+from renderer.clock import ClockRenderer
+from renderer.error import ErrorRenderer
+from data.status import Status
 
 
 class MainRenderer:
     """
-    Handle the rendering of different boards (Clock, Ticker)
+    Handle the rendering of different boards/screens (Clock, Ticker)
 
-    Properties:
-        matrix      RGBMatrix instance
-        data        Data instance
+    Arguments:
+        matrix (rgbmatrix.RGBMatrix):       RGBMatrix instance
+        data (data.Data):                   Data instance
+
+    Attributes:
+        canvas (rgbmatrix.Canvas):          Canvas associated with matrix
+
     """
     def __init__(self, matrix, data):
         self.matrix = matrix
-        self.canvas = matrix.CreateFrameCanvas()
         self.data = data
 
+        self.canvas = matrix.CreateFrameCanvas()
+
     def render(self):
-        while True:
+        while self.data.status != Status.FAIL:
             try:
                 clock_renderer = ClockRenderer(self.matrix, self.canvas, self.data)
                 clock_renderer.render()
 
-                self.data.refresh_tickers()
-                time.sleep(REFRESH_DELAY)
+                time.sleep(ROTATION_RATE)
 
                 TickerRenderer(self.matrix, self.canvas, self.data).render()
-
-                # Refresh data for next run
-                clock_renderer.refresh()
+                self.data.update()  # Update data for next run
             except KeyboardInterrupt:
-                sys.exit(0)
+                raise SystemExit(' Exiting...')
+
+        if self.data.status != Status.SUCCESS:
+            self.render_error()
+
+    def render_error(self):
+        ErrorRenderer(self.matrix, self.canvas, self.data.config, self.data.status).render()

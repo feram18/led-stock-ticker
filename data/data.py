@@ -1,106 +1,120 @@
-from constants import MAX_API_REQUESTS, EASTERN_TZ
-from datetime import datetime
-from pytz import timezone
-from .ticker import Ticker
 import time
+import logging
+import multitasking
+import data.ticker
+from requests.exceptions import Timeout
+from constants import DATE_FORMAT
+from utils import retry
+from data.stock import Stock
+from data.crypto import Crypto
+from data.status import Status
 
 
-class Data:
+class Data(object):
     """
     Data to be displayed on matrix
 
-    Properties:
-        config      Config instance
+    Arguments:
+        config (data.MatrixConfig):         MatrixConfig instance
+
+    Attributes:
+        time_format (str):                  Clock's time format
+        date (str):                         Date string
+        time (str):                         Time string
+        tickers (list):                     List of Ticker instances
+        status (data.Status):               Current update status
     """
+
     def __init__(self, config):
         self.config = config
 
+        self.time_format = self.config.time_format
+        self.date = None
+        self.time = None
         self.tickers = []
-        self.current_ticker_index = 0
 
-        self.time_app_started = datetime.now(timezone(EASTERN_TZ))
-        self.time_of_use = self.calc_time_of_use()
-        self.total_tickers = self.calc_total_tickers()
-        self.update_rate = self.calc_update_rate()
+        self.total_valid_tickers = len(self.config.stocks + self.config.cryptos)
+        threads = min([self.total_valid_tickers, multitasking.cpu_count() * 2])
+        multitasking.set_max_threads(threads)
+        self.updated_tickers = 0
 
-        self.refresh_tickers()
+        self.status = self.update()
 
-    def get_tickers_data(self):
+    def initialize(self) -> Status:
         """
-        Setup initial tickers' data
+        Initialize Ticker instances, and append those which are valid to tickers list.
+        :return: status: (data.Status) Update status
+        :exception Timeout: If the request timed out
         """
-        count = 0
-        for ticker in self.config.tickers:
-            time_started = datetime.now()
-            if count is 4:  # 8 API (max. limit) requests have been made
-                time.sleep(60 - time_started.second)  # Wait until next minute for following 8 requests
-            self.tickers.append(Ticker(self.config.api_key, ticker, self.config.country, self.update_rate))
-            count += 1
+        try:
+            logging.info('Initializing data...')
 
-    def refresh_tickers(self):
+            for stock in self.config.stocks:
+                self.download_stock(stock, self.config.currency)
+            for crypto in self.config.cryptos:
+                self.download_crypto(crypto, self.config.currency)
+            while len(self.tickers) < self.total_valid_tickers:
+                time.sleep(0.1)
+
+            self.date = self.get_date()
+            self.time = self.get_time()
+            return Status.SUCCESS
+        except Timeout:
+            retry(self.initialize())
+
+    def update(self) -> Status:
         """
-        Update tickers' prices
+        Update tickers' prices, date, and time.
+        :return: status: (data.Status) Update status
+        :exception Timeout: If the request timed out
         """
-        if len(self.tickers) < 1:
-            self.get_tickers_data()
+        try:
+            if len(self.tickers) < 1:
+                return self.initialize()
+            else:
+                logging.info('Checking for update...')
+                self.updated_tickers = 0
+                for ticker in self.tickers:
+                    self.update_ticker(ticker)
+
+            self.date = self.get_date()
+            self.time = self.get_time()
+            return Status.SUCCESS
+        except Timeout:
+            return Status.NETWORK_ERROR
+
+    @multitasking.task
+    def download_stock(self, stock: str, currency: str):
+        instance = Stock(stock, currency)
+        if instance.valid:
+            self.tickers.append(instance)
         else:
-            for ticker in self.tickers:
-                ticker.update_data()
+            self.total_valid_tickers -= 1
 
-    def calc_total_tickers(self) -> int:
-        """
-        Calculate the total number of tickers on config file
-        :return: total_tickers: int
-        """
-        return len(self.config.tickers)
-
-    def calc_time_of_use(self) -> float:
-        """
-        Determine amount of time (in minutes) that new data will need to be updated.
-        (i.e. Amount of time between current time, and 4:00 PM EST, when prices are no longer updated)
-        Result is used to determine update rate.
-        :return: time_of_use: float
-        """
-        end_time = datetime.now(timezone(EASTERN_TZ)).replace(hour=16, minute=0, second=0, microsecond=0)  # 4:00PM
-        time_delta = end_time - self.time_app_started
-        return time_delta.total_seconds() / 60
-
-    def calc_update_rate(self) -> float:
-        """
-        Determine rate at which software will fetch new data from API
-        :return: update_rate: float
-        """
-        # Number of requests available, after initial data is fetched
-        available_requests = MAX_API_REQUESTS - self.total_tickers
-        max_rpm = available_requests / self.time_of_use  # Maximum number of requests per minute
-        update_rate = round((self.total_tickers / max_rpm) * 60, 2)  # In seconds
-
-        if update_rate > 40.0:
-            return update_rate
+    @multitasking.task
+    def download_crypto(self, crypto: str, currency: str):
+        instance = Crypto(crypto, currency)
+        if instance.valid:
+            self.tickers.append(instance)
         else:
-            return 40.0
+            self.total_valid_tickers -= 1
 
-    def current_ticker(self) -> int:
-        """
-        Determine the index of the ticker
-        :return: index: int
-        """
-        return self.tickers[self.current_ticker_index]
+    @multitasking.task
+    def update_ticker(self, ticker: data.ticker.Ticker):
+        ticker.update()
+        self.updated_tickers += 1
 
-    def advance_to_next(self) -> int:
+    def get_time(self) -> str:
         """
-        Increase index to the following ticker in the list
-        :return: ticker: int
+        Get current time as a string.
+        :return: time: (str) Current time
         """
-        self.current_ticker_index = self.next_ticker_index()
-        return self.current_ticker()
+        return time.strftime(self.time_format)
 
-    def next_ticker_index(self) -> int:
+    @staticmethod
+    def get_date() -> str:
         """
-        Returns the index of the next ticker in the list
-        :return: counter: int
+        Get current date as a string.
+        :return: date: (str) Current date
         """
-        counter = self.current_ticker_index + 1
-        if counter >= len(self.tickers):
-            counter = 0
-        return counter
+        return time.strftime(DATE_FORMAT)

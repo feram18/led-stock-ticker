@@ -1,225 +1,198 @@
-from requests import RequestException
-from datetime import datetime
-from pytz import timezone
-import constants
-import requests
+import yfinance as yf
 import logging
 import time
-import sys
+from constants import UPDATE_RATE
+from requests.exceptions import Timeout
+from utils import convert_currency
+from data.status import Status
 
 
-class Ticker:
+class Ticker(object):
     """
-    Class to represent a Ticker object
+        Class to represent a Ticker object
 
-    Properties:
-        api_key         String containing TwelveData API key
-        ticker          Ticker string
-        country         Country string
-        update_rate     Float value of update frequency (in seconds)
-    """
-    def __init__(self, api_key: str, ticker: str, country: str, update_rate: float):
-        self.api_key = api_key
+        Arguments:
+            ticker (str):                       Ticker string
+            currency (str):                     Currency prices will be displayed on
 
-        self.update_rate = update_rate
-        self.country = country
-
+        Attributes:
+            data (yfinance.Ticker):             yfinance Ticker instance
+            name (str):                         Ticker's full name
+            prev_close_price (float):           Ticker's previous day's close price
+            current_price (float):              Ticker's current price
+            value_change (float):               Ticker's value change since previous day's close price
+            pct_change (str):                   Ticker's value percentage change since previous day's close price
+            chart_prices (list):                List of close prices over the past two days
+            valid (bool):                       Indicates if ticker is valid
+            initialized (bool):                 Indicates if data has been initialized
+            last_updated (float):               Time Ticker's data was last updated
+            update_status (data.Status):        Indicates update status.
+        """
+    def __init__(self, ticker: str, currency: str):
+        self.data = None
         self.ticker = ticker
         self.name = None
-        self.prev_day_close_price = None
         self.current_price = None
+        self.prev_close_price = None
         self.value_change = None
-        self.percentage_change = None
+        self.pct_change = None
+        self.chart_prices = None
+        self.valid = True  # Assume true until determined otherwise
+        self.currency = currency
 
-        # Check for tickers' validity
-        self.ticker_valid = self.ticker_valid()
-
-        self.data_initialized = False
+        self.initialized = False
+        self.update_status = self.update()  # Force an initial update
         self.last_updated = time.time()
 
-        # Force an initial update
-        self.update_data()
-
-    def setup_data(self):
+    def initialize(self) -> Status:
         """
-        Setup initial data
+        Setup ticker's initial data.
+        :return status: (data.Status) Update status
+        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
+        :exception Timeout: If the request timed out
         """
-        logging.debug("Fetching initial data...")
+        logging.debug(f'Fetching initial data for {self.ticker}.')
 
-        self.name = self.get_stock_name()
-        self.prev_day_close_price = self.get_previous_day_close_price()
-        self.current_price = self.get_current_price()
-        self.value_change = self.get_value_change()
-        self.percentage_change = self.get_percentage_change()
+        try:
+            self.data = yf.Ticker(self.ticker)
 
-    def update_data(self, force=False):
-        """
-        Only update data that may have changed since last update
-        i.e. Exclude the stock/cryptocurrency's full name and previous day close price
-        :param force: boolean (default False)
-        """
-        if self.data_initialized is False:
-            self.setup_data()
-            self.data_initialized = True
-
-        if force is True or self.should_update():
-            logging.debug("Fetching new data...")
+            self.name = self.get_name()
+            self.current_price = self.get_current_price()
+            self.prev_close_price = self.get_previous_close_price()
+            self.value_change = self.get_value_change()
+            self.pct_change = self.get_percentage_change()
+            self.chart_prices = self.get_chart_prices()
 
             self.last_updated = time.time()
+            self.initialized = True
+            return Status.SUCCESS
+        except KeyError:
+            logging.error(f'No data available for {self.ticker}.')
+            self.valid = False
+            return Status.FAIL
+        except Timeout:
+            return Status.NETWORK_ERROR
 
-            self.current_price = self.get_current_price()
-            self.value_change = self.get_value_change()
-            self.percentage_change = self.get_percentage_change()
-
-    def get_previous_day_close_price(self) -> float:
+    def update(self, force=False) -> Status:
         """
-        Fetch the ticker's previous day's close price. To be used in percentage and value change calculations.
-        :return: close_price: float
+        Update only the data that may have changed since last update
+        i.e. Exclude the ticker's name, previous day close price, and logo image.
+        :param force: (boolean default=False) Force update
+        :return status: (data.Status) Update status
+        :exception Timeout: If the request timed out
         """
-        logging.debug(f"Fetching previous day' close price for {self.ticker}")
+        if not self.initialized:
+            return self.initialize()
+        elif force or self.should_update():
+            logging.debug(f'Fetching new data for {self.ticker}.')
+            try:
+                self.data = yf.Ticker(self.ticker)
+                self.current_price = self.get_current_price()
+                self.value_change = self.get_value_change()
+                self.pct_change = self.get_percentage_change()
+                self.chart_prices = self.get_chart_prices()
 
-        url = constants.PREVIOUS_DAY_CLOSE_PRICE_URL.format(self.ticker,
-                                                            constants.INTERVAL,
-                                                            constants.OUTPUT_SIZE,
-                                                            constants.DECIMAL_PLACES,
-                                                            True,
-                                                            self.api_key)
+                self.last_updated = time.time()
+                return Status.SUCCESS
+            except Timeout:
+                return Status.NETWORK_ERROR
+
+    def get_name(self) -> str:
+        """
+        Fetch ticker's full name. i.e. TSLA -> Tesla Inc.
+        :return: name: (str) Name
+        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
+        """
         try:
-            response = requests.get(url).json()
-            close_price = float(response["values"][0]["previous_close"])
-            return close_price
-        except RequestException:
-            logging.error(f"Unable to fetch previous day' close price for {self.ticker}")
+            return self.data.info['shortName']
+        except KeyError:
+            self.valid = False
+            self.update_status = Status.FAIL
+            return ''
 
     def get_current_price(self) -> float:
         """
         Fetch the ticker's price at the current time.
-        :return: price: float
+        If currency is not set to USD, convert value to user-selected currency.
+        :return: current_price: (float) Current price
+        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
-        logging.debug(f"Fetching current price for {self.ticker}")
-
-        url = constants.CURRENT_PRICE_URL.format(self.ticker, constants.DECIMAL_PLACES, self.api_key)
-
         try:
-            response = requests.get(url).json()
-            price = float(response["price"])
-            return price
-        except RequestException:
-            logging.error(f"Unable to fetch current price for {self.ticker}")
+            current_price = self.data.info["regularMarketPrice"]
+            if self.currency != 'USD':
+                current_price = convert_currency('USD', self.currency, current_price)
+            return float(f'{current_price:.2f}')
+        except KeyError:
+            self.valid = False
+            self.update_status = Status.FAIL
+            return 0.00
 
-    def get_value_change(self) -> str:
+    def get_previous_close_price(self) -> float:
+        """
+        Fetch the ticker's previous day's close price.
+        If currency is not set to USD, convert value to user-selected currency.
+        :return: prev_close_price: (float) Previous day's close price
+        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
+        """
+        try:
+            prev_close_price = self.data.info['regularMarketPreviousClose']
+            if self.currency != 'USD':
+                prev_close_price = convert_currency('USD', self.currency, prev_close_price)
+            return prev_close_price
+        except KeyError:
+            self.valid = False
+            self.update_status = Status.FAIL
+            return 0.00
+
+    def get_value_change(self) -> float:
         """
         Calculate the ticker's price value change since previous day's close price.
-        :return: value_change: str
+        :return: value_change: (str) Value change
         """
-        logging.debug("Calculating value change")
-
-        value_change = "{:.2f}".format(self.current_price - self.prev_day_close_price)
-        return value_change
+        return float(f'{self.current_price - self.prev_close_price:.2f}')
 
     def get_percentage_change(self) -> str:
         """
         Calculate the ticker's percentage change since previous day's close price.
-        :return: pct_change: str
+        :return: pct_change: (str) Percentage change
+        :exception ZeroDivisionError: If previous day's close price is zero.
         """
-        logging.debug("Calculating percentage change")
-
-        pct_change = "{:.2f}".format(100 * ((self.current_price - self.prev_day_close_price) /
-                                            abs(self.prev_day_close_price))) + "%"
-        return pct_change
-
-    def get_stock_name(self) -> str:
-        """
-        Fetch stock's full name. i.e. TSLA -> Tesla Inc.
-        :return: name: str
-        """
-        logging.debug(f"Fetching name for {self.ticker}")
-
-        url = constants.STOCK_NAME_URL.format(self.ticker, self.country)
-
         try:
-            response = requests.get(url).json()
-            if len(response["data"]) > 0:
-                return response["data"][0]["name"]
-            else:
-                logging.debug(f"Checking if {self.ticker} is a cryptocurrency")
-                return self.get_crypto_name()
-        except RequestException:
-            logging.error(f"Failed to fetch name for {self.ticker}")
+            return f'{100 * (self.value_change / abs(self.prev_close_price)):.2f}%'
+        except ZeroDivisionError:
+            self.valid = False
+            return '0.00%'
 
-    def get_crypto_name(self) -> str:
+    def get_chart_prices(self) -> list:
         """
-        Fetch cryptocurrency's full name. i.e. BTC -> Bitcoin.
-        :return: name: str
+        Fetch historical market data for chart.
+        :return: chart_prices: (list) List of historical prices
         """
-        logging.debug(f"Fetching name for {self.ticker}")
-
-        url = constants.CRYPTO_NAME_URL.format(self.ticker)
-
-        try:
-            response = requests.get(url).json()
-            full_name = response["data"][0]["currency_base"]
-            return full_name
-        except RequestException:
-            logging.error(f"Failed to fetch name for {self.ticker}")
-
-    def ticker_valid(self) -> bool:
-        """
-        Verify ticker's validity.
-        :return:
-        """
-        logging.debug(f"Verifying validity of ticker: {self.ticker}")
-
-        url = constants.SYMBOL_SEARCH_URL.format(self.ticker)
-
-        try:
-            response = requests.get(url).json()
-            if response["data"][0]["symbol"] == self.ticker:
-                return True
-            else:
-                logging.error(f"Ticker: {self.ticker} does not exist.")
-                sys.exit(1)
-        except RequestException:
-            logging.error(f"Failed to verify validity of ticker: {self.ticker}")
+        chart_prices = self.data.history(interval='1m', period='1d')['Close'].tolist()
+        if len(chart_prices) < 100:
+            chart_prices = self.data.history(interval='1m', period='2d')['Close'].tolist()
+        elif not chart_prices:
+            self.valid = False
+            self.update_status = Status.FAIL
+            chart_prices.append(0.00)
+        return chart_prices
 
     def should_update(self) -> bool:
         """
-        Returns Boolean value to determine if the stock's data should be updated.
-        i.e. If 2 minutes (120 seconds) have passed since data was last fetched, update is needed.
-        :return: should_update: bool
+        Returns Boolean value to determine if the ticker's data should be updated.
+        i.e. If 2 minutes have passed since data was last fetched, an update is needed.
+        Update rate depends on number of tickers selected by user.
+        :return: should_update: (bool)
         """
-        if not self.weekend() and not self.after_hours():
-            current_time = time.time()
-            time_delta = current_time - self.last_updated
-            return time_delta >= self.update_rate
-        else:
-            return False
-
-    @staticmethod
-    def after_hours() -> bool:
-        """
-        Determine if current time is not between 09:30 AM and 04:00 PM EST range (Regular stock market hours).
-        :return: after_hours: bool
-        """
-        current_time = datetime.now(timezone(constants.EASTERN_TZ))  # Current time in EST
-        open_market = current_time.replace(hour=9, minute=30, second=0, microsecond=0)  # 09:30 AM EST
-        close_market = current_time.replace(hour=16, minute=0, second=0, microsecond=0)  # 04:00 PM EST
-        return current_time < open_market or current_time > close_market
-
-    @staticmethod
-    def weekend() -> bool:
-        """
-        Determine if today is a weekend day
-        :return: weekend: bool
-        """
-        week_day_no = datetime.today().weekday()
-        return week_day_no > 5  # 5 Sat, 6 Sun
+        current_time = time.time()
+        time_delta = current_time - self.last_updated
+        return time_delta >= UPDATE_RATE
 
     def __str__(self):
-        return f"<{self.__class__.__name__} {hex(id(self))}> " \
-               f"Ticker: {self.ticker}; " \
-               f"Full Name: {self.name}; " \
-               f"Previous Day Close Price: {self.prev_day_close_price}; " \
-               f"Current Price: {self.current_price}; " \
-               f"Value Change: {self.value_change}; " \
-               f"Percentage Change: {self.percentage_change}"
+        return f'<{self.__class__.__name__} {hex(id(self))}> ' \
+               f'Ticker: {self.ticker}; ' \
+               f'Full Name: {self.name}; ' \
+               f'Previous Day Close Price: {self.prev_close_price}; ' \
+               f'Current Price: {self.current_price}; ' \
+               f'Value Change: {self.value_change}; ' \
+               f'Percentage Change: {self.pct_change}'

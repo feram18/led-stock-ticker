@@ -1,37 +1,58 @@
-from rgbmatrix import graphics
-from utils import load_font, load_color, align_center, align_center_vertically
+import time
+from rgbmatrix.graphics import DrawText
+from utils import align_text_center, load_font, load_image
+from constants import NETWORK_RETRY, ERROR_IMAGE
+from data.color import Color
 
 
 class ErrorRenderer:
     """
     Render an error message
 
-    Properties:
-        matrix           RGBMatrix instance
-        canvas           Canvas associated with matrix
-        config           Config instance
-        error_msg        String containing error information
+    Arguments:
+        matrix (rgbmatrix.RGBMatrix):           RGBMatrix instance
+        canvas (rgbmatrix.Canvas):              Canvas associated with matrix
+        config (data.Config):                   Config instance
+        error_msg (str):                        String containing error information
+
+    Attributes:
+        font (rgbmatrix.graphics.Font):         Font for error msg
+        color (rgbmatrix.graphics.Color):       Color for error msg
+        msg_x (int):                            Error msg's x-coord
+        msg_y (int):                            Error msg's y-coord
     """
+
     def __init__(self, matrix, canvas, config, error_msg: str):
         self.matrix = matrix
         self.canvas = canvas
         self.error_msg = error_msg
 
-        # Load Font
-        self.FONT_4X6 = config.layout["fonts"]["4x6"]
-        self.font = load_font(self.FONT_4X6["path"])
+        # Load font
+        self.font = load_font(config.layout['fonts']['4x6'])
 
         # Load text color
-        self.text_color = load_color(config.colors["error"])
+        self.color = Color.RED
+
+        # Load error image
+        self.error_image = load_image(ERROR_IMAGE, (4, 6))
 
         # Set coords
-        self.error_x = align_center(error_msg, matrix.width / 2, self.FONT_4X6["width"])
-        self.error_y = align_center_vertically(matrix.height / 2, self.FONT_4X6["height"])
+        self.msg_x, self.msg_y = align_text_center(self.error_msg,
+                                                   self.canvas.width,
+                                                   self.canvas.height,
+                                                   self.font.baseline - 1,
+                                                   self.font.height)
+
+        self.image_x_offset, self.image_y_offset = 0, 0
 
     def render(self):
         self.canvas.Clear()
-        self.__render_error_msg()
+        self.render_error_msg()
+        time.sleep(NETWORK_RETRY)
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-    def __render_error_msg(self):
-        return graphics.DrawText(self.canvas, self.font, self.error_x, self.error_y, self.text_color, self.error_msg)
+    def render_error_msg(self):
+        return DrawText(self.canvas, self.font, self.msg_x, self.msg_y, self.color, self.error_msg)
+
+    def render_image(self):
+        return self.canvas.SetImage(self.error_image, self.image_x_offset, self.image_y_offset)
