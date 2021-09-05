@@ -1,8 +1,8 @@
 import time
 import logging
 import multitasking
-import data.ticker
 from requests.exceptions import Timeout
+import data.ticker
 from constants import DATE_FORMAT
 from utils import retry
 from data.stock import Stock
@@ -10,7 +10,7 @@ from data.crypto import Crypto
 from data.status import Status
 
 
-class Data(object):
+class Data:
     """
     Data to be displayed on matrix
 
@@ -49,10 +49,11 @@ class Data(object):
         try:
             logging.info('Initializing data...')
 
-            for stock in self.config.stocks:
-                self.download_stock(stock, self.config.currency)
-            for crypto in self.config.cryptos:
-                self.download_crypto(crypto, self.config.currency)
+            for stock in self.config.stocks:  # Initialize stocks
+                self.fetch_stock(stock, self.config.currency)
+            for crypto in self.config.cryptos:  # Initialize cryptos
+                self.fetch_crypto(crypto, self.config.currency)
+            # Wait until all tickers are initialized
             while len(self.tickers) < self.total_valid_tickers:
                 time.sleep(0.1)
 
@@ -77,14 +78,19 @@ class Data(object):
                 for ticker in self.tickers:
                     self.update_ticker(ticker)
 
-            self.date = self.get_date()
-            self.time = self.get_time()
-            return Status.SUCCESS
+                self.date = self.get_date()
+                self.time = self.get_time()
+                return Status.SUCCESS
         except Timeout:
             return Status.NETWORK_ERROR
 
     @multitasking.task
-    def download_stock(self, stock: str, currency: str):
+    def fetch_stock(self, stock: str, currency: str):
+        """
+        Fetch stock's data
+        :param stock: (str) Stock ticker
+        :param currency: (str) Stock's prices currency
+        """
         instance = Stock(stock, currency)
         if instance.valid:
             self.tickers.append(instance)
@@ -92,7 +98,12 @@ class Data(object):
             self.total_valid_tickers -= 1
 
     @multitasking.task
-    def download_crypto(self, crypto: str, currency: str):
+    def fetch_crypto(self, crypto: str, currency: str):
+        """
+        Fetch crypto's data
+        :param crypto: (str) Crypto ticker
+        :param currency: (str) Crypto's prices currency
+        """
         instance = Crypto(crypto, currency)
         if instance.valid:
             self.tickers.append(instance)
@@ -101,6 +112,10 @@ class Data(object):
 
     @multitasking.task
     def update_ticker(self, ticker: data.ticker.Ticker):
+        """
+        Update ticker's data
+        :param ticker: (data.Ticker) Ticker instance to update
+        """
         ticker.update()
         self.updated_tickers += 1
 

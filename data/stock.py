@@ -1,12 +1,11 @@
-import yfinance as yf
 import logging
 import time
+import yfinance as yf
 import requests
-from data.ticker import Ticker
-from data.status import Status
 from requests.exceptions import MissingSchema, Timeout, ConnectionError
 from PIL import Image, UnidentifiedImageError
-
+from data.ticker import Ticker
+from data.status import Status
 
 class Stock(Ticker):
     """

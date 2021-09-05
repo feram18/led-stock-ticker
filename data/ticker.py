@@ -1,13 +1,13 @@
-import yfinance as yf
 import logging
 import time
-from constants import UPDATE_RATE
+import yfinance as yf
 from requests.exceptions import Timeout
+from constants import UPDATE_RATE
 from utils import convert_currency
 from data.status import Status
 
 
-class Ticker(object):
+class Ticker:
     """
         Class to represent a Ticker object
 

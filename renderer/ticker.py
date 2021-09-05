@@ -263,7 +263,7 @@ class TickerRenderer:
         :param ticker: (str) Ticker string to format
         :return: ticker: (str) Formatted ticker string
         """
-        currency_postfix = f'-USD'
+        currency_postfix = '-USD'
         if currency_postfix in ticker.upper():
             return ticker.replace(currency_postfix, '')
         else:

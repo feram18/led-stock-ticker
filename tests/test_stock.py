@@ -1,6 +1,6 @@
 from unittest import TestCase
-from data.stock import Stock
 from PIL.Image import Image
+from data.stock import Stock
 
 
 class TestStock(TestCase):

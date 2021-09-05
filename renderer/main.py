@@ -34,8 +34,8 @@ class MainRenderer:
 
                 TickerRenderer(self.matrix, self.canvas, self.data).render()
                 self.data.update()  # Update data for next run
-            except KeyboardInterrupt:
-                raise SystemExit(' Exiting...')
+            except KeyboardInterrupt as e:
+                raise SystemExit(' Exiting...') from e
 
         if self.data.status != Status.SUCCESS:
             self.render_error()

@@ -2,18 +2,18 @@
 
 import argparse
 import logging
-import requests
 import json
 import time
+import requests
 from rgbmatrix import RGBMatrixOptions
 from rgbmatrix.graphics import Font
-from constants import DEFAULT_FONT_PATH, EASTERN_TZ, NETWORK_RETRY, CURRENCY_EXCHANGE_URL
 from PIL import Image
 from argparse import Namespace
 from datetime import datetime
 from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
 from data.market_holiday_calendar import MarketHolidayCalendar
+from constants import DEFAULT_FONT_PATH, EASTERN_TZ, NETWORK_RETRY, CURRENCY_EXCHANGE_URL
 
 
 def read_json(filename: str) -> dict:
@@ -228,7 +228,7 @@ def holiday() -> bool:
     sdt = today.replace(month=1, day=1)  # Start Date
     edt = today.replace(month=12, day=31)  # End Date
     holidays = MarketHolidayCalendar().holidays(start=sdt, end=edt).to_pydatetime()
-    return True if today in holidays else False
+    return today in holidays
 
 
 def retry(method):

@@ -2,8 +2,8 @@ import unittest
 import sys
 import PIL
 from unittest import TestCase
-from utils import *
 from rgbmatrix.graphics import Font
+from utils import *
 
 TEST_FILE = 'tests/test_file.json'
 INVALID_FILE = 'invalid.txt'

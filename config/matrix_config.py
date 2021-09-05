@@ -6,7 +6,7 @@ from utils import read_json
 from data.currency import currencies
 
 
-class MatrixConfig(object):
+class MatrixConfig:
     """
     Configuration class
 

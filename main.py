@@ -30,17 +30,17 @@ def main(matrix_):
 if __name__ == '__main__':
     # Get logging level
     if '--debug' in sys.argv:
-        log_level = logging.DEBUG
+        LOG_LEVEL = logging.DEBUG
         sys.argv.remove('--debug')
     else:
-        log_level = logging.WARNING
+        LOG_LEVEL = logging.WARNING
 
     # Set logger configuration
     logging.basicConfig(filename='led-stock-ticker.log',
                         filemode='w',
                         format='%(asctime)s %(levelname)s: %(message)s',
                         datefmt='%m/%d/%Y %I:%M:%S %p',
-                        level=log_level)
+                        level=LOG_LEVEL)
 
     # Check for led configuration arguments
     matrixOptions = led_matrix_options(args())
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     try:
         main(matrix)
-    except Exception as e:
+    except Exception as e:  # For any random unhandled exceptions
         logging.exception(SystemExit(e))
     finally:
         matrix.Clear()

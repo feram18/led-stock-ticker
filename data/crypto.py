@@ -26,7 +26,7 @@ class Crypto(Ticker):
         :param name: (str) Name to format
         :return: name: (str) Formatted name
         """
-        currency_postfix = f' USD'
+        currency_postfix = ' USD'
         if currency_postfix in name.upper():
             return name.replace(currency_postfix, '')
         else:

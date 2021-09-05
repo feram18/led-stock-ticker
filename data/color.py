@@ -1,8 +1,9 @@
-"""Predefined Color objects class"""
 from rgbmatrix import graphics
 
 
 class Color:
+    """Predefined Color objects class"""
+
     RED = graphics.Color(171, 0, 3)
     ORANGE = graphics.Color(128, 128, 128)
     YELLOW = graphics.Color(239, 178, 30)
