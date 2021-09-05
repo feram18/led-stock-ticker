@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LED-Stock-Ticker Configuration File",
+  "type": "object",
+  "required": ["tickers", "currency", "clock_format"],
+  "properties": {
+    "tickers": {
+      "type": "object",
+      "required": ["stocks", "cryptos"],
+      "properties": {
+        "stocks": {
+          "type": "array",
+          "pattern": "^([A-Z]{1,5})$",
+          "minItems": 1,
+          "uniqueItems": true,
+          "default": ["TSLA", "AMZN", "MSFT"]
+        },
+        "cryptos": {
+          "type": "array",
+          "pattern": "^([A-Z]+)$",
+          "minItems": 0,
+          "uniqueItems": true,
+          "default:": ["BTC", "ETH", "LTC"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^([A-Z]{3})$",
+      "default": "USD"
+    },
+    "clock_format": {
+      "type": "string",
+      "enum": ["12h", "24h"],
+      "default": "12h"
+    }
+  },
+  "additionalProperties": false
+}
