@@ -86,6 +86,7 @@ _As of version 0.1.0_
 | :paraguay: | Paraguayan guaraní | PYG |
 | :qatar: | Qatari riyal | QAR |
 | :romania: | Romanian leu | RON |
+| :serbia: | Serbian dinar | RSD |
 | :ru: | Russian ruble | RUB |
 | :saudi_arabia: | Saudi riyal | SAR |
 | :solomon_islands: | Solomon Islands dollar | SBD |
