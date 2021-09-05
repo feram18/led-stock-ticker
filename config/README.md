@@ -3,109 +3,108 @@ Supported Currencies
 
 _As of version 0.1.0_
 
-| Currency | ISO Code |
-| -------- |:--------:|
-| United Arab Emirates dirham | AED |
-| Afghan afghani | AFN |
-| Albanian lek | ALL |
-| Argentine peso | ARS |
-| Australian dollar | AUD |
-| Aruban florin | AWG |
-| Azerbaijani manat | AZN |
-| Bosnia and Herzegovina convertible mark | BAM |
-| Barbadian dollar | BBD |
-| Bangladeshi taka | BDT |
-| Bulgarian lev | BGN |
-| Bermudian dollar | BMD |
-| Brunei dollar | BND |
-| Bolivian boliviano | BOB |
-| Brazilian real | BRL |
-| Bahamian dollar | BSD |
-| Botswana pula | BWP |
-| Belarusian ruble | BYN |
-| Belize dollar | BZD |
-| Canadian dollar | CAD |
-| Swiss franc | CHF |
-| Chilean peso | CLP |
-| Chinese yuan | CNY |
-| Colombian peso | COP |
-| Costa Rican colón | CRC |
-| Cuban peso | CUP |
-| Czech koruna | CZK |
-| Danish krone | DKK |
-| Egyptian pound | EGP |
-| Euro | EUR |
-| Fijian dollar | FJD |
-| Falkland Islands pound | FKP |
-| British pound | GBP |
-| Georgian lari | GEL |
-| Guernsey pound | GGP |
-| Ghanaian cedi | GHS |
-| Gibraltar pound | GIP |
-| Guatemalan quetzal | GTQ |
-| Guyanese dollar | GYD |
-| Hong Kong dollar | HKD |
-| Honduran lempira | HNL |
-| Croatian kuna | HRK |
-| Hungarian forint | HUF |
-| Indonesian rupiah | IDR |
-| Israeli new shekel | ILS |
-| Manx pound | IMP |
-| Indian rupee | INR |
-| Iranian rial | IRR |
-| Jamaican dollar | JMD |
-| Japanese yen | JPY |
-| Kenyan shilling | KES |
-| Kyrgyzstani som | KGS |
-| North Korean won | KPW |
-| South Korean won | KRW |
-| Cayman Islands dollar | KYD |
-| Lao kip | LAK |
-| Lebanese pound | LBP |
-| Sri Lankan rupee | LKR |
-| Liberian dollar | LRD |
-| Moroccan dirham | MAD |
-| Macedonian denar | MKD |
-| Mongolian tögrög | MNT |
-| Mauritian rupee | MUR |
-| Mexican peso | MXN |
-| Malaysian ringgit | MYR |
-| Mozambican metical | MZN |
-| Namibian dollar | NAD |
-| Nigerian naira | NGN |
-| Nicaraguan córdoba | NIO |
-| Norwegian krone | NOK |
-| Nepalese rupee | NPR |
-| New Zealand dollar | NZD |
-| Omani rial | OMR |
-| Panamanian balboa | PAB |
-| Peruvian sol | PEN |
-| Philippine peso | PHP |
-| Pakistani rupee | PKR |
-| Polish złoty | PLN |
-| Paraguayan guaraní | PYG |
-| Qatari riyal | QAR |
-| Romanian leu | RON |
-| Serbian dinar | RSD |
-| Russian ruble | RUB |
-| Saudi riyal | SAR |
-| Solomon Islands dollar | SBD |
-| Seychellois rupee | SCR |
-| Swedish krona | SEK |
-| Singapore dollar | SGD |
-| Saint Helena pound | SHP |
-| Somali shilling | SOS |
-| Surinamese dollar | SRD |
-| Syrian pound | SYP |
-| Thai baht | THB |
-| Turkish lira | TRY |
-| Trinidad and Tobago dollar | TTD |
-| New Taiwan dollar | TWD |
-| Ukrainian hryvnia | UAH |
-| United States dollar | USD |
-| Uruguayan peso | UYU |
-| Uzbekistani soʻm | UZS |
-| Vietnamese đồng | VND |
-| Eastern Caribbean dollar | XCD |
-| Yemeni rial | YER |
-| South African rand | ZAR |
+|       | Currency | ISO Code |
+| :---: | :------- |:--------:|
+| :united_arab_emirates: | United Arab Emirates dirham | AED |
+| :afghanistan: | Afghan afghani | AFN |
+| :albania: | Albanian lek | ALL |
+| :argentina:| Argentine peso | ARS |
+| :australia: | Australian dollar | AUD |
+| :aruba: | Aruban florin | AWG |
+| :azerbaijan: | Azerbaijani manat | AZN |
+| :bosnia_herzegovina: | Bosnia and Herzegovina convertible mark | BAM |
+| :barbados: | Barbadian dollar | BBD |
+| :bangladesh: | Bangladeshi taka | BDT |
+| :bulgaria: | Bulgarian lev | BGN |
+| :bermuda: | Bermudian dollar | BMD |
+| :brunei: | Brunei dollar | BND |
+| :bolivia: | Bolivian boliviano | BOB |
+| :brazil: | Brazilian real | BRL |
+| :bahamas: | Bahamian dollar | BSD |
+| :botswana: | Botswana pula | BWP |
+| :belarus: | Belarusian ruble | BYN |
+| :belize: | Belize dollar | BZD |
+| :canada: | Canadian dollar | CAD |
+| :switzerland: | Swiss franc | CHF |
+| :chile: | Chilean peso | CLP |
+| :cn: | Chinese yuan | CNY |
+| :colombia: | Colombian peso | COP |
+| :costa_rica: | Costa Rican colón | CRC |
+| :cuba: | Cuban peso | CUP |
+| :czech_republic: | Czech koruna | CZK |
+| :denmark: | Danish krone | DKK |
+| :egypt: | Egyptian pound | EGP |
+| :eu: | Euro | EUR |
+| :fiji: | Fijian dollar | FJD |
+| :falkland_islands: | Falkland Islands pound | FKP |
+| :gb: | British pound | GBP |
+| :georgia: | Georgian lari | GEL |
+| :guernsey: | Guernsey pound | GGP |
+| :ghana: | Ghanaian cedi | GHS |
+| :gibraltar: | Gibraltar pound | GIP |
+| :guatemala: | Guatemalan quetzal | GTQ |
+| :guyana: | Guyanese dollar | GYD |
+| :hong_kong: | Hong Kong dollar | HKD |
+| :honduras: | Honduran lempira | HNL |
+| :croatia: | Croatian kuna | HRK |
+| :hungary: | Hungarian forint | HUF |
+| :indonesia: | Indonesian rupiah | IDR |
+| :israel: | Israeli new shekel | ILS |
+| :isle_of_man: | Manx pound | IMP |
+| :india: | Indian rupee | INR |
+| :iran: | Iranian rial | IRR |
+| :jamaica: | Jamaican dollar | JMD |
+| :jp: | Japanese yen | JPY |
+| :kenya: | Kenyan shilling | KES |
+| :kyrgyzstan: | Kyrgyzstani som | KGS |
+| :north_korea: | North Korean won | KPW |
+| :kr: | South Korean won | KRW |
+| :cayman_islands: | Cayman Islands dollar | KYD |
+| :laos: | Lao kip | LAK |
+| :lebanon: | Lebanese pound | LBP |
+| :sri_lanka: | Sri Lankan rupee | LKR |
+| :liberia: | Liberian dollar | LRD |
+| :morocco: | Moroccan dirham | MAD |
+| :macedonia: | Macedonian denar | MKD |
+| :mongolia: | Mongolian tögrög | MNT |
+| :mauritania: | Mauritian rupee | MUR |
+| :mexico: | Mexican peso | MXN |
+| :malaysia: | Malaysian ringgit | MYR |
+| :mozambique: | Mozambican metical | MZN |
+| :namibia: | Namibian dollar | NAD |
+| :nigeria: | Nigerian naira | NGN |
+| :nicaragua: | Nicaraguan córdoba | NIO |
+| :norway: | Norwegian krone | NOK |
+| :nepal: | Nepalese rupee | NPR |
+| :new_zealand: | New Zealand dollar | NZD |
+| :oman: | Omani rial | OMR |
+| :panama: | Panamanian balboa | PAB |
+| :peru: | Peruvian sol | PEN |
+| :philippines: | Philippine peso | PHP |
+| :pakistan: | Pakistani rupee | PKR |
+| :poland: | Polish złoty | PLN |
+| :paraguay: | Paraguayan guaraní | PYG |
+| :qatar: | Qatari riyal | QAR |
+| :romania: | Romanian leu | RON |
+| :ru: | Russian ruble | RUB |
+| :saudi_arabia: | Saudi riyal | SAR |
+| :solomon_islands: | Solomon Islands dollar | SBD |
+| :seychelles: | Seychellois rupee | SCR |
+| :sweden: | Swedish krona | SEK |
+| :singapore: | Singapore dollar | SGD |
+| :st_helena: | Saint Helena pound | SHP |
+| :somalia: | Somali shilling | SOS |
+| :suriname: | Surinamese dollar | SRD |
+| :syria: | Syrian pound | SYP |
+| :thailand: | Thai baht | THB |
+| :tr: | Turkish lira | TRY |
+| :trinidad_tobago: | Trinidad and Tobago dollar | TTD |
+| :taiwan: | New Taiwan dollar | TWD |
+| :ukraine: | Ukrainian hryvnia | UAH |
+| :us: | United States dollar | USD |
+| :uruguay: | Uruguayan peso | UYU |
+| :uzbekistan: | Uzbekistani soʻm | UZS |
+| :vietnam: | Vietnamese đồng | VND |
+| :antigua_barbuda: | Eastern Caribbean dollar | XCD |
+| :yemen: | Yemeni rial | YER |
+| :south_africa: | South African rand | ZAR |
