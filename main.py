@@ -4,7 +4,7 @@ from rgbmatrix import RGBMatrix
 from constants import SCRIPT_NAME
 from utils import args, led_matrix_options
 from version import __version__
-from config.config import Config
+from config.matrix_config import MatrixConfig
 from data.data import Data
 from renderer.main import MainRenderer
 from renderer.loading import Loading
@@ -15,7 +15,7 @@ def main(matrix_):
     print(f'\U0001F4CA {SCRIPT_NAME} - v{__version__} ({matrix_.width}x{matrix_.height})')
 
     # Read software preferences from config.json
-    config = Config(matrix_.width, matrix_.height)
+    config = MatrixConfig(matrix_.width, matrix_.height)
 
     # Render loading splash screen
     Loading(matrix_, config).render()
