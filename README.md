@@ -1,26 +1,42 @@
 # LED Stock Ticker Display
 ***
-An LED display for real-time prices of stocks and cryptocurrencies. 
-Requires a Raspberry Pi, and a 64x32 LED board connected to the Raspberry Pi via the GPIO pins.
+
+[![Build Status](https://travis-ci.com/feram18/led-stock-ticker.svg?branch=master)](https://travis-ci.com/feram18/led-stock-ticker)
+![GitHub](https://img.shields.io/github/license/feram18/led-stock-ticker)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/feram18/led-stock-ticker)
+![GitHub Release Date](https://img.shields.io/github/release-date/feram18/led-stock-ticker)
+
+An LED display for real-time prices of stocks and cryptocurrencies. Requires a Raspberry Pi, and a 64×32 LED board 
+connected to the Raspberry Pi via the GPIO pins.
+
+## Table of Contents
+* [Features](#features)
+* [Installation](#installation)
+  * [Hardware](#hardware)
+  * [Software](#software)
+* [Usage](#usage)
+  * [Configuration](#configuration)
+  * [Flags](#flags)
+* [Roadmap](#roadmap)
+* [Sources](#sources)
+* [Disclaimer](#disclaimer)
+* [License](#license)
 
 ## Features
-### Real-time prices
-
-It can display the real-time prices (refreshing every 90 seconds) of your selected stocks and cryptocurrencies.
-
-![Demo-Image](assets/img/LED-Stock-Ticker-Demo.gif)
+- **Real-time prices**. Display the real-time prices of your preferred stocks and cryptocurrencies.
+- **Market status indicator**. Displays the stock market's current status (Located to the left of the ticker).
+- **Ticker chart**. Chart with ticker's value change over the past day.
+- **Currency selection**. You can select the currency you would like to see prices on. Check the list of supported 
+currencies [here](config/README.md).
 
 ## Installation
 ### Hardware
-
 Materials needed:
-- Raspberry Pi
-- Adafruit RGB Matrix HAT or Bonnet
-- 64x32 RGB LED matrix
-
+- [Raspberry Pi]
+- Adafruit RGB Matrix [HAT] or [Bonnet]
+- [64x32] RGB LED matrix
 
 ### Software
-
 **Pre-requisites**
 
 You'll need to make sure Git and PIP are installed on your Raspberry Pi.
@@ -33,7 +49,7 @@ sudo apt-get install git python-pip
 **Installation**
 
 First, clone this repository. Using the `--recursive` flag will install the rgbmatrix binaries, which come from
-hzeller's [rpi-rgb-led-matrix] library. This library is being used to render the data onto the LED matrix.
+hzeller's [rpi-rgb-led-matrix] library. This library is used to render the data onto the LED matrix.
 
 ```sh
 git clone --recursive https://github.com/feram18/led-stock-ticker.git
@@ -42,39 +58,48 @@ chmod +x install.sh
 ./install.sh
 ```
 
-Secondly, you'll need to create an account at [Twelve Data] to get your free API key. 
+**Updating**
+
+From the `led-stock-ticker` directory, run the update script. The script will also take care of updating all 
+dependencies.
+
+```sh
+./update.sh
+```
 
 ## Usage
-From the `/led-stock-ticker` directory run the following command (include additional [flags](#Flags) as necessary):
-
-`sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2 --led-cols=64`.
-
-Running as root is necessary in order for the matrix to render.
-
-
 ### Configuration
-A default `config.json.example` file is included for reference. 
-Edit the generated `config.json` file to add your API key, and other default values as desired.
+A `config.json.example` file is included for reference in the `config` directory.  After installation has been 
+completed, run the configuration script to set your preferences.
+
+```sh
+./config.py
 ```
-  "api_key"         String    An API key is required for the application to work.
-                              You can get a free API key at twelvedata.com.
 
-  "tickers"         Array     Pass an array of tickers. Maximum limit of 8.
-                              Example: ["TSLA", "AMZN", "MSFT"].
-                              When adding a cryptocurrency, add the currency next to the symbol.
-                              Example: "BTC/USD", "ETH/EUR".
+The `config.json` file follows the following format:
+```
+  "tickers":                      Options for stocks and cryptocurrencies preferences
+    "stocks"            Array     Pass an array of stock symbols.
+                                  Example: ["TSLA", "AMZN", "MSFT"]
+    "cryptos"           Array     Pass an array of cryptocurrency symbols.
+                                  Example: ["BTC", "ETH", "LTC"]
+  "currency"            String    Currency in which you would like to see the prices displayed.
+                                  Example: "EUR" (Default: USD).
+  "clock_format"        String    Sets the preferred clock format.
+                                  Accepted values are "12h" and "24h" (Default: 12h).
+```
 
-  "country"         String    Country name of the stocks. Example: "US"/"United States"
-  "currency"        String    Currency in which you would like to see the prices displayed.
-                              Example: "USD", "MXN", "EUR"
-  "timezone"        String    Timezone where you are located. Example: "UTC", "EST"
-  "time_format"     String    Sets the preferred hour format for displaying time.
-                              Accepted values are "12h" or "24h".
+Additionally, you will want to ensure the timezone on your Raspberry Pi is correct. It will often have London by 
+default, but can be changed through the Raspberry Pi configuration tool.
+
+```sh
+sudo raspi-config
 ```
 
 ### Flags
-You can configure your LED matrix with the same flags used in the [rpi-rgb-led-matrix] library. 
-More information on these arguments can be found in the library documentation.
+The LED matrix is configured with the flags provided by the [rpi-rgb-led-matrix] library. 
+More details on these flags/arguments can be found in the library's documentation.
+
 ```
 --led-rows                Display rows. 16 for 16x32, 32 for 32x32. (Default: 32)
 --led-cols                Panel columns. Typically 32 or 64. (Default: 32)
@@ -94,31 +119,42 @@ More information on these arguments can be found in the library documentation.
 --led-multiplexing        Multiplexing type: 0 = direct; 1 = strip; 2 = checker; 3 = spiral; 4 = Z-strip; 5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven. (Default: 0)
 ```
 
+### Execution
+From the `led-stock-ticker` directory run the command
+
+```sh
+sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2 --led-cols=64
+```
+You can modify and include [flags](#Flags) as necessary. Running as root is necessary in order for the matrix to render.
+
+### Debug
+If you are experiencing issues, you can activate debug mode by running the software and appending the `--debug` flag to 
+your execution command. This will enable debugging messages to be written to the `led-stock-ticker.log` file.
+
 ## Roadmap
+- [X] Support currency selection
+- [X] Display ticker charts
+- [X] Create configuration script
 - [ ] Support different matrix dimensions
-- [ ] Improve visuals and layout configuration
-- [ ] Create configuration script
+  -  [ ] 32×32
 
 ## Sources
-This project relies on [Twelve Data]'s API to retrieve the stock prices, and the [rpi-rgb-led-matrix] library to make 
-everything work with the LED board, and is included into this repository as a submodule, so when cloning the repository 
-it is necessary to use the `--recursive` flag.
+This project relies on the following:
+- [YFinance] library to retrieve the stock/cryptocurrency data.
+- [Exchange Rates] API for currency exchanges.
+- [rpi-rgb-led-matrix] library to make everything work with the LED board. It is included into this repository as a 
+  submodule, so when cloning the repository it is necessary to use the `--recursive` flag.
 
 ## Disclaimer
-This application is dependent on [Twelve Data]'s API relaying accurate and updated data.
-
-## Limitations
-[Twelve Data]'s Basic (free) tier only allows for 8 API requests per minute, with a maximum of 800 API requests a day.
-Assuming that the board will be in use during regular trading hours (9:30 AM to 4:00 PM EST - U.S. stock market), the 
-software will calculate an appropriate refresh rate to ensure the API's request limit is not exceeded while real-time 
-prices are available (regular stock market trading hours).
-
-The refresh rate will depend on (1) the time you initiate the software, and (2) the number of symbols you have indicated
-on your `config.json` file. For example, if you start the software at 09:30AM, and there is only one symbol, the price 
-will be updated every ~30 seconds, whereas if you have eight symbols, the prices will be updated every ~4 minutes.
+This application is dependent on the [YFinance] library, and [Exchange Rates] API relaying accurate and updated data.
 
 ## License
 GNU General Public License v3.0
 
-[Twelve Data]: <https://twelvedata.com>
+[Raspberry Pi]: <https://www.raspberrypi.org/products/>
+[64x32]: <https://www.adafruit.com/product/2279>
+[HAT]: <https://www.adafruit.com/product/2345>
+[Bonnet]: <https://www.adafruit.com/product/3211>
+[YFinance]: <https://github.com/ranaroussi/yfinance>
+[Exchange Rates]: <https://exchangerate.host/>
 [rpi-rgb-led-matrix]: <https://github.com/hzeller/rpi-rgb-led-matrix>
