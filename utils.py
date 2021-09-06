@@ -333,41 +333,41 @@ def args() -> Namespace:
     return parser.parse_args()
 
 
-def led_matrix_options(args: Namespace) -> RGBMatrixOptions:
+def led_matrix_options(args_: Namespace) -> RGBMatrixOptions:
     """
     Set RGBMatrixOptions from parsed arguments.
-    :param args: (argsparse.Namespace) Parsed arguments from CLI
+    :param args_: (argsparse.Namespace) Parsed arguments from CLI
     :return: options: (rgbmatrix.RGBMatrixOptions) RGBMatrixOptions instance
     :exception AttributeError: If attribute is not found
     """
     options = RGBMatrixOptions()
 
-    if args.led_gpio_mapping is not None:
-        options.hardware_mapping = args.led_gpio_mapping
+    if args_.led_gpio_mapping is not None:
+        options.hardware_mapping = args_.led_gpio_mapping
 
-    options.rows = args.led_rows
-    options.cols = args.led_cols
-    options.chain_length = args.led_chain
-    options.parallel = args.led_parallel
-    options.row_address_type = args.led_row_addr_type
-    options.multiplexing = args.led_multiplexing
-    options.pwm_bits = args.led_pwm_bits
-    options.brightness = args.led_brightness
-    options.pwm_lsb_nanoseconds = args.led_pwm_lsb_nanoseconds
-    options.led_rgb_sequence = args.led_rgb_sequence
+    options.rows = args_.led_rows
+    options.cols = args_.led_cols
+    options.chain_length = args_.led_chain
+    options.parallel = args_.led_parallel
+    options.row_address_type = args_.led_row_addr_type
+    options.multiplexing = args_.led_multiplexing
+    options.pwm_bits = args_.led_pwm_bits
+    options.brightness = args_.led_brightness
+    options.pwm_lsb_nanoseconds = args_.led_pwm_lsb_nanoseconds
+    options.led_rgb_sequence = args_.led_rgb_sequence
     try:
-        options.pixel_mapper_config = args.led_pixel_mapper
+        options.pixel_mapper_config = args_.led_pixel_mapper
     except AttributeError:
         logging.warning('Your compiled RGB Matrix Library is out of date. '
                         'The --led-pixel-mapper argument will not work until it is updated.')
 
-    if args.led_show_refresh:
+    if args_.led_show_refresh:
         options.show_refresh_rate = 1
 
-    if args.led_slowdown_gpio is not None:
-        options.gpio_slowdown = args.led_slowdown_gpio
+    if args_.led_slowdown_gpio is not None:
+        options.gpio_slowdown = args_.led_slowdown_gpio
 
-    if args.led_no_hardware_pulse:
+    if args_.led_no_hardware_pulse:
         options.disable_hardware_pulsing = True
 
     return options
