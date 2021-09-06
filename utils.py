@@ -224,9 +224,9 @@ def holiday() -> bool:
     Determine if today is an NYSE-observed US federal holiday.
     :return: holiday: (bool)
     """
-    today = datetime.today()
-    sdt = today.replace(month=1, day=1)  # Start Date
-    edt = today.replace(month=12, day=31)  # End Date
+    today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    sdt = today.replace(month=1, day=1)  # Year start date
+    edt = today.replace(month=12, day=31)  # Year end date
     holidays = MarketHolidayCalendar().holidays(start=sdt, end=edt).to_pydatetime()
     return today in holidays
 
