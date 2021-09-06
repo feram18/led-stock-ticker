@@ -3,22 +3,19 @@
 
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Installs dependencies
-installDependencies(){
-  printf "Installing dependencies...\n"
-  pip3 install -r requirements.txt
-}
-
 # Cleans up & updates repository
 updateRepository() {
-  printf "\nUpdating repository...\n"
+  printf "Updating repository...\n"
   git reset --hard
   git checkout master
   git fetch origin --prune
   git pull
+}
 
-  # Allow scripts to be easily executed next time
-  chmod +x install.sh update.sh config.py
+# Installs dependencies
+installDependencies(){
+  printf "\nInstalling dependencies...\n"
+  python3 -m pip install -r requirements.txt
 }
 
 # Creates configuration file (config.json)
@@ -44,9 +41,13 @@ checkConfigFile() {
 }
 
 main() {
-  installDependencies
   updateRepository
+  installDependencies
   checkConfigFile
+
+  # Allow scripts to be easily executed next time
+  chmod +x install.sh update.sh config.py
+
   echo "$(tput setaf 2)Update completed$(tput setaf 7)"
 }
 
