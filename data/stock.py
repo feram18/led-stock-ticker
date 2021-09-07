@@ -7,6 +7,7 @@ from PIL import Image, UnidentifiedImageError
 from data.ticker import Ticker
 from data.status import Status
 
+
 class Stock(Ticker):
     """
     Class to represent a Ticker object
