@@ -34,7 +34,7 @@ class Data:
         self.tickers = []
 
         self.total_valid_tickers = len(self.config.stocks + self.config.cryptos)
-        threads = min([self.total_valid_tickers, multitasking.cpu_count() * 2])
+        threads = min([self.total_valid_tickers, multitasking.cpu_count()*2])
         multitasking.set_max_threads(threads)
         self.updated_tickers = 0
 
