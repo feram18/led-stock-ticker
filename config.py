@@ -96,7 +96,7 @@ def set_data(config: dict, current_config: dict) -> dict:
     return config
 
 
-if __name__ == '__main__':
+def main():
     try:
         config_json = read_json(CONFIG_FILE)
         config_json = set_data(config_json, get_current_preferences())
@@ -104,3 +104,7 @@ if __name__ == '__main__':
         questionary.print('\u2705 Setup is complete!', style='bold fg:green')
     except (KeyboardInterrupt, AttributeError):
         SystemExit('Setup cancelled. Setting default values.')
+
+
+if __name__ == '__main__':
+    main()
