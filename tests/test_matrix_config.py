@@ -6,7 +6,7 @@ from constants import DEFAULT_STOCKS, DEFAULT_CRYPTOS, TWELVE_HOURS_FORMAT, TWEN
 
 
 @unittest.skipUnless(sys.platform.startswith('linux'), 'Requires Linux')
-class TestConfig(TestCase):
+class TestMatrixConfig(TestCase):
     def setUp(self) -> None:
         self.config = MatrixConfig(64, 32)
 
