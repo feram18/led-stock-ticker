@@ -82,7 +82,7 @@ class MatrixConfig:
         """
         Determine if stocks on config are an instance of a list (several tickers) or a single instance of a string
         (i.e. One tickers). Else, set stocks list to default values (TSLA, AMZN, MSFT).
-        :param stocks: (list or str) List of stocks to validate
+        :param stocks: (List[str] or str) List of stocks to validate
         :return result: (list) Validated list of stocks
         """
         if isinstance(stocks, str):
