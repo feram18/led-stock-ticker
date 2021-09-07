@@ -41,7 +41,6 @@ def write_json(filename: str, data: dict):
     with open(filename, 'w') as json_file:
         logging.debug(f'Writing JSON to file at {filename}')
         json.dump(data, json_file, indent=4)
-    json_file.close()
 
 
 def text_offscreen(string: str, canvas_width: int, font_width: int) -> bool:
