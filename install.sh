@@ -4,7 +4,7 @@
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Installs rpi-rgb-led-matrix library
-installMatrixLibrary() {
+function installMatrixLibrary() {
   printf "\nInstalling rpi-rgb-led-matrix library...\n"
   cd "${ROOT_DIR}/rpi-rgb-led-matrix/" || exit
   make build-python PYTHON="$(which python3)"
@@ -14,7 +14,7 @@ installMatrixLibrary() {
   cd "${ROOT_DIR}" || exit # Back to repo's root directory
 }
 
-main() {
+function main() {
   # Print welcome banner
   echo "$(tput setaf 5)___________________________________________________________________"
   echo "$(tput setaf 5)   __   _______    ______           __     _______     __          "
