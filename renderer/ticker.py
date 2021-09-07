@@ -232,8 +232,8 @@ class TickerRenderer:
             if max_p == min_p:
                 prev_close_y = self.chart_y
             else:
-                prev_close_y = int(self.chart_y + (max_p - self.prev_close_price) *
-                                   ((self.canvas.height - self.chart_y) / (max_p - min_p)))
+                prev_close_y = int(self.chart_y + (max_p-self.prev_close_price) *
+                                   ((self.canvas.height-self.chart_y) / (max_p-min_p)))
 
         for x in range(self.canvas.width):
             p = self.chart_prices[int(x * x_inc)]
