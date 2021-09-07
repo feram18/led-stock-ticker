@@ -9,6 +9,13 @@
 An LED display for real-time prices of stocks and cryptocurrencies. Requires a Raspberry Pi, and a 64×32 LED board 
 connected to the Raspberry Pi via the GPIO pins.
 
+<p align="center">
+  <img src="assets/img/led-stock-ticker_demo(v0-0-1).gif" />
+</p>
+<p align = "center">
+Version 0.0.1 Demo
+</p>
+
 ## Table of Contents
 * [Features](#features)
 * [Installation](#installation)
