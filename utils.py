@@ -4,6 +4,7 @@ import argparse
 import logging
 import json
 import time
+import os
 import requests
 from rgbmatrix import RGBMatrixOptions
 from rgbmatrix.graphics import Font
@@ -21,15 +22,13 @@ def read_json(filename: str) -> dict:
     Read from JSON file and return it as a dictionary
     :param filename: (str) JSON file
     :return: json: (dict) JSON file as a dict
-    :exception FileNotFoundError: If file at given path cannot be found
     """
-    try:
+    if os.path.isfile(filename):
         with open(filename, 'r') as json_file:
             logging.debug(f'Reading JSON file at {filename}')
             return json.load(json_file)
-    except FileNotFoundError:
-        logging.error(f'Could not find file at {filename}')
-        raise
+    else:
+        logging.error(f"Couldn't find file at {filename}")
 
 
 def write_json(filename: str, data: dict):
@@ -51,7 +50,7 @@ def text_offscreen(string: str, canvas_width: int, font_width: int) -> bool:
     :param font_width: (int) Font's width
     :return: offscreen: (bool)
     """
-    return len(string) > canvas_width / font_width
+    return len(string) > canvas_width/font_width
 
 
 def align_text_center(string: str,
@@ -67,29 +66,21 @@ def align_text_center(string: str,
     :param font_width: (int) Font's width
     :param font_height: (int) Font's height
     :return: (x, y): (int, int) X, Y coordinates
-    :exception: TypeError: If incorrect data type is provided as an argument
     """
-    try:
-        x = abs(canvas_width // 2 - (len(string) * font_width) // 2)
-        y = abs(canvas_height // 2 + font_height // 2)
-    except TypeError:
-        x, y = 0, 0
+    x = abs(canvas_width//2 - (len(string)*font_width)//2)
+    y = abs(canvas_height//2 + font_height//2)
     return x, y
 
 
 def align_text_right(string: str, canvas_width: int, font_width: int) -> int:
     """
-    Calculates x-coord to align text to right of canvas.
+    Calculate x-coord to align text to right of canvas.
     :param string: (str) String of text to be displayed
     :param canvas_width: (int) Canvas' width
     :param font_width: (int) Font's width
     :return: x_coord: (int) X coordinate
-    :exception TypeError: If incorrect data type is provided as an argument
     """
-    try:
-        return canvas_width - (len(string) * font_width)
-    except TypeError:
-        return 0
+    return canvas_width - (len(string)*font_width)
 
 
 def center_image(canvas_width: int = 0,
@@ -103,13 +94,9 @@ def center_image(canvas_width: int = 0,
     :param image_width: (int) Image width
     :param image_height: (int) Image height
     :return: (x, y): (int, int) X, Y coordinates
-    :exception TypeError: If incorrect data type is provided as an argument
     """
-    try:
-        x = abs(canvas_width / 2 - image_width // 2)
-        y = abs(canvas_height / 2 - image_height // 2)
-    except TypeError:
-        x, y = 0, 0
+    x = abs(canvas_width//2 - image_width//2)
+    y = abs(canvas_height//2 - image_height//2)
     return x, y
 
 
@@ -121,52 +108,45 @@ def scroll_text(canvas_width: int, text_x: int, curr_pos: int) -> int:
     :param curr_pos: (int) Text's current x coordinate
     :return: x_coord: (int) X coordinate to displace to
     """
-    if text_x + curr_pos < 1:
+    if text_x+curr_pos < 1:
         return canvas_width
     else:
         return text_x - 1
 
 
-def load_font(path: str) -> Font:
+def load_font(filename: str) -> Font:
     """
     Return Font object from given path.
-    :param path: (str) Location of font file
+    :param filename: (str) Location of font file
     :return: font: (rgbmatrix.graphics.Font) Font object
-    :exception FileNotFoundError: If file at given path cannot be found
     """
     font = Font()
-    try:
-        font.LoadFont(path)
-    except (FileNotFoundError, Exception):
-        logging.warning(f"Couldn't load font {path}. Setting font to default 4x6.")
+    if os.path.isfile(filename):
+        font.LoadFont(filename)
+    else:
+        logging.warning(f"Couldn't load font {filename}. Setting font to default 4x6.")
         font.LoadFont(DEFAULT_FONT_PATH)
     return font
 
 
 def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
     """
-    Return Image object from given file
+    Return Image object from given file.
     :param filename: (str) Location of image file
     :param size: (int, int) Maximum width and height of image
     :return: image: (PIL.Image) Image file
-    :exception TypeError: If incorrect data type is provided for size argument
-    :exception FileNotFoundError: If file at given path cannot be found
     """
-    try:
+    if os.path.isfile(filename):
         image = Image.open(filename)
         image.thumbnail(size, Image.ANTIALIAS)
         return image.convert('RGB')
-    except TypeError:
-        image = Image.open(filename)
-        image.thumbnail((32, 32), Image.ANTIALIAS)
-        return image.convert('RGB')
-    except FileNotFoundError:
+    else:
         logging.error(f"Couldn't find image {filename}")
 
 
 def convert_currency(from_curr: str, to_curr: str, amount: float) -> float:
     """
-    Convert a value from USD to user-defined currency.
+    Convert a value from a currency to another.
     :param from_curr: (str) Currency to convert from
     :param to_curr: (str) Currency to convert to
     :param amount: (float) Amount to convert
@@ -200,7 +180,7 @@ def market_closed() -> bool:
 def after_hours() -> bool:
     """
     Determine if it current time is after hours.
-    i.e. Current time is not between 09:30 AM and 04:00 PM EST range (Regular stock market hours), or it is a weekend.
+    i.e. Current time is not between 09:30 AM and 04:00 PM EST (Regular stock market hours), or it is a weekend.
     :return: after_hours: (bool)
     """
     current_time = datetime.now(timezone(EASTERN_TZ))  # Current time in EST
