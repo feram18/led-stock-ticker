@@ -1,6 +1,10 @@
 import unittest
+import logging
+import time
 from unittest import TestCase
-from data.ticker import *
+from data.ticker import Ticker
+from data.status import Status
+from constants import UPDATE_RATE
 
 
 class TestTicker(TestCase):
