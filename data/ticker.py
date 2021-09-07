@@ -73,11 +73,11 @@ class Ticker:
         except Timeout:
             return Status.NETWORK_ERROR
 
-    def update(self, force=False) -> Status:
+    def update(self, force: bool = False) -> Status:
         """
         Update only the data that may have changed since last update
         i.e. Exclude the ticker's name, previous day close price, and logo image.
-        :param force: (boolean default=False) Force update
+        :param force: (bool default=False) Force update
         :return status: (data.Status) Update status
         :exception Timeout: If the request timed out
         """
@@ -158,7 +158,7 @@ class Ticker:
         :exception ZeroDivisionError: If previous day's close price is zero.
         """
         try:
-            return f'{100 * (self.value_change / abs(self.prev_close_price)):.2f}%'
+            return f'{100 * (self.value_change/abs(self.prev_close_price)):.2f}%'
         except ZeroDivisionError:
             self.valid = False
             return '0.00%'
