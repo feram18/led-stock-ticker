@@ -60,4 +60,4 @@ class Loading:
         return DrawText(self.canvas, self.font, self.version_x, self.version_y, self.color, __version__)
 
     def render_logo(self):
-        return self.canvas.SetImage(self.loading_image, self.loading_x_offset, self.loading_y_offset - 3)
+        return self.canvas.SetImage(self.loading_image, self.loading_x_offset, self.loading_y_offset - 2)
