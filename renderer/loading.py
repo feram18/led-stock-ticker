@@ -15,11 +15,11 @@ class Loading:
 
     Attributes:
         canvas (rgbmatrix.Canvas):              Canvas associated with matrix
-        loading_image (PIL.Image):                       Software logo image
+        loading_image (PIL.Image):              Loading image
         color (rgbmatrix.graphics.Color):       Color instance
         font (rgbmatrix.graphics.Font):         Font instance
-        loading_x_offset (int):                    Logo image x-coord
-        loading_y_offset (int):                    Logo image y-coord
+        loading_x_offset (int):                 Loading image x-coord
+        loading_y_offset (int):                 Loading image y-coord
         version_x (int):                        Version text x-coord
         version_y (int):                        Version text y-coord
     """
