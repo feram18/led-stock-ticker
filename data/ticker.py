@@ -118,7 +118,7 @@ class Ticker:
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
         try:
-            current_price = self.data.info["regularMarketPrice"]
+            current_price = self.data.info['regularMarketPrice']
             if self.currency != 'USD':
                 current_price = convert_currency('USD', self.currency, current_price)
             return float(f'{current_price:.2f}')
