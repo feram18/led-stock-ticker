@@ -15,7 +15,7 @@ class Loading:
 
     Attributes:
         canvas (rgbmatrix.Canvas):              Canvas associated with matrix
-        logo(PIL.Image):                        Software logo image
+        logo (PIL.Image):                       Software logo image
         color (rgbmatrix.graphics.Color):       Color instance
         font (rgbmatrix.graphics.Font):         Font instance
         logo_x_offset (int):                    Logo image x-coord
@@ -60,4 +60,4 @@ class Loading:
         return DrawText(self.canvas, self.font, self.version_x, self.version_y, self.color, __version__)
 
     def render_logo(self):
-        return self.canvas.SetImage(self.logo, self.logo_x_offset, self.logo_y_offset)
+        return self.canvas.SetImage(self.logo, self.logo_x_offset, self.logo_y_offset - 3)
