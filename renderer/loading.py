@@ -1,6 +1,6 @@
 from rgbmatrix.graphics import DrawText
 from version import __version__
-from constants import LOGO_IMAGE
+from constants import LOADING_IMAGE
 from utils import align_text_center, load_font, load_image, center_image
 from data.color import Color
 
@@ -30,7 +30,7 @@ class Loading:
         self.canvas = matrix.CreateFrameCanvas()
 
         # Load logo
-        self.logo = load_image(LOGO_IMAGE, (28, 28))
+        self.logo = load_image(LOADING_IMAGE, (28, 28))
 
         # Load color
         self.color = Color.ORANGE
