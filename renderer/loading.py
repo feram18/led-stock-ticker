@@ -15,11 +15,11 @@ class Loading:
 
     Attributes:
         canvas (rgbmatrix.Canvas):              Canvas associated with matrix
-        logo (PIL.Image):                       Software logo image
+        loading_image (PIL.Image):                       Software logo image
         color (rgbmatrix.graphics.Color):       Color instance
         font (rgbmatrix.graphics.Font):         Font instance
-        logo_x_offset (int):                    Logo image x-coord
-        logo_y_offset (int):                    Logo image y-coord
+        loading_x_offset (int):                    Logo image x-coord
+        loading_y_offset (int):                    Logo image y-coord
         version_x (int):                        Version text x-coord
         version_y (int):                        Version text y-coord
     """
@@ -29,8 +29,8 @@ class Loading:
         self.config = config
         self.canvas = matrix.CreateFrameCanvas()
 
-        # Load logo
-        self.logo = load_image(LOADING_IMAGE, (28, 28))
+        # Loading image
+        self.loading_image = load_image(LOADING_IMAGE, (28, 28))
 
         # Load color
         self.color = Color.ORANGE
@@ -38,10 +38,10 @@ class Loading:
         # Load font
         self.font = load_font(self.config.layout['fonts']['4x6'])
 
-        self.logo_x_offset, self.logo_y_offset = center_image(self.canvas.width,
-                                                              self.canvas.height,
-                                                              self.logo.size[0],
-                                                              self.logo.size[1])
+        self.loading_x_offset, self.loading_y_offset = center_image(self.canvas.width,
+                                                                    self.canvas.height,
+                                                                    self.loading_image.size[0],
+                                                                    self.loading_image.size[1])
 
         self.version_x = align_text_center(string=__version__,
                                            canvas_width=self.canvas.width,
@@ -60,4 +60,4 @@ class Loading:
         return DrawText(self.canvas, self.font, self.version_x, self.version_y, self.color, __version__)
 
     def render_logo(self):
-        return self.canvas.SetImage(self.logo, self.logo_x_offset, self.logo_y_offset - 3)
+        return self.canvas.SetImage(self.loading_image, self.loading_x_offset, self.loading_y_offset - 3)
