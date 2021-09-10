@@ -3,7 +3,14 @@
 
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Cleans up & updates repository
+# Cleans up repository directory
+function clean() {
+  rm -f led-stock-ticker.log  # Log file
+  sudo rm -rf "*/__pycache__"  # pycache
+  sudo rm -rf "__pycache__"
+}
+
+# Updates repository
 function updateRepository() {
   printf "Updating repository...\n"
   git reset --hard
@@ -29,7 +36,8 @@ function createConfigFile() {
 # Checks if configuration file exists/requires update
 function checkConfigFile() {
   cd "${ROOT_DIR}/config/" || exit
-  if [[ ! -e config.json ]]; then # config.json file does not exist
+  if [[ ! -e config.json ]]; then
+    # config.json file does not exist
     createConfigFile
   elif [[ -e config.json && config.json.example -nt config.json ]];then
     # config.json file exists, but format has changed
@@ -41,6 +49,7 @@ function checkConfigFile() {
 }
 
 function main() {
+  clean
   updateRepository
   installDependencies
   checkConfigFile
