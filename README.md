@@ -10,10 +10,9 @@ An LED display for real-time prices of stocks and cryptocurrencies. Requires a R
 connected to the Raspberry Pi via the GPIO pins.
 
 <p align="center">
-  <img src="assets/img/led-stock-ticker_demo(v0-0-1).gif" />
-</p>
-<p align = "center">
-Version 0.0.1 Demo
+  <img src="assets/img/led-stock-ticker_demo(v0-1-0).gif" title="LED-Stock-Ticker Demo #1"/><br>
+  <br><img src="assets/img/led-stock-ticker_demo(v0-1-0)-2.gif" title="LED-Stock-Ticker Demo #2"/><br>  
+  Version 0.1.0 Demo
 </p>
 
 ## Table of Contents
@@ -86,13 +85,13 @@ completed, run the configuration script to set your preferences.
 The `config.json` file follows the following format:
 ```
   "tickers":                      Options for stocks and cryptocurrencies preferences
-    "stocks"            Array     Pass an array of stock symbols.
+    "stocks"          Array       Pass an array of stock symbols.
                                   Example: ["TSLA", "AMZN", "MSFT"]
-    "cryptos"           Array     Pass an array of cryptocurrency symbols.
+    "cryptos"         Array       Pass an array of cryptocurrency symbols.
                                   Example: ["BTC", "ETH", "LTC"]
-  "currency"            String    Currency in which you would like to see the prices displayed.
+  "currency"          String      Currency in which you would like to see the prices displayed.
                                   Example: "EUR" (Default: USD).
-  "clock_format"        String    Sets the preferred clock format.
+  "clock_format"      String      Sets the preferred clock format.
                                   Accepted values are "12h" and "24h" (Default: 12h).
 ```
 
@@ -142,6 +141,7 @@ your execution command. This will enable debugging messages to be written to the
 - [X] Support currency selection
 - [X] Display ticker charts
 - [X] Create configuration script
+- [ ] Add board customization options
 - [ ] Support different matrix dimensions
   -  [ ] 32×32
 
