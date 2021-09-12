@@ -12,7 +12,7 @@ connected to the Raspberry Pi via the GPIO pins.
 <p align="center">
   <img src="assets/img/led-stock-ticker_demo(v0-1-0).gif" title="LED-Stock-Ticker Demo #1"/><br>
   <br><img src="assets/img/led-stock-ticker_demo(v0-1-0)-2.gif" title="LED-Stock-Ticker Demo #2"/><br>  
-  Version 0.1.0 Demo
+  Version 0.1.0
 </p>
 
 ## Table of Contents
@@ -23,6 +23,8 @@ connected to the Raspberry Pi via the GPIO pins.
 * [Usage](#usage)
   * [Configuration](#configuration)
   * [Flags](#flags)
+  * [Execution](#execution)
+  * [Debug](#debug)
 * [Roadmap](#roadmap)
 * [Sources](#sources)
 * [Disclaimer](#disclaimer)
