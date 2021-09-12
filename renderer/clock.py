@@ -62,7 +62,7 @@ class ClockRenderer:
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_date(self):
-        return DrawText(self.canvas, self.date_font, self.date_x, self.date_y, self.date_color, self.date)
+        DrawText(self.canvas, self.date_font, self.date_x, self.date_y, self.date_color, self.date)
 
     def render_time(self):
-        return DrawText(self.canvas, self.time_font, self.time_x, self.time_y, self.time_color, self.time)
+        DrawText(self.canvas, self.time_font, self.time_x, self.time_y, self.time_color, self.time)

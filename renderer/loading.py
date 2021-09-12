@@ -57,7 +57,7 @@ class Loading:
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_version(self):
-        return DrawText(self.canvas, self.font, self.version_x, self.version_y, self.color, __version__)
+        DrawText(self.canvas, self.font, self.version_x, self.version_y, self.color, __version__)
 
     def render_logo(self):
-        return self.canvas.SetImage(self.loading_image, self.loading_x_offset, self.loading_y_offset - 2)
+        self.canvas.SetImage(self.loading_image, self.loading_x_offset, self.loading_y_offset - 2)

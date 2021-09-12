@@ -52,7 +52,7 @@ class ErrorRenderer:
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_error_msg(self):
-        return DrawText(self.canvas, self.font, self.msg_x, self.msg_y, self.color, self.error_msg)
+        DrawText(self.canvas, self.font, self.msg_x, self.msg_y, self.color, self.error_msg)
 
     def render_image(self):
-        return self.canvas.SetImage(self.error_image, self.image_x_offset, self.image_y_offset)
+        self.canvas.SetImage(self.error_image, self.image_x_offset, self.image_y_offset)

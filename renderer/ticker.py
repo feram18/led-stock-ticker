@@ -186,39 +186,39 @@ class TickerRenderer:
             DrawLine(self.canvas, i, 6, i, 11, self.market_status_color)
 
     def render_full_name(self):
-        return DrawText(self.canvas,
-                        self.primary_font,
-                        self.name_x,
-                        self.name_y,
-                        self.text_color,
-                        self.name)
+        DrawText(self.canvas,
+                 self.primary_font,
+                 self.name_x,
+                 self.name_y,
+                 self.text_color,
+                 self.name)
 
     def render_ticker(self):
-        return DrawText(self.canvas,
-                        self.large_font,
-                        self.ticker_x,
-                        self.ticker_y,
-                        self.text_color,
-                        self.ticker_)
+        DrawText(self.canvas,
+                 self.large_font,
+                 self.ticker_x,
+                 self.ticker_y,
+                 self.text_color,
+                 self.ticker_)
 
     def render_price(self):
-        return DrawText(self.canvas,
-                        self.secondary_font,
-                        self.price_x,
-                        self.price_y,
-                        self.text_color,
-                        self.price)
+        DrawText(self.canvas,
+                 self.secondary_font,
+                 self.price_x,
+                 self.price_y,
+                 self.text_color,
+                 self.price)
 
     def render_value_change(self):
-        return DrawText(self.canvas,
-                        self.secondary_font,
-                        self.value_change_x,
-                        self.value_change_y,
-                        self.value_change_color,
-                        self.value_change)
+        DrawText(self.canvas,
+                 self.secondary_font,
+                 self.value_change_x,
+                 self.value_change_y,
+                 self.value_change_color,
+                 self.value_change)
 
     def render_logo(self):
-        return self.canvas.SetImage(self.logo, self.logo_x_offset, self.logo_y_offset)
+        self.canvas.SetImage(self.logo, self.logo_x_offset, self.logo_y_offset)
 
     def render_chart(self):
         min_p, max_p = min(self.chart_prices), max(self.chart_prices)
@@ -232,8 +232,8 @@ class TickerRenderer:
             if max_p == min_p:
                 prev_close_y = self.chart_y
             else:
-                prev_close_y = int(self.chart_y + (max_p-self.prev_close_price) *
-                                   ((self.canvas.height-self.chart_y) / (max_p-min_p)))
+                prev_close_y = int(self.chart_y + (max_p - self.prev_close_price) *
+                                   ((self.canvas.height - self.chart_y) / (max_p - min_p)))
 
         for x in range(self.canvas.width):
             p = self.chart_prices[int(x * x_inc)]
