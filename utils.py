@@ -13,6 +13,7 @@ from argparse import Namespace
 from datetime import datetime
 from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
+from typing import Optional
 from data.market_holiday_calendar import MarketHolidayCalendar
 from constants import DEFAULT_FONT_PATH, EASTERN_TZ, NETWORK_RETRY, CURRENCY_EXCHANGE_URL
 
@@ -116,7 +117,7 @@ def scroll_text(canvas_width: int, text_x: int, curr_pos: int) -> int:
 
 def load_font(filename: str) -> Font:
     """
-    Return Font object from given path.
+    Return Font object from given path. If file at path does not exist, set default 4x6 font.
     :param filename: (str) Location of font file
     :return: font: (rgbmatrix.graphics.Font) Font object
     """
@@ -129,7 +130,7 @@ def load_font(filename: str) -> Font:
     return font
 
 
-def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
+def load_image(filename: str, size: (int, int) = (32, 32)) -> Optional[Image]:
     """
     Return Image object from given file.
     :param filename: (str) Location of image file
@@ -137,16 +138,18 @@ def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
     :return: image: (PIL.Image) Image file
     """
     if os.path.isfile(filename):
-        image = Image.open(filename).convert('RGB')
-        image.thumbnail(size, Image.ANTIALIAS)
-        return image
+        with Image.open(filename) as image:
+            image.convert('RGB')
+            image.thumbnail(size, Image.ANTIALIAS)
+            return image
     else:
         logging.error(f"Couldn't find image {filename}")
+        return None
 
 
 def convert_currency(from_curr: str, to_curr: str, amount: float) -> float:
     """
-    Convert a value from a currency to another.
+    Convert a value from one currency to another.
     :param from_curr: (str) Currency to convert from
     :param to_curr: (str) Currency to convert to
     :param amount: (float) Amount to convert
