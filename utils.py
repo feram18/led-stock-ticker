@@ -13,7 +13,6 @@ from PIL import Image
 from datetime import datetime
 from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
-from typing import Optional
 from data.market_holiday_calendar import MarketHolidayCalendar
 
 
@@ -129,7 +128,7 @@ def load_font(filename: str) -> Font:
     return font
 
 
-def load_image(filename: str, size: (int, int) = (32, 32)) -> Optional[Image]:
+def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
     """
     Return Image object from given file.
     :param filename: (str) Location of image file
