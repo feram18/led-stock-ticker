@@ -1,5 +1,6 @@
 import sys
 import logging
+from logging.handlers import RotatingFileHandler
 from rgbmatrix import RGBMatrix
 from utils import args, led_matrix_options
 from version import __version__
@@ -35,11 +36,19 @@ if __name__ == '__main__':
         LOG_LEVEL = logging.WARNING
 
     # Set logger configuration
+    rfh = RotatingFileHandler(filename='led-stock-ticker.log',
+                              mode='a',
+                              maxBytes=5 * 1024 * 1024,
+                              backupCount=5)
+
     logging.basicConfig(filename='led-stock-ticker.log',
                         filemode='w',
                         format='%(asctime)s %(levelname)s: %(message)s',
                         datefmt='%m/%d/%Y %I:%M:%S %p',
-                        level=LOG_LEVEL)
+                        level=LOG_LEVEL,
+                        handlers=[
+                            rfh
+                        ])
 
     # Check for led configuration arguments
     matrixOptions = led_matrix_options(args())
