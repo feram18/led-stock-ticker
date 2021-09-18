@@ -12,7 +12,6 @@ DEFAULT_STOCKS = ['TSLA', 'AMZN', 'MSFT']
 DEFAULT_CRYPTOS = ['BTC', 'ETH', 'LTC']
 CLOCK_FORMATS = ['12h', '24h']
 DEFAULT_FONT_PATH = 'rpi-rgb-led-matrix/fonts/4x6.bdf'
-EASTERN_TZ = 'US/Eastern'
 UPDATE_RATE = 10.0 * 60  # 10 minutes
 ROTATION_RATE = 10.0  # 10 seconds
 TEXT_SCROLL_DELAY = 0.5  # 0.5 seconds
@@ -26,6 +25,3 @@ CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amo
 DATE_FORMAT = '%a, %b %d'  # eg. Sun, Jan 5
 TWELVE_HOURS_FORMAT = '%I:%M %p'  # eg. 11:38 PM
 TWENTY_FOUR_HOURS_FORMAT = '%H:%M'  # eg. 23:38
-
-# Strings
-SCRIPT_NAME = 'LED-Stock-Ticker'
