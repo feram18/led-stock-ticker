@@ -95,7 +95,7 @@ class TestUtils(TestCase):
     def test_load_font_2(self):
         with self.assertLogs(level=logging.WARNING) as cm:
             font = utils.load_font(INVALID_FILE)
-        self.assertIn(f"WARNING:root:Couldn't load font {INVALID_FILE}. Setting font to default 4x6.", cm.output)
+        self.assertIn(f"WARNING:root:Couldn't find font {INVALID_FILE}. Setting font to default 4x6.", cm.output)
         self.assertIsInstance(font, Font)
         self.assertEqual(font.baseline, 5)
         self.assertEqual(font.height, 6)
