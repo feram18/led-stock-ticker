@@ -5,7 +5,7 @@ config/config.json
 config/layout/*
 
 # Log Files
-led-stock-ticker.log
+*.log*
 
 # Submodules
 rpi-rgb-led-matrix/*
