@@ -6,16 +6,15 @@ import json
 import time
 import os
 import requests
+import constants
 from rgbmatrix import RGBMatrixOptions
 from rgbmatrix.graphics import Font
 from PIL import Image
-from argparse import Namespace
 from datetime import datetime
 from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
 from typing import Optional
 from data.market_holiday_calendar import MarketHolidayCalendar
-from constants import DEFAULT_FONT_PATH, EASTERN_TZ, NETWORK_RETRY, CURRENCY_EXCHANGE_URL
 
 
 def read_json(filename: str) -> dict:
@@ -68,7 +67,7 @@ def align_text_center(string: str,
     :param font_height: (int) Font's height
     :return: (x, y): (int, int) X, Y coordinates
     """
-    x = abs(canvas_width//2 - (len(string)*font_width)//2)
+    x = abs(canvas_width//2 - (len(string)*font_width) // 2)
     y = abs(canvas_height//2 + font_height//2)
     return x, y
 
@@ -109,7 +108,7 @@ def scroll_text(canvas_width: int, text_x: int, curr_pos: int) -> int:
     :param curr_pos: (int) Text's current x coordinate
     :return: x_coord: (int) X coordinate to displace to
     """
-    if text_x+curr_pos < 1:
+    if text_x + curr_pos < 1:
         return canvas_width
     else:
         return text_x - 1
@@ -125,8 +124,8 @@ def load_font(filename: str) -> Font:
     if os.path.isfile(filename):
         font.LoadFont(filename)
     else:
-        logging.warning(f"Couldn't load font {filename}. Setting font to default 4x6.")
-        font.LoadFont(DEFAULT_FONT_PATH)
+        logging.warning(f"Couldn't find font {filename}. Setting font to default 4x6.")
+        font.LoadFont(constants.DEFAULT_FONT_PATH)
     return font
 
 
@@ -160,7 +159,7 @@ def convert_currency(from_curr: str, to_curr: str, amount: float) -> float:
     :exception RequestException: If an ambiguous exception that occurred
     """
     try:
-        URL = CURRENCY_EXCHANGE_URL.format(from_curr, to_curr, amount)
+        URL = constants.CURRENCY_EXCHANGE_URL.format(from_curr, to_curr, amount)
         response = requests.get(URL).json()
         return float(response['result'])
     except TypeError:
@@ -186,7 +185,7 @@ def after_hours() -> bool:
     i.e. Current time is not between 09:30 AM and 04:00 PM EST (Regular stock market hours), or it is a weekend.
     :return: after_hours: (bool)
     """
-    current_time = datetime.now(timezone(EASTERN_TZ))  # Current time in EST
+    current_time = datetime.now(timezone('US/Eastern'))  # Current time in EST
     open_market = current_time.replace(hour=9, minute=30, second=0, microsecond=0)  # 09:30 AM EST
     close_market = current_time.replace(hour=16, minute=0, second=0, microsecond=0)  # 04:00 PM EST
     return current_time < open_market or current_time > close_market or weekend()
@@ -219,12 +218,12 @@ def retry(method):
     :param method: method
     :return: method
     """
-    logging.error(f'Failed to establish a network connection. Retrying in {NETWORK_RETRY} seconds.')
-    time.sleep(NETWORK_RETRY)
+    logging.error(f'Failed to establish a network connection. Retrying in {constants.NETWORK_RETRY} seconds.')
+    time.sleep(constants.NETWORK_RETRY)
     return method()
 
 
-def args() -> Namespace:
+def args() -> argparse.Namespace:
     """
     CLI argument parser to configure matrix.
     :return: arguments: (argsparse.Namespace) Argument parser
@@ -315,7 +314,7 @@ def args() -> Namespace:
     return parser.parse_args()
 
 
-def led_matrix_options(args_: Namespace) -> RGBMatrixOptions:
+def led_matrix_options(args_: argparse.Namespace) -> RGBMatrixOptions:
     """
     Set RGBMatrixOptions from parsed arguments.
     :param args_: (argsparse.Namespace) Parsed arguments from CLI

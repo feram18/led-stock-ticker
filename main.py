@@ -1,7 +1,6 @@
 import sys
 import logging
 from rgbmatrix import RGBMatrix
-from constants import SCRIPT_NAME
 from utils import args, led_matrix_options
 from version import __version__
 from config.matrix_config import MatrixConfig
@@ -12,7 +11,7 @@ from renderer.loading import Loading
 
 def main(matrix_):
     # Print script details on startup
-    print(f'\U0001F4CA {SCRIPT_NAME} - v{__version__} ({matrix_.width}x{matrix_.height})')
+    print(f'\U0001F4CA LED-Stock-Ticker - v{__version__} ({matrix_.width}x{matrix_.height})')
 
     # Read software preferences from config.json
     config = MatrixConfig(matrix_.width, matrix_.height)
