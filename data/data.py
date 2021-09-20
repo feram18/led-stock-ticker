@@ -2,11 +2,11 @@ import time
 import logging
 import multitasking
 from requests.exceptions import Timeout
-import data.ticker
 from constants import DATE_FORMAT
 from utils import retry
-from data.stock import Stock
 from data.crypto import Crypto
+from data.stock import Stock
+from data.ticker import Ticker
 from data.status import Status
 
 
@@ -36,6 +36,7 @@ class Data:
         self.total_valid_tickers = len(self.config.stocks + self.config.cryptos)
         threads = min([self.total_valid_tickers, multitasking.cpu_count()*2])
         multitasking.set_max_threads(threads)
+
         self.updated_tickers = 0
 
         self.status = self.update()
@@ -59,6 +60,7 @@ class Data:
 
             self.date = self.get_date()
             self.time = self.get_time()
+
             return Status.SUCCESS
         except Timeout:
             retry(self.initialize())
@@ -91,9 +93,9 @@ class Data:
         :param stock: (str) Stock ticker
         :param currency: (str) Stock's prices currency
         """
-        instance = Stock(stock, currency)
-        if instance.valid:
-            self.tickers.append(instance)
+        ticker = Stock(stock, currency)
+        if ticker.valid:
+            self.tickers.append(ticker)
         else:
             self.total_valid_tickers -= 1
 
@@ -104,14 +106,14 @@ class Data:
         :param crypto: (str) Crypto ticker
         :param currency: (str) Crypto's prices currency
         """
-        instance = Crypto(crypto, currency)
-        if instance.valid:
-            self.tickers.append(instance)
+        ticker = Crypto(crypto, currency)
+        if ticker.valid:
+            self.tickers.append(ticker)
         else:
             self.total_valid_tickers -= 1
 
     @multitasking.task
-    def update_ticker(self, ticker: data.ticker.Ticker):
+    def update_ticker(self, ticker: Ticker):
         """
         Update ticker's data
         :param ticker: (data.Ticker) Ticker instance to update
