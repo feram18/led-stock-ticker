@@ -137,9 +137,9 @@ def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
     """
     if os.path.isfile(filename):
         with Image.open(filename) as image:
-            image.convert('RGB')
             image.thumbnail(size, Image.ANTIALIAS)
-            return image
+            return image.convert('RGB')
+
     else:
         logging.error(f"Couldn't find image {filename}")
         return None
