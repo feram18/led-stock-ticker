@@ -6,7 +6,6 @@ LAYOUT_FILE = 'config/layout/w{}h{}.json'
 LOADING_IMAGE = 'assets/img/led-stock-ticker_loading.png'
 ERROR_IMAGE = 'assets/img/error.png'
 
-
 # Software Defaults
 DEFAULT_STOCKS = ['TSLA', 'AMZN', 'MSFT']
 DEFAULT_CRYPTOS = ['BTC', 'ETH', 'LTC']
@@ -16,7 +15,6 @@ UPDATE_RATE = 10.0 * 60  # 10 minutes
 ROTATION_RATE = 10.0  # 10 seconds
 TEXT_SCROLL_DELAY = 0.5  # 0.5 seconds
 TEXT_SCROLL_SPEED = 0.1  # 0.1 seconds
-NETWORK_RETRY = 15.0  # 15 seconds
 
 # ExchangeRate API
 CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amount={}&places=2'
