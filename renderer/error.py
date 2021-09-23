@@ -1,7 +1,7 @@
 import time
 from rgbmatrix.graphics import DrawText
 from utils import align_text_center, load_font, load_image
-from constants import NETWORK_RETRY, ERROR_IMAGE
+from constants import ERROR_IMAGE
 from data.color import Color
 
 
@@ -48,7 +48,7 @@ class ErrorRenderer:
     def render(self):
         self.canvas.Clear()
         self.render_error_msg()
-        time.sleep(NETWORK_RETRY)
+        time.sleep(5.0)
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_error_msg(self):
