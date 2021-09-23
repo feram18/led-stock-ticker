@@ -87,13 +87,13 @@ completed, run the configuration script to set your preferences.
 The `config.json` file follows the following format:
 ```
   "tickers":                      Options for stocks and cryptocurrencies preferences
-    "stocks"          Array       Pass an array of stock symbols.
+    "stocks"          Array       Pass an array of stock symbols
                                   Example: ["TSLA", "AMZN", "MSFT"]
-    "cryptos"         Array       Pass an array of cryptocurrency symbols.
+    "cryptos"         Array       Pass an array of cryptocurrency symbols
                                   Example: ["BTC", "ETH", "LTC"]
-  "currency"          String      Currency in which you would like to see the prices displayed.
-                                  Example: "EUR" (Default: USD).
-  "clock_format"      String      Sets the preferred clock format.
+  "currency"          String      Currency in which you would like to see the prices displayed
+                                  Example: "EUR" (Default: USD)
+  "clock_format"      String      Sets the preferred clock format
                                   Accepted values are "12h" and "24h" (Default: 12h).
 ```
 
@@ -151,8 +151,7 @@ your execution command. This will enable debugging messages to be written to the
 This project relies on the following:
 - [YFinance] library to retrieve the stock/cryptocurrency data.
 - [Exchange Rates] API for currency exchanges.
-- [rpi-rgb-led-matrix] library to make everything work with the LED board. It is included into this repository as a 
-  submodule, so when cloning the repository it is necessary to use the `--recursive` flag.
+- [rpi-rgb-led-matrix] library to make everything work with the LED board, included as a submodule.
 
 ## Disclaimer
 This application is dependent on the [YFinance] library, and [Exchange Rates] API relaying accurate and updated data.
