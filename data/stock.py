@@ -10,7 +10,7 @@ from data.status import Status
 
 class Stock(Ticker):
     """
-    Class to represent a Ticker object
+    Class to represent a Stock object
 
     Arguments:
         ticker (str):               Ticker string
