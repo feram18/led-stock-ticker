@@ -3,7 +3,6 @@
 import argparse
 import logging
 import json
-import time
 import os
 import requests
 import constants
@@ -13,6 +12,7 @@ from PIL import Image
 from datetime import datetime
 from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
+from retry import retry
 from data.market_holiday_calendar import MarketHolidayCalendar
 
 
@@ -145,6 +145,7 @@ def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
         return None
 
 
+@retry((Timeout, ConnectionError), total_tries=3)
 def convert_currency(from_curr: str, to_curr: str, amount: float) -> float:
     """
     Convert a value from one currency to another.
@@ -163,8 +164,6 @@ def convert_currency(from_curr: str, to_curr: str, amount: float) -> float:
         return float(response['result'])
     except TypeError:
         return 0.0
-    except (Timeout, ConnectionError):
-        retry(convert_currency(from_curr, to_curr, amount))
     except RequestException:
         logging.error('Encountered an unknown error while converting currency. Returning original value.')
         return amount
@@ -209,17 +208,6 @@ def holiday() -> bool:
     edt = today.replace(month=12, day=31)  # Year end date
     holidays = MarketHolidayCalendar().holidays(start=sdt, end=edt).to_pydatetime()
     return today in holidays
-
-
-def retry(method):
-    """
-    Retry executing method that failed due to a network error.
-    :param method: method
-    :return: method
-    """
-    logging.error(f'Failed to establish a network connection. Retrying in {constants.NETWORK_RETRY} seconds.')
-    time.sleep(constants.NETWORK_RETRY)
-    return method()
 
 
 def args() -> argparse.Namespace:
