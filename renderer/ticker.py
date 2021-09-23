@@ -1,8 +1,7 @@
 import time
+import utils
 from rgbmatrix.graphics import DrawText, DrawLine
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
-from utils import text_offscreen, align_text_center, align_text_right, scroll_text, load_font, market_closed, \
-    convert_currency, center_image
 from data.crypto import Crypto
 from data.stock import Stock
 from data.ticker import Ticker
@@ -13,12 +12,10 @@ from data.color import Color
 class TickerRenderer:
     """
     Render Tickers
-
     Arguments:
         matrix (rgbmatrix.RGBMatrix):                       RGBMatrix instance
         canvas (rgbmatrix.Canvas):                          Canvas associated with matrix
         data (data.Data):                                   Data instance
-
     Attributes:
         coords (dict):                                      Coordinates dictionary
         text_color (rgbmatrix.graphics.Color):              Main text color
@@ -67,9 +64,9 @@ class TickerRenderer:
 
         # Load fonts
         self.fonts = self.data.config.layout['fonts']
-        self.primary_font = load_font(self.fonts['tom_thumb'])
-        self.secondary_font = load_font(self.fonts['4x6'])
-        self.large_font = load_font(self.fonts['6x9'])
+        self.primary_font = utils.load_font(self.fonts['tom_thumb'])
+        self.secondary_font = utils.load_font(self.fonts['4x6'])
+        self.large_font = utils.load_font(self.fonts['6x9'])
 
         # Stock/Cryptocurrency data
         self.tickers = self.data.tickers
@@ -112,7 +109,7 @@ class TickerRenderer:
             self.set_data(ticker)
             self.canvas.Clear()
 
-            if text_offscreen(self.name, self.canvas.width, self.primary_font.baseline - 1):
+            if utils.text_offscreen(self.name, self.canvas.width, self.primary_font.baseline - 1):
                 time_started = time.time()
                 first_run = True
                 self.name_x = 1
@@ -134,14 +131,14 @@ class TickerRenderer:
 
                     time.sleep(TEXT_SCROLL_SPEED)
 
-                    self.name_x = scroll_text(self.canvas.width, self.name_x, pos)
+                    self.name_x = utils.scroll_text(self.canvas.width, self.name_x, pos)
 
                     if time.time() - time_started >= ROTATION_RATE:
                         self.finished_scrolling = True
             else:
-                self.name_x = align_text_center(string=self.name,
-                                                canvas_width=self.canvas.width,
-                                                font_width=self.primary_font.baseline - 1)[0]
+                self.name_x = utils.align_text_center(string=self.name,
+                                                      canvas_width=self.canvas.width,
+                                                      font_width=self.primary_font.baseline - 1)[0]
 
                 # Render elements
                 self.render_chart()
@@ -156,7 +153,7 @@ class TickerRenderer:
             self.finished_scrolling = False
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-    def set_data(self, ticker):
+    def set_data(self, ticker: Ticker):
         """
         Populate variables from Ticker instance's attributes.
         :param ticker: (data.Ticker) Ticker instance
@@ -166,32 +163,37 @@ class TickerRenderer:
         self.market_status_color = self.set_market_status_color(self.market_closed)
         self.ticker_ = self.format_ticker(ticker.ticker) if isinstance(ticker, Crypto) else ticker.ticker
         self.price = self.format_price(self.currency, ticker.current_price)
-        self.price_x = align_text_center(string=self.price,
-                                         canvas_width=self.canvas.width,
-                                         font_width=self.primary_font.baseline - 1)[0]
+        self.price_x = utils.align_text_center(string=self.price,
+                                               canvas_width=self.canvas.width,
+                                               font_width=self.primary_font.baseline - 1)[0]
         if self.currency == 'USD':
             self.prev_close_price = ticker.prev_close_price
         else:  # Convert back to USD for chart calculations purposes
-            self.prev_close_price = convert_currency(self.currency, 'USD', ticker.prev_close_price)
+            self.prev_close_price = utils.convert_currency(self.currency,
+                                                           'USD',
+                                                           ticker.prev_close_price)
         self.value_change = ticker.pct_change
-        self.value_change_x = align_text_right(self.value_change, self.canvas.width, self.primary_font.baseline - 1)
+        self.value_change_x = utils.align_text_right(self.value_change,
+                                                     self.canvas.width,
+                                                     self.primary_font.baseline - 1)
         self.value_change_color = self.set_change_color(ticker.value_change)
         self.chart_prices = ticker.chart_prices
         if isinstance(ticker, Stock) and ticker.logo is not None:
             self.logo = ticker.logo
-            self.logo_x_offset = center_image(canvas_width=self.canvas.width, image_width=self.logo.size[0])[0]
+            self.logo_x_offset = utils.center_image(canvas_width=self.canvas.width,
+                                                    image_width=self.logo.size[0])[0]
 
     def render_market_status(self):
         for i in range(2):
             DrawLine(self.canvas, i, 6, i, 11, self.market_status_color)
 
     def render_full_name(self):
-        DrawText(self.canvas,
-                 self.primary_font,
-                 self.name_x,
-                 self.name_y,
-                 self.text_color,
-                 self.name)
+        return DrawText(self.canvas,
+                        self.primary_font,
+                        self.name_x,
+                        self.name_y,
+                        self.text_color,
+                        self.name)
 
     def render_ticker(self):
         DrawText(self.canvas,
@@ -221,39 +223,41 @@ class TickerRenderer:
         self.canvas.SetImage(self.logo, self.logo_x_offset, self.logo_y_offset)
 
     def render_chart(self):
-        min_p, max_p = min(self.chart_prices), max(self.chart_prices)
-        x_inc = len(self.chart_prices) / self.canvas.width
+        if self.chart_prices:
+            min_p, max_p = min(self.chart_prices), max(self.chart_prices)
+            x_inc = len(self.chart_prices) / self.canvas.width
 
-        if self.prev_close_price < min_p:
-            prev_close_y = self.canvas.height - 1
-        elif self.prev_close_price > max_p or max_p == min_p:
-            prev_close_y = self.chart_y
-        else:
-            if max_p == min_p:
+            if self.prev_close_price < min_p:
+                prev_close_y = self.canvas.height - 1
+            elif self.prev_close_price > max_p or max_p == min_p:
                 prev_close_y = self.chart_y
             else:
-                prev_close_y = int(self.chart_y + (max_p - self.prev_close_price) *
-                                   ((self.canvas.height - self.chart_y) / (max_p - min_p)))
+                if max_p == min_p:
+                    prev_close_y = self.chart_y
+                else:
+                    prev_close_y = int(self.chart_y + (max_p - self.prev_close_price) *
+                                       ((self.canvas.height - self.chart_y) / (max_p - min_p)))
 
-        for x in range(self.canvas.width):
-            p = self.chart_prices[int(x * x_inc)]
-            if max_p == min_p:
-                y = self.chart_y
-            else:
-                y = int(self.chart_y + (max_p - p) * ((self.canvas.height - self.chart_y) / (max_p - min_p)))
-            step = -1 if y > prev_close_y else 1
+            for x in range(self.canvas.width):
+                p = self.chart_prices[int(x * x_inc)]
+                if max_p == min_p:
+                    y = self.chart_y
+                else:
+                    y = int(self.chart_y + (max_p - p) *
+                            ((self.canvas.height - self.chart_y) / (max_p - min_p)))
+                step = -1 if y > prev_close_y else 1
 
-            for ys in range(y, prev_close_y + step, step):
+                for ys in range(y, prev_close_y + step, step):
+                    self.canvas.SetPixel(x,
+                                         ys - 1,
+                                         self.value_change_color.red,
+                                         self.value_change_color.green,
+                                         self.value_change_color.blue)
                 self.canvas.SetPixel(x,
-                                     ys - 1,
+                                     y - 1,
                                      self.value_change_color.red,
                                      self.value_change_color.green,
                                      self.value_change_color.blue)
-            self.canvas.SetPixel(x,
-                                 y - 1,
-                                 self.value_change_color.red,
-                                 self.value_change_color.green,
-                                 self.value_change_color.blue)
 
     @staticmethod
     def format_ticker(ticker: str) -> str:
@@ -306,4 +310,4 @@ class TickerRenderer:
         :param ticker: (data.Ticker) Ticker instance
         :return: status: (bool) Market Closed
         """
-        return False if isinstance(ticker, Crypto) else market_closed()
+        return False if isinstance(ticker, Crypto) else utils.market_closed()
