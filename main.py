@@ -37,16 +37,16 @@ if __name__ == '__main__':
         LOG_LEVEL = logging.WARNING
 
     # Set logger configuration
-    logger = logging.getLogger('')
+    logger = logging.getLogger('')  # root logger
     logger.setLevel(LOG_LEVEL)
     handler = RotatingFileHandler(filename='led-stock-ticker.log',
-                                  maxBytes=5 * 1024 * 1024,
-                                  backupCount=5)
+                                  maxBytes=5 * 1024 * 1024,  # 5MB
+                                  backupCount=4)
     handler.setFormatter(Formatter(fmt='%(asctime)s %(levelname)s: %(message)s',
                                    datefmt='%m/%d/%Y %I:%M:%S %p'))
     logger.addHandler(handler)
 
-    # Check for led configuration arguments
+    # Check matrix configuration arguments
     matrixOptions = led_matrix_options(args())
 
     # Initialize the matrix
