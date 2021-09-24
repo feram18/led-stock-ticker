@@ -13,14 +13,14 @@ class Stock(Ticker):
     Class to represent a Stock object
 
     Arguments:
-        ticker (str):               Ticker string
+        symbol (str):               Symbol string
         currency (str):             Currency prices will be displayed on
 
     Attributes:
         logo (PIL.Image):           Ticker's company/brand logo
     """
-    def __init__(self, ticker: str, currency: str):
-        super().__init__(ticker, currency)
+    def __init__(self, symbol: str, currency: str):
+        super().__init__(symbol, currency)
         self.logo = None
 
     def initialize(self) -> Status:
@@ -30,10 +30,10 @@ class Stock(Ticker):
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         :exception Timeout: If the request timed out
         """
-        logging.debug(f'Fetching initial data for {self.ticker}.')
+        logging.debug(f'Fetching initial data for {self.symbol}.')
 
         try:
-            self.data = yf.Ticker(self.ticker)
+            self.data = yf.Ticker(self.symbol)
 
             self.name = self.get_name()
             self.current_price = self.get_current_price()
@@ -47,7 +47,7 @@ class Stock(Ticker):
             self.initialized = True
             return Status.SUCCESS
         except KeyError:
-            logging.error(f'No data available for {self.ticker}.')
+            logging.error(f'No data available for {self.symbol}.')
             self.valid = False
             return Status.FAIL
         except Timeout:
@@ -66,15 +66,15 @@ class Stock(Ticker):
             logo.thumbnail((8, 8), Image.ANTIALIAS)
             return logo.convert('RGB')
         except MissingSchema:
-            logging.exception(f'Invalid URL for {self.ticker} logo image provided.')
+            logging.exception(f'Invalid URL for {self.symbol} logo image provided.')
         except UnidentifiedImageError:
-            logging.exception(f'Invalid image format for {self.ticker} logo image.')
+            logging.exception(f'Invalid image format for {self.symbol} logo image.')
         except ConnectionError:
-            logging.exception(f'Unable to fetch {self.ticker} logo image.')
+            logging.exception(f'Unable to fetch {self.symbol} logo image.')
 
     def __str__(self):
         return f'<{self.__class__.__name__} {hex(id(self))}> ' \
-               f'Ticker: {self.ticker}; ' \
+               f'Ticker: {self.symbol}; ' \
                f'Full Name: {self.name}; ' \
                f'Previous Day Close Price: {self.prev_close_price}; ' \
                f'Current Price: {self.current_price}; ' \

@@ -12,7 +12,7 @@ class Ticker:
         Class to represent a Ticker object
 
         Arguments:
-            ticker (str):                       Ticker string
+            symbol (str):                       Symbol string
             currency (str):                     Currency prices will be displayed on
 
         Attributes:
@@ -28,9 +28,9 @@ class Ticker:
             last_updated (float):               Time Ticker's data was last updated
             update_status (data.Status):        Indicates update status.
         """
-    def __init__(self, ticker: str, currency: str):
+    def __init__(self, symbol: str, currency: str):
         self.data = None
-        self.ticker = ticker
+        self.symbol = symbol
         self.name = None
         self.current_price = None
         self.prev_close_price = None
@@ -51,10 +51,10 @@ class Ticker:
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         :exception Timeout: If the request timed out
         """
-        logging.debug(f'Fetching initial data for {self.ticker}.')
+        logging.debug(f'Fetching initial data for {self.symbol}.')
 
         try:
-            self.data = yf.Ticker(self.ticker)
+            self.data = yf.Ticker(self.symbol)
 
             self.name = self.get_name()
             self.current_price = self.get_current_price()
@@ -67,7 +67,7 @@ class Ticker:
             self.initialized = True
             return Status.SUCCESS
         except KeyError:
-            logging.error(f'No data available for {self.ticker}.')
+            logging.error(f'No data available for {self.symbol}.')
             self.valid = False
             return Status.FAIL
         except Timeout:
@@ -84,9 +84,9 @@ class Ticker:
         if not self.initialized:
             return self.initialize()
         elif force or self.should_update():
-            logging.debug(f'Fetching new data for {self.ticker}.')
+            logging.debug(f'Fetching new data for {self.symbol}.')
             try:
-                self.data = yf.Ticker(self.ticker)
+                self.data = yf.Ticker(self.symbol)
                 self.current_price = self.get_current_price()
                 self.value_change = self.get_value_change()
                 self.pct_change = self.get_percentage_change()
@@ -190,7 +190,7 @@ class Ticker:
 
     def __str__(self):
         return f'<{self.__class__.__name__} {hex(id(self))}> ' \
-               f'Ticker: {self.ticker}; ' \
+               f'Ticker: {self.symbol}; ' \
                f'Full Name: {self.name}; ' \
                f'Previous Day Close Price: {self.prev_close_price}; ' \
                f'Current Price: {self.current_price}; ' \
