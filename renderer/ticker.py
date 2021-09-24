@@ -31,9 +31,9 @@ class TickerRenderer:
         name (str):                                         Ticker's full name string
         name_x (int):                                       Ticker's full name's x-coord
         name_y (int):                                       Ticker's full name's y-coord
-        ticker_ (str):                                      Ticker string
-        ticker_x (int):                                     Ticker's x-coord
-        ticker_y (int):                                     Ticker's y-coord
+        symbol (str):                                       Symbol string
+        symbol_x (int):                                     Symbol's x-coord
+        symbol_y (int):                                     Symbol's y-coord
         price (str):                                        Ticker's price string
         price_x (int):                                      Ticker's price x-coord
         price_y (int):                                      Ticker's price y-coord
@@ -81,9 +81,9 @@ class TickerRenderer:
         self.name_x = self.coords['name']['x']
         self.name_y = self.coords['name']['y']
 
-        self.ticker_ = None
-        self.ticker_x = self.coords['ticker']['x']
-        self.ticker_y = self.coords['ticker']['y']
+        self.symbol = None
+        self.symbol_x = self.coords['symbol']['x']
+        self.symbol_y = self.coords['symbol']['y']
 
         self.price = None
         self.price_x = self.coords['price']['x']
@@ -119,9 +119,9 @@ class TickerRenderer:
 
                     # Render elements
                     self.render_chart()
-                    pos = self.render_full_name()
+                    pos = self.render_name()
                     self.render_market_status()
-                    self.render_ticker()
+                    self.render_symbol()
                     self.render_price()
                     self.render_value_change()
 
@@ -142,9 +142,9 @@ class TickerRenderer:
 
                 # Render elements
                 self.render_chart()
-                self.render_full_name()
+                self.render_name()
                 self.render_market_status()
-                self.render_ticker()
+                self.render_symbol()
                 self.render_price()
                 self.render_value_change()
 
@@ -161,7 +161,7 @@ class TickerRenderer:
         self.name = ticker.name
         self.market_closed = self.market_status_closed(ticker)
         self.market_status_color = self.set_market_status_color(self.market_closed)
-        self.ticker_ = self.format_ticker(ticker.ticker) if isinstance(ticker, Crypto) else ticker.ticker
+        self.symbol = self.format_symbol(ticker.symbol) if isinstance(ticker, Crypto) else ticker.symbol
         self.price = self.format_price(self.currency, ticker.current_price)
         self.price_x = utils.align_text_center(string=self.price,
                                                canvas_width=self.canvas.width,
@@ -187,7 +187,7 @@ class TickerRenderer:
         for i in range(2):
             DrawLine(self.canvas, i, 6, i, 11, self.market_status_color)
 
-    def render_full_name(self):
+    def render_name(self):
         return DrawText(self.canvas,
                         self.primary_font,
                         self.name_x,
@@ -195,13 +195,13 @@ class TickerRenderer:
                         self.text_color,
                         self.name)
 
-    def render_ticker(self):
+    def render_symbol(self):
         DrawText(self.canvas,
                  self.large_font,
-                 self.ticker_x,
-                 self.ticker_y,
+                 self.symbol_x,
+                 self.symbol_y,
                  self.text_color,
-                 self.ticker_)
+                 self.symbol)
 
     def render_price(self):
         DrawText(self.canvas,
@@ -257,18 +257,18 @@ class TickerRenderer:
                                      self.value_change_color.blue)
 
     @staticmethod
-    def format_ticker(ticker: str) -> str:
+    def format_symbol(symbol: str) -> str:
         """
         Format cryptocurrency string to remove currency exchange from it.
         i.e. BTC-USD -> BTC
-        :param ticker: (str) Ticker string to format
-        :return: ticker: (str) Formatted ticker string
+        :param symbol: (str) Symbol string to format
+        :return: symbol: (str) Formatted symbol string
         """
         currency_postfix = '-USD'
-        if currency_postfix in ticker.upper():
-            return ticker.replace(currency_postfix, '')
+        if currency_postfix in symbol.upper():
+            return symbol.replace(currency_postfix, '')
         else:
-            return ticker
+            return symbol
 
     @staticmethod
     def format_price(currency: str, price: float) -> str:
