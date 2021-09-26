@@ -1,6 +1,7 @@
 import time
 from renderer.renderer import Renderer
-from renderer.ticker import TickerRenderer
+from renderer.stock import StockRenderer
+from renderer.crypto import CryptoRenderer
 from renderer.clock import ClockRenderer
 from renderer.error import ErrorRenderer
 from constants import ROTATION_RATE
@@ -31,7 +32,8 @@ class MainRenderer(Renderer):
 
                 time.sleep(ROTATION_RATE)
 
-                TickerRenderer(self.matrix, self.canvas, self.data).render()
+                StockRenderer(self.matrix, self.canvas, self.data).render()
+                CryptoRenderer(self.matrix, self.canvas, self.data).render()
                 self.data.update()  # Update data for next run
             except KeyboardInterrupt as e:
                 raise SystemExit(' Exiting...') from e
