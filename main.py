@@ -18,14 +18,17 @@ def main(matrix_):
     # Read software preferences from config.json
     config = MatrixConfig(matrix_.width, matrix_.height)
 
+    # Create canvas
+    canvas = matrix_.CreateFrameCanvas()
+
     # Render loading splash screen
-    Loading(matrix_, config).render()
+    Loading(matrix_, canvas, config).render()
 
     # Fetch initial data
     data = Data(config)
 
     # Begin rendering screen rotation
-    MainRenderer(matrix_, data).render()
+    MainRenderer(matrix_, canvas, data).render()
 
 
 if __name__ == '__main__':
