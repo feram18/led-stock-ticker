@@ -1,9 +1,10 @@
 from rgbmatrix.graphics import DrawText
+from renderer.renderer import Renderer
 from utils import align_text_center, load_font
 from data.color import Color
 
 
-class ClockRenderer:
+class ClockRenderer(Renderer):
     """
     Render date and time
 
@@ -25,8 +26,7 @@ class ClockRenderer:
         time_y (int):                               Time text's y-coord
     """
     def __init__(self, matrix, canvas, data):
-        self.matrix = matrix
-        self.canvas = canvas
+        super().__init__(matrix, canvas)
         self.data = data
 
         # Load data

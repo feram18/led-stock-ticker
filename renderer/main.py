@@ -1,14 +1,15 @@
 import time
-from constants import ROTATION_RATE
+from renderer.renderer import Renderer
 from renderer.ticker import TickerRenderer
 from renderer.clock import ClockRenderer
 from renderer.error import ErrorRenderer
+from constants import ROTATION_RATE
 from data.status import Status
 
 
-class MainRenderer:
+class MainRenderer(Renderer):
     """
-    Handle the rendering of different boards/screens (Clock, Ticker)
+    Handle the rendering of different boards/screens (Clock, Stocks, Cryptos)
 
     Arguments:
         matrix (rgbmatrix.RGBMatrix):       RGBMatrix instance
@@ -18,11 +19,9 @@ class MainRenderer:
         canvas (rgbmatrix.Canvas):          Canvas associated with matrix
 
     """
-    def __init__(self, matrix, data):
-        self.matrix = matrix
+    def __init__(self, matrix, canvas, data):
+        super().__init__(matrix, canvas)
         self.data = data
-
-        self.canvas = matrix.CreateFrameCanvas()
 
     def render(self):
         while self.data.status != Status.FAIL:

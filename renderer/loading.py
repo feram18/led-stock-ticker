@@ -1,11 +1,12 @@
 from rgbmatrix.graphics import DrawText
+from renderer.renderer import Renderer
 from version import __version__
 from constants import LOADING_IMAGE
 from utils import align_text_center, load_font, load_image, center_image
 from data.color import Color
 
 
-class Loading:
+class Loading(Renderer):
     """
     Render a splash screen while tickers' data is being fetched
 
@@ -24,10 +25,9 @@ class Loading:
         version_y (int):                        Version text y-coord
     """
 
-    def __init__(self, matrix, config):
-        self.matrix = matrix
+    def __init__(self, matrix, canvas, config):
+        super().__init__(matrix, canvas)
         self.config = config
-        self.canvas = matrix.CreateFrameCanvas()
 
         # Loading image
         self.loading_image = load_image(LOADING_IMAGE, (28, 28))

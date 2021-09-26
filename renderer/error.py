@@ -1,13 +1,14 @@
 import time
 from rgbmatrix.graphics import DrawText
+from renderer.renderer import Renderer
 from utils import align_text_center, load_font, load_image
 from constants import ERROR_IMAGE
 from data.color import Color
 
 
-class ErrorRenderer:
+class ErrorRenderer(Renderer):
     """
-    Render an error message
+    Renderer for error messages
 
     Arguments:
         matrix (rgbmatrix.RGBMatrix):           RGBMatrix instance
@@ -23,8 +24,7 @@ class ErrorRenderer:
     """
 
     def __init__(self, matrix, canvas, config, error_msg: str):
-        self.matrix = matrix
-        self.canvas = canvas
+        super().__init__(matrix, canvas)
         self.error_msg = error_msg
 
         # Load font
