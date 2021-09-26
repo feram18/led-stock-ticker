@@ -15,29 +15,30 @@ class Data:
     Data to be displayed on matrix
 
     Arguments:
-        config (data.MatrixConfig):         MatrixConfig instance
+        matrix_config (config.MatrixConfig):        MatrixConfig instance
 
     Attributes:
-        time_format (str):                  Clock's time format
-        date (str):                         Date string
-        time (str):                         Time string
-        tickers (list):                     List of Ticker instances
-        status (data.Status):               Current update status
+        time_format (str):                          Clock's time format
+        date (str):                                 Date string
+        time (str):                                 Time string
+        stocks (list):                              List of Stock instances
+        cryptos (list):                             List of Crypto instances
+        total_valid_tickers (int):                  Total number of valid tickers
+        status (data.Status):                       Current update status
     """
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, matrix_config):
+        self.config = matrix_config
 
         self.time_format = self.config.time_format
         self.date = None
         self.time = None
-        self.tickers = []
+        self.stocks = []
+        self.cryptos = []
 
         self.total_valid_tickers = len(self.config.stocks + self.config.cryptos)
         threads = min([self.total_valid_tickers, multitasking.cpu_count()*2])
         multitasking.set_max_threads(threads)
-
-        self.updated_tickers = 0
 
         self.status = self.update()
 
@@ -55,7 +56,7 @@ class Data:
             for crypto in self.config.cryptos:  # Initialize cryptos
                 self.fetch_crypto(crypto, self.config.currency)
             # Wait until all tickers are initialized
-            while len(self.tickers) < self.total_valid_tickers:
+            while len(self.stocks + self.cryptos) < self.total_valid_tickers:
                 time.sleep(0.1)
 
             self.date = self.get_date()
@@ -72,12 +73,11 @@ class Data:
         :exception Timeout: If the request timed out
         """
         try:
-            if len(self.tickers) < 1:
+            if len(self.stocks + self.cryptos) < 1:
                 return self.initialize()
             else:
                 logging.info('Checking for update...')
-                self.updated_tickers = 0
-                for ticker in self.tickers:
+                for ticker in self.stocks + self.cryptos:
                     self.update_ticker(ticker)
 
                 self.date = self.get_date()
@@ -95,7 +95,7 @@ class Data:
         """
         ticker = Stock(stock, currency)
         if ticker.valid:
-            self.tickers.append(ticker)
+            self.stocks.append(ticker)
         else:
             self.total_valid_tickers -= 1
 
@@ -108,7 +108,7 @@ class Data:
         """
         ticker = Crypto(crypto, currency)
         if ticker.valid:
-            self.tickers.append(ticker)
+            self.cryptos.append(ticker)
         else:
             self.total_valid_tickers -= 1
 
@@ -116,10 +116,9 @@ class Data:
     def update_ticker(self, ticker: Ticker):
         """
         Update ticker's data
-        :param ticker: (data.Ticker) Ticker instance to update
+        :param ticker: (data.Ticker) Ticker object to update
         """
         ticker.update()
-        self.updated_tickers += 1
 
     def get_time(self) -> str:
         """
