@@ -24,7 +24,6 @@ class TickerRenderer(Renderer, ABC):
         primary_font (rgbmatrix.graphics.Font):             Primary Font object
         secondary_font (rgbmatrix.graphics.Font):           Secondary Font object
         large_font (rgbmatrix.graphics.Font):               Large Font object
-        tickers (list):                                     List of Ticker instances
         currency (str):                                     Currency to display prices on
         name (str):                                         Ticker's full name string
         name_x (int):                                       Ticker's full name's x-coord
@@ -61,9 +60,6 @@ class TickerRenderer(Renderer, ABC):
         self.secondary_font = utils.load_font(self.fonts['4x6'])
         self.large_font = utils.load_font(self.fonts['6x9'])
 
-        # Stock/Cryptocurrency data
-        self.tickers = self.data.tickers
-
         # Selected currency
         self.currency = self.data.config.currency
 
@@ -72,7 +68,7 @@ class TickerRenderer(Renderer, ABC):
         self.name_y = self.coords['name']['y']
 
         self.symbol = None
-        self.symbol_x = self.coords['symbol']['x']
+        self.symbol_x = None
         self.symbol_y = self.coords['symbol']['y']
 
         self.price = None
@@ -160,9 +156,9 @@ class TickerRenderer(Renderer, ABC):
                                      self.value_change_color.green,
                                      self.value_change_color.blue)
 
-    def set_data(self, ticker: Ticker):
+    def populate_data(self, ticker: Ticker):
         """
-        Populate variables from Ticker instance's attributes.
+        Populate attributes from Ticker instance's attributes.
         :param ticker: (data.Ticker) Ticker instance
         """
         self.name = ticker.name

@@ -6,11 +6,26 @@ from constants import TEXT_SCROLL_SPEED, TEXT_SCROLL_DELAY, ROTATION_RATE
 
 
 class CryptoRenderer(TickerRenderer):
-    """Renderer for Crypto objects"""
+    """
+    Renderer for Crypto objects
+
+    Arguments:
+        matrix (rgbmatrix.RGBMatrix):       RGBMatrix instance
+        canvas (rgbmatrix.Canvas):          Canvas associated with matrix
+        data (data.Data):                   Data instance
+
+    Attributes:
+        cryptos (list):                     List of Crypto objects
+    """
+
+    def __init__(self, matrix, canvas, data):
+        super().__init__(matrix, canvas, data)
+        self.symbol_x = 0
+        self.cryptos = self.data.cryptos
 
     def render(self):
-        for ticker in self.tickers:
-            self.set_data(ticker)
+        for crypto in self.cryptos:
+            self.populate_data(crypto)
             self.canvas.Clear()
 
             if utils.text_offscreen(self.name, self.canvas.width, self.primary_font.baseline - 1):
@@ -55,12 +70,12 @@ class CryptoRenderer(TickerRenderer):
             self.finished_scrolling = False
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-    def set_data(self, crypto: Crypto):
+    def populate_data(self, crypto: Crypto):
         """
-        Populate variables from Crypto instance's attributes.
+        Populate attributes from Crypto instance's attributes.
         :param crypto: (data.Crypto) Crypto instance
         """
-        super().set_data(crypto)
+        super().populate_data(crypto)
         self.symbol = self.format_symbol(crypto.symbol)
 
     @staticmethod

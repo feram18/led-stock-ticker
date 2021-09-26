@@ -2,9 +2,9 @@ import time
 import utils
 from rgbmatrix.graphics import DrawText, DrawLine
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
+from renderer.ticker import TickerRenderer
 from data.stock import Stock
 from data.color import Color
-from renderer.ticker import TickerRenderer
 
 
 class StockRenderer(TickerRenderer):
@@ -15,6 +15,7 @@ class StockRenderer(TickerRenderer):
         data (data.Data):                                   Data instance
 
     Attributes:
+        stocks (list):                                      List of Stock objects
         market_closed (bool):                               Indicates if stock market is closed
         market_status_color (rgbmatrix.graphics.Color):     Color that indicates stock market's current status
         logo (PIL.Image):                                   Ticker's company logo (if available)
@@ -24,8 +25,10 @@ class StockRenderer(TickerRenderer):
 
     def __init__(self, matrix, canvas, data):
         super().__init__(matrix, canvas, data)
+        self.stocks = self.data.stocks
 
-        # Set strings and coords
+        self.symbol_x = self.coords['symbol']['x']
+
         self.market_closed = utils.market_closed()
         self.market_status_color = Color.RED if self.market_closed else Color.GREEN
 
@@ -34,8 +37,8 @@ class StockRenderer(TickerRenderer):
         self.logo_y_offset = self.canvas.height
 
     def render(self):
-        for ticker in self.tickers:
-            self.set_data(ticker)
+        for stock in self.stocks:
+            self.populate_data(stock)
             self.canvas.Clear()
 
             if utils.text_offscreen(self.name, self.canvas.width, self.primary_font.baseline - 1):
@@ -82,12 +85,12 @@ class StockRenderer(TickerRenderer):
             self.finished_scrolling = False
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-    def set_data(self, stock: Stock):
+    def populate_data(self, stock: Stock):
         """
-        Populate variables from Stock instance's attributes.
+        Populate attributes from Stock instance's attributes.
         :param stock: (data.Stock) Stock instance
         """
-        super().set_data(stock)
+        super().populate_data(stock)
         self.symbol = stock.symbol
         if stock.logo is not None:
             self.logo = stock.logo
