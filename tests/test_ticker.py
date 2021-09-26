@@ -15,7 +15,7 @@ class TestTicker(TestCase):
         with self.assertLogs(level=logging.DEBUG) as cm:
             status = self.ticker.update(True)
         self.assertEqual(status, Status.SUCCESS)
-        self.assertIn(f'DEBUG:root:Fetching new data for {self.ticker.ticker}.', cm.output)
+        self.assertIn(f'DEBUG:root:Fetching new data for {self.ticker.symbol}.', cm.output)
 
     def test_get_name(self):
         name = self.ticker.get_name()

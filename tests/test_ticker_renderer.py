@@ -10,11 +10,11 @@ from data.color import Color
 @unittest.skipUnless(sys.platform.startswith("linux"), "Requires Linux")
 class TestTickerRenderer(TestCase):
     def test_format_ticker(self):
-        result = TickerRenderer.format_ticker('BTC-USD')
+        result = TickerRenderer.format_symbol('BTC-USD')
         self.assertEqual(result, 'BTC')
 
     def test_format_ticker_2(self):
-        result = TickerRenderer.format_ticker('TSLA')
+        result = TickerRenderer.format_symbol('TSLA')
         self.assertEqual(result, 'TSLA')
 
     def test_format_price(self):
