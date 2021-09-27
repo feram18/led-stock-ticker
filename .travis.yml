@@ -32,7 +32,7 @@ install:
   - ./install.sh
 
 script:
-  - python3 -m pytest
+  - python3 -m pytest -k-slow
 
 branches:
   only:
