@@ -122,7 +122,10 @@ class Ticker:
             current_price = self.data.info['regularMarketPrice']
             if self.currency != 'USD':
                 current_price = convert_currency('USD', self.currency, current_price)
-            return float(f'{current_price:.2f}')
+            if current_price < 1.0:  # Increase precision for tickers with low prices
+                return float(f'{current_price:.3f}')
+            else:
+                return float(f'{current_price:.2f}')
         except KeyError:
             self.valid = False
             self.update_status = Status.FAIL
