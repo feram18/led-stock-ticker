@@ -174,6 +174,8 @@ class Ticker:
             chart_prices = self.data.history(interval='1m', period='2d')['Close'].tolist()
             if len(chart_prices) < 100:
                 chart_prices = self.data.history(interval='1m', period='3d')['Close'].tolist()
+                if len(chart_prices) < 100:
+                    chart_prices = self.data.history(interval='1m', period='4d')['Close'].tolist()
         elif not chart_prices:
             self.valid = False
             self.update_status = Status.FAIL
