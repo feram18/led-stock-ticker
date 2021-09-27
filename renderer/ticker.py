@@ -114,7 +114,7 @@ class TickerRenderer(Renderer, ABC):
                  self.text_color,
                  self.price)
 
-    def render_value_change(self):
+    def render_percentage_change(self):
         DrawText(self.canvas,
                  self.secondary_font,
                  self.value_change_x,

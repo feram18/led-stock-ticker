@@ -41,7 +41,7 @@ class CryptoRenderer(TickerRenderer):
                     pos = self.render_name()
                     self.render_symbol()
                     self.render_price()
-                    self.render_value_change()
+                    self.render_percentage_change()
 
                     if first_run:
                         time.sleep(TEXT_SCROLL_DELAY)
@@ -63,7 +63,7 @@ class CryptoRenderer(TickerRenderer):
                 self.render_name()
                 self.render_symbol()
                 self.render_price()
-                self.render_value_change()
+                self.render_percentage_change()
 
                 time.sleep(ROTATION_RATE)
 
