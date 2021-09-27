@@ -34,7 +34,7 @@ class TickerRenderer(Renderer, ABC):
         price (str):                                        Ticker's price string
         price_x (int):                                      Ticker's price x-coord
         price_y (int):                                      Ticker's price y-coord
-        prev_close_price (float):                           Ticker's previous close price
+        previous_close (float):                             Ticker's previous close price
         value_change (str):                                 Ticker's value change string
         value_change_x (int):                               Ticker's value change x-coord
         value_change_y (int):                               Ticker's value change y-coord
@@ -75,7 +75,7 @@ class TickerRenderer(Renderer, ABC):
         self.price_x = self.coords['price']['x']
         self.price_y = self.coords['price']['y']
 
-        self.prev_close_price = None
+        self.previous_close = None
 
         self.value_change = None
         self.value_change_x = self.coords['value_change']['x']
@@ -127,12 +127,12 @@ class TickerRenderer(Renderer, ABC):
             min_p, max_p = min(self.chart_prices), max(self.chart_prices)
             x_inc = len(self.chart_prices) / self.canvas.width
 
-            if self.prev_close_price < min_p:
+            if self.previous_close < min_p:
                 prev_close_y = self.canvas.height - 1
-            elif self.prev_close_price > max_p or max_p == min_p:
+            elif self.previous_close > max_p or max_p == min_p:
                 prev_close_y = self.chart_y
             else:
-                prev_close_y = int(self.chart_y + (max_p - self.prev_close_price) *
+                prev_close_y = int(self.chart_y + (max_p - self.previous_close) *
                                    ((self.canvas.height - self.chart_y) / (max_p - min_p)))
 
             for x in range(self.canvas.width):
@@ -167,11 +167,11 @@ class TickerRenderer(Renderer, ABC):
                                                canvas_width=self.canvas.width,
                                                font_width=self.primary_font.baseline - 1)[0]
         if self.currency == 'USD':
-            self.prev_close_price = ticker.prev_close_price
+            self.previous_close = ticker.previous_close
         else:  # Convert back to USD for chart calculations purposes
-            self.prev_close_price = utils.convert_currency(self.currency,
-                                                           'USD',
-                                                           ticker.prev_close_price)
+            self.previous_close = utils.convert_currency(self.currency,
+                                                         'USD',
+                                                         ticker.previous_close)
         self.value_change = ticker.pct_change
         self.value_change_x = utils.align_text_right(self.value_change,
                                                      self.canvas.width,

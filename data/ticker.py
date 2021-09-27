@@ -19,7 +19,7 @@ class Ticker:
     Attributes:
         data (yfinance.Ticker):             yfinance Ticker instance
         name (str):                         Ticker's full name
-        prev_close_price (float):           Ticker's previous day's close price
+        previous_close (float):             Ticker's previous day's close price
         current_price (float):              Ticker's current price
         value_change (float):               Ticker's value change since previous day's close price
         pct_change (str):                   Ticker's value percentage change since previous day's close price
@@ -35,7 +35,7 @@ class Ticker:
         self.symbol = symbol
         self.name = None
         self.current_price = None
-        self.prev_close_price = None
+        self.previous_close = None
         self.value_change = None
         self.pct_change = None
         self.chart_prices = None
@@ -111,14 +111,14 @@ class Ticker:
         """
         Fetch the ticker's previous day's close price.
         If currency is not set to USD, convert value to user-selected currency.
-        :return: prev_close_price: (float) Previous day's close price
+        :return: prev_close: (float) Previous day's close price
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
         try:
-            prev_close_price = self.data.info['regularMarketPreviousClose']
+            prev_close = self.data.info['regularMarketPreviousClose']
             if self.currency != 'USD':
-                prev_close_price = convert_currency('USD', self.currency, prev_close_price)
-            return prev_close_price
+                prev_close = convert_currency('USD', self.currency, prev_close)
+            return prev_close
         except KeyError:
             self.valid = False
             self.update_status = Status.FAIL
@@ -129,7 +129,7 @@ class Ticker:
         Calculate the ticker's price value change since previous day's close price.
         :return: value_change: (str) Value change
         """
-        return float(f'{self.current_price - self.prev_close_price:.2f}')
+        return float(f'{self.current_price - self.previous_close:.2f}')
 
     def get_percentage_change(self) -> str:
         """
@@ -138,7 +138,7 @@ class Ticker:
         :exception ZeroDivisionError: If previous day's close price is zero.
         """
         try:
-            return f'{100 * (self.value_change/abs(self.prev_close_price)):.2f}%'
+            return f'{100 * (self.value_change / abs(self.previous_close)):.2f}%'
         except ZeroDivisionError:
             self.valid = False
             return '0.00%'
@@ -176,7 +176,7 @@ class Ticker:
         return f'<{self.__class__.__name__} {hex(id(self))}> ' \
                f'Ticker: {self.symbol}; ' \
                f'Full Name: {self.name}; ' \
-               f'Previous Day Close Price: {self.prev_close_price}; ' \
+               f'Previous Day Close Price: {self.previous_close}; ' \
                f'Current Price: {self.current_price}; ' \
                f'Value Change: {self.value_change}; ' \
                f'Percentage Change: {self.pct_change}'
