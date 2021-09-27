@@ -1,49 +1,54 @@
-import unittest
+import pytest
+import sys
 import logging
 import time
-from unittest import TestCase
 from data.ticker import Ticker
 from data.status import Status
 from constants import UPDATE_RATE
 
 
-class TestTicker(TestCase):
-    def setUp(self) -> None:
+@pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
+class TestTicker:
+    def setup_method(self):
         self.ticker = Ticker('TSLA', 'USD')
 
-    def test_update(self):
-        with self.assertLogs(level=logging.DEBUG) as cm:
+    def teardown_method(self):
+        del self.ticker
+
+    def test_update(self, caplog):
+        caplog.clear()
+        with caplog.at_level(logging.DEBUG):
             status = self.ticker.update(True)
-        self.assertEqual(status, Status.SUCCESS)
-        self.assertIn(f'DEBUG:root:Fetching new data for {self.ticker.symbol}.', cm.output)
+        assert status == Status.SUCCESS
+        assert f'Fetching new data for {self.ticker.symbol}.' in caplog.text
 
     def test_get_name(self):
         name = self.ticker.get_name()
-        self.assertEqual(name, 'Tesla, Inc.')
+        assert name == 'Tesla, Inc.'
 
     def test_get_current_price(self):
         current_price = self.ticker.get_current_price()
-        self.assertIsInstance(current_price, float)
+        assert isinstance(current_price, float)
 
     def test_get_previous_close_price(self):
         prev_close_price = self.ticker.get_previous_close_price()
-        self.assertIsInstance(prev_close_price, float)
+        assert isinstance(prev_close_price, float)
 
     def test_get_value_change(self):
         value_change = self.ticker.get_value_change()
-        self.assertIsInstance(value_change, float)
+        assert isinstance(value_change, float)
 
     def test_get_percentage_change(self):
         pct_change = self.ticker.get_percentage_change()
-        self.assertIsInstance(pct_change, str)
-        self.assertIn('%', pct_change)
+        assert isinstance(pct_change, str)
+        assert '%' in pct_change
 
     def test_get_chart_prices(self):
         chart_prices = self.ticker.get_chart_prices()
-        self.assertIsInstance(chart_prices, list)
-        self.assertTrue(len(chart_prices) > 0)
+        assert isinstance(chart_prices, list)
+        assert len(chart_prices) > 0
 
-    @unittest.SkipTest
+    @pytest.mark.slow
     def test_should_update(self):
         time.sleep(UPDATE_RATE)
-        self.assertEqual(self.ticker.should_update(), True)
+        assert self.ticker.should_update() is True

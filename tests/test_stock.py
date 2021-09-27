@@ -1,12 +1,17 @@
-from unittest import TestCase
+import pytest
+import sys
 from PIL.Image import Image
 from data.stock import Stock
 
 
-class TestStock(TestCase):
-    def setUp(self) -> None:
+@pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
+class TestStock:
+    def setup_method(self):
         self.stock = Stock('VZ', 'EUR')
+
+    def teardown_method(self):
+        del self.stock
 
     def test_get_logo(self):
         logo = self.stock.get_logo()
-        self.assertIsInstance(logo, Image)
+        assert isinstance(logo, Image)
