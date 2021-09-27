@@ -9,25 +9,26 @@ from data.status import Status
 
 class Ticker:
     """
-        Class to represent a Ticker object
+    Class to represent a Ticker object
 
-        Arguments:
-            symbol (str):                       Symbol string
-            currency (str):                     Currency prices will be displayed on
+    Arguments:
+        symbol (str):                       Symbol string
+        currency (str):                     Currency prices will be displayed on
 
-        Attributes:
-            data (yfinance.Ticker):             yfinance Ticker instance
-            name (str):                         Ticker's full name
-            prev_close_price (float):           Ticker's previous day's close price
-            current_price (float):              Ticker's current price
-            value_change (float):               Ticker's value change since previous day's close price
-            pct_change (str):                   Ticker's value percentage change since previous day's close price
-            chart_prices (list):                List of close prices over the past two days
-            valid (bool):                       Indicates if ticker is valid
-            initialized (bool):                 Indicates if data has been initialized
-            last_updated (float):               Time Ticker's data was last updated
-            update_status (data.Status):        Indicates update status.
-        """
+    Attributes:
+        data (yfinance.Ticker):             yfinance Ticker instance
+        name (str):                         Ticker's full name
+        prev_close_price (float):           Ticker's previous day's close price
+        current_price (float):              Ticker's current price
+        value_change (float):               Ticker's value change since previous day's close price
+        pct_change (str):                   Ticker's value percentage change since previous day's close price
+        chart_prices (list):                List of close prices over the past two days
+        valid (bool):                       Indicates if ticker is valid
+        initialized (bool):                 Indicates if data has been initialized
+        last_updated (float):               Time Ticker's data was last updated
+        update_status (data.Status):        Indicates update status.
+    """
+
     def __init__(self, symbol: str, currency: str):
         self.data = None
         self.symbol = symbol
@@ -171,6 +172,8 @@ class Ticker:
         chart_prices = self.data.history(interval='1m', period='1d')['Close'].tolist()
         if len(chart_prices) < 100:
             chart_prices = self.data.history(interval='1m', period='2d')['Close'].tolist()
+            if len(chart_prices) < 100:
+                chart_prices = self.data.history(interval='1m', period='3d')['Close'].tolist()
         elif not chart_prices:
             self.valid = False
             self.update_status = Status.FAIL
