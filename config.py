@@ -9,7 +9,7 @@ from utils import read_json, write_json
 
 def get_current_preferences() -> dict:
     """
-    Return current config.json values
+    Return current preferences from config.json
     :return: current_preferences (dict)
     """
     preferences = read_json(CONFIG_FILE)
@@ -32,11 +32,7 @@ def get_stocks(curr_preference: str) -> list:
                               validate=lambda text: len(text) > 0,
                               qmark='\U0001F4C8',
                               instruction='(Separate each ticker by a space)').ask().upper().split()
-    result = []
-    for stock in stocks:
-        if stock not in result:  # Verify ticker is unique
-            result.append(stock)
-    return result
+    return [i for n, i in enumerate(stocks) if i not in stocks[:n]]
 
 
 def get_cryptos(curr_preference: str) -> list:
@@ -49,12 +45,7 @@ def get_cryptos(curr_preference: str) -> list:
                                default=' '.join(DEFAULT_CRYPTOS) if len(curr_preference) < 1 else curr_preference,
                                qmark='\U0001F4B0',
                                instruction='(Separate each ticker by a space)').ask().upper().split()
-
-    result = []
-    for crypto in cryptos:
-        if crypto not in result:  # Verify ticker is unique
-            result.append(crypto)
-    return result
+    return [i for n, i in enumerate(cryptos) if i not in cryptos[:n]]
 
 
 def get_currency(curr_preference: str) -> str:
@@ -82,9 +73,9 @@ def get_clock_format(curr_preference: str) -> str:
                               qmark='\U0001F552').ask()
 
 
-def set_data(config: dict, current_config: dict) -> dict:
+def set_preferences(config: dict, current_config: dict) -> dict:
     """
-    Set config dictionary data.
+    Write preferences to config.json file.
     :param config (dict) Config dict to edit
     :param current_config (dict) Current config dict values
     :return: data: (dict) Data dictionary
@@ -99,7 +90,7 @@ def set_data(config: dict, current_config: dict) -> dict:
 def main():
     try:
         config_json = read_json(CONFIG_FILE)
-        config_json = set_data(config_json, get_current_preferences())
+        config_json = set_preferences(config_json, get_current_preferences())
         write_json(CONFIG_FILE, config_json)
         questionary.print('\u2705 Setup is complete!', style='bold fg:green')
     except (KeyboardInterrupt, AttributeError):
