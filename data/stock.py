@@ -74,8 +74,8 @@ class Stock(Ticker):
 
     def __str__(self):
         return f'<{self.__class__.__name__} {hex(id(self))}> ' \
-               f'Ticker: {self.symbol}; ' \
-               f'Full Name: {self.name}; ' \
+               f'Symbol: {self.symbol}; ' \
+               f'Name: {self.name}; ' \
                f'Previous Close Price: {self.previous_close}; ' \
                f'Current Price: {self.current_price}; ' \
                f'Value Change: {self.value_change}; ' \
