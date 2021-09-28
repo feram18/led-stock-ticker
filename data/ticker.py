@@ -46,9 +46,34 @@ class Ticker:
         self.update_status = self.update()  # Force an initial update
         self.last_updated = time.time()
 
-    @abstractmethod
     def initialize(self) -> Status:
-        pass
+        """
+        Setup crypto's initial data.
+        :return status: (data.Status) Update status
+        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
+        :exception Timeout: If the request timed out
+        """
+        logging.debug(f'Fetching initial data for {self.symbol}.')
+
+        try:
+            self.data = yf.Ticker(self.symbol)
+
+            self.name = self.get_name()
+            self.current_price = self.get_current_price()
+            self.previous_close = self.get_previous_close_price()
+            self.value_change = self.get_value_change()
+            self.pct_change = self.get_percentage_change()
+            self.chart_prices = self.get_chart_prices()
+
+            self.last_updated = time.time()
+            self.initialized = True
+            return Status.SUCCESS
+        except KeyError:
+            logging.error(f'No data available for {self.symbol}.')
+            self.valid = False
+            return Status.FAIL
+        except Timeout:
+            return Status.NETWORK_ERROR
 
     def update(self, force: bool = False) -> Status:
         """
