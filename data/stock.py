@@ -37,7 +37,7 @@ class Stock(Ticker):
 
             self.name = self.get_name()
             self.current_price = self.get_current_price()
-            self.prev_close_price = self.get_previous_close_price()
+            self.previous_close = self.get_previous_close_price()
             self.value_change = self.get_value_change()
             self.pct_change = self.get_percentage_change()
             self.chart_prices = self.get_chart_prices()
@@ -76,7 +76,7 @@ class Stock(Ticker):
         return f'<{self.__class__.__name__} {hex(id(self))}> ' \
                f'Ticker: {self.symbol}; ' \
                f'Full Name: {self.name}; ' \
-               f'Previous Day Close Price: {self.prev_close_price}; ' \
+               f'Previous Close Price: {self.previous_close}; ' \
                f'Current Price: {self.current_price}; ' \
                f'Value Change: {self.value_change}; ' \
                f'Percentage Change: {self.pct_change}; ' \
