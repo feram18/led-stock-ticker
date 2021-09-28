@@ -1,7 +1,6 @@
 import logging
 import time
 import yfinance as yf
-from abc import abstractmethod
 from requests.exceptions import Timeout
 from constants import UPDATE_RATE
 from utils import convert_currency
@@ -175,11 +174,7 @@ class Ticker:
         """
         chart_prices = self.data.history(interval='1m', period='1d')['Close'].tolist()
         if len(chart_prices) < 100:
-            chart_prices = self.data.history(interval='1m', period='2d')['Close'].tolist()
-            if len(chart_prices) < 100:
-                chart_prices = self.data.history(interval='1m', period='3d')['Close'].tolist()
-                if len(chart_prices) < 100:
-                    chart_prices = self.data.history(interval='1m', period='4d')['Close'].tolist()
+            chart_prices = self.data.history(interval='1m', period='3d')['Close'].tolist()
         elif not chart_prices:
             self.valid = False
             self.update_status = Status.FAIL
