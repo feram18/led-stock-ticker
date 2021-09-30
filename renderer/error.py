@@ -2,7 +2,7 @@ import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from utils import align_text_center, load_font, load_image
-from constants import ERROR_IMAGE
+from constants import ERROR_IMAGE, ROTATION_RATE
 from data.color import Color
 
 
@@ -13,28 +13,28 @@ class ErrorRenderer(Renderer):
     Arguments:
         matrix (rgbmatrix.RGBMatrix):           RGBMatrix instance
         canvas (rgbmatrix.Canvas):              Canvas associated with matrix
-        config (data.Config):                   Config instance
-        error_msg (str):                        String containing error information
+        data (data.Data):                       Data instance
 
     Attributes:
+        error_msg (str)                         Error message string
+        error_image (PIL.Image):                Error image
         font (rgbmatrix.graphics.Font):         Font for error msg
         color (rgbmatrix.graphics.Color):       Color for error msg
         msg_x (int):                            Error msg's x-coord
         msg_y (int):                            Error msg's y-coord
     """
 
-    def __init__(self, matrix, canvas, config, error_msg: str):
+    def __init__(self, matrix, canvas, data):
         super().__init__(matrix, canvas)
-        self.error_msg = error_msg
+
+        self.error_msg = data.status
+        self.error_image = load_image(ERROR_IMAGE, (4, 6))
 
         # Load font
-        self.font = load_font(config.layout['fonts']['4x6'])
+        self.font = load_font(data.config.layout['fonts']['4x6'])
 
         # Load text color
         self.color = Color.RED
-
-        # Load error image
-        self.error_image = load_image(ERROR_IMAGE, (4, 6))
 
         # Set coords
         self.msg_x, self.msg_y = align_text_center(self.error_msg,
@@ -47,8 +47,10 @@ class ErrorRenderer(Renderer):
 
     def render(self):
         self.canvas.Clear()
+
         self.render_error_msg()
-        time.sleep(5.0)
+        time.sleep(ROTATION_RATE)
+
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_error_msg(self):
