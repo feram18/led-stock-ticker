@@ -1,10 +1,8 @@
-import time
 from renderer.renderer import Renderer
 from renderer.stock import StockRenderer
 from renderer.crypto import CryptoRenderer
 from renderer.clock import ClockRenderer
 from renderer.error import ErrorRenderer
-from constants import ROTATION_RATE
 from data.status import Status
 
 
@@ -14,32 +12,39 @@ class MainRenderer(Renderer):
 
     Arguments:
         matrix (rgbmatrix.RGBMatrix):       RGBMatrix instance
+        canvas (rgbmatrix.Canvas):          Canvas associated with matrix
         data (data.Data):                   Data instance
 
     Attributes:
-        canvas (rgbmatrix.Canvas):          Canvas associated with matrix
-
+        status (data.Status):               Update status
     """
+
     def __init__(self, matrix, canvas, data):
         super().__init__(matrix, canvas)
         self.data = data
+        self.status = self.data.status
 
     def render(self):
-        while self.data.status != Status.FAIL:
+        while self.status is Status.SUCCESS:
             try:
-                clock_renderer = ClockRenderer(self.matrix, self.canvas, self.data)
-                clock_renderer.render()
+                self.render_clock()
+                self.render_stocks()
+                self.render_cryptos()
 
-                time.sleep(ROTATION_RATE)
-
-                StockRenderer(self.matrix, self.canvas, self.data).render()
-                CryptoRenderer(self.matrix, self.canvas, self.data).render()
                 self.data.update()  # Update data for next run
             except KeyboardInterrupt as e:
                 raise SystemExit(' Exiting...') from e
 
-        if self.data.status != Status.SUCCESS:
-            self.render_error()
+        self.render_error()
+
+    def render_clock(self):
+        ClockRenderer(self.matrix, self.canvas, self.data).render()
+
+    def render_stocks(self):
+        StockRenderer(self.matrix, self.canvas, self.data).render()
+
+    def render_cryptos(self):
+        CryptoRenderer(self.matrix, self.canvas, self.data).render()
 
     def render_error(self):
-        ErrorRenderer(self.matrix, self.canvas, self.data.config, self.data.status).render()
+        ErrorRenderer(self.matrix, self.canvas, self.data).render()
