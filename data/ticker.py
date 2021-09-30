@@ -1,6 +1,7 @@
 import logging
 import time
 import yfinance as yf
+from abc import abstractmethod
 from requests.exceptions import Timeout
 from constants import UPDATE_RATE
 from utils import convert_currency
@@ -123,37 +124,24 @@ class Ticker:
             if self.currency != 'USD':
                 current_price = convert_currency('USD', self.currency, current_price)
             if current_price < 1.0:  # Increase precision for tickers with low prices
-                return float(f'{current_price:.3f}')
+                return float(format(current_price, '.3f'))
             else:
-                return float(f'{current_price:.2f}')
+                return float(format(current_price, '.2f'))
         except KeyError:
             self.valid = False
             self.update_status = Status.FAIL
             return 0.00
 
+    @abstractmethod
     def get_previous_close_price(self) -> float:
-        """
-        Fetch the ticker's previous day's close price.
-        If currency is not set to USD, convert value to user-selected currency.
-        :return: prev_close: (float) Previous day's close price
-        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
-        """
-        try:
-            prev_close = self.data.info['regularMarketPreviousClose']
-            if self.currency != 'USD':
-                prev_close = convert_currency('USD', self.currency, prev_close)
-            return prev_close
-        except KeyError:
-            self.valid = False
-            self.update_status = Status.FAIL
-            return 0.00
+        pass
 
     def get_value_change(self) -> float:
         """
         Calculate the ticker's price value change since previous day's close price.
         :return: value_change: (str) Value change
         """
-        return float(f'{self.current_price - self.previous_close:.2f}')
+        return float(format((self.current_price - self.previous_close), '.2f'))
 
     def get_percentage_change(self) -> str:
         """
