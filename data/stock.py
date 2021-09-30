@@ -6,6 +6,7 @@ from requests.exceptions import MissingSchema, Timeout, ConnectionError
 from PIL import Image, UnidentifiedImageError
 from data.ticker import Ticker
 from data.status import Status
+from utils import convert_currency
 
 
 class Stock(Ticker):
@@ -52,6 +53,23 @@ class Stock(Ticker):
             return Status.FAIL
         except Timeout:
             return Status.NETWORK_ERROR
+
+    def get_previous_close_price(self) -> float:
+        """
+        Fetch the stock's previous close price.
+        If currency is not set to USD, convert value to user-selected currency.
+        :return: prev_close: (float) Previous day's close price
+        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
+        """
+        try:
+            prev_close = self.data.info['regularMarketPreviousClose']
+            if self.currency != 'USD':
+                prev_close = convert_currency('USD', self.currency, prev_close)
+            return prev_close
+        except KeyError:
+            self.valid = False
+            self.update_status = Status.FAIL
+            return 0.00
 
     def get_logo(self) -> Image:
         """
