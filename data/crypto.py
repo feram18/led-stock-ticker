@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 from utils import convert_currency
 from data.ticker import Ticker
@@ -31,10 +31,11 @@ class Crypto(Ticker):
         """
         try:
             prices = self.data.history(interval='1m', period='2d')
-            date = datetime.now(timezone('Europe/London'))
-            date = date.replace(day=date.day - 1, second=0)  # Change to yesterday
-            date = datetime.isoformat(date, sep=' ', timespec='seconds').format('%Y-%m-%d %H:%M:%S%z')
-            prev_close = prices.loc[date].Close
+            today = datetime.now(timezone('Europe/London'))
+            yesterday = today - timedelta(days=1)   # Change to yesterday
+            yesterday = yesterday.replace(second=0)
+            yesterday = datetime.isoformat(yesterday, sep=' ', timespec='seconds').format('%Y-%m-%d %H:%M:%S%z')
+            prev_close = prices.loc[yesterday].Close
             if self.currency != 'USD':
                 prev_close = convert_currency('USD', self.currency, prev_close)
             return prev_close
