@@ -8,6 +8,7 @@ import requests
 import constants
 from rgbmatrix import RGBMatrixOptions
 from rgbmatrix.graphics import Font
+from typing import Optional
 from PIL import Image
 from datetime import datetime
 from pytz import timezone
@@ -53,10 +54,10 @@ def text_offscreen(string: str, canvas_width: int, font_width: int) -> bool:
 
 
 def align_text_center(string: str,
-                      canvas_width: int = 0,
-                      canvas_height: int = 0,
-                      font_width: int = 0,
-                      font_height: int = 0) -> (int, int):
+                      canvas_width: Optional[int] = 0,
+                      canvas_height: Optional[int] = 0,
+                      font_width: Optional[int] = 0,
+                      font_height: Optional[int] = 0) -> (int, int):
     """
     Calculate x-coord to align text to center of canvas.
     :param string: (str) String of text to be displayed
@@ -82,10 +83,10 @@ def align_text_right(string: str, canvas_width: int, font_width: int) -> int:
     return canvas_width - (len(string)*font_width)
 
 
-def center_image(canvas_width: int = 0,
-                 canvas_height: int = 0,
-                 image_width: int = 0,
-                 image_height: int = 0) -> (int, int):
+def center_image(canvas_width: Optional[int] = 0,
+                 canvas_height: Optional[int] = 0,
+                 image_width: Optional[int] = 0,
+                 image_height: Optional[int] = 0) -> (int, int):
     """
     Calculate x and y-coords to center image on canvas.
     :param canvas_width: (int) Canvas' width
@@ -128,7 +129,7 @@ def load_font(filename: str) -> Font:
     return font
 
 
-def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
+def load_image(filename: str, size: Optional[(int, int)] = (32, 32)) -> Image:
     """
     Return Image object from given file.
     :param filename: (str) Location of image file
@@ -139,7 +140,6 @@ def load_image(filename: str, size: (int, int) = (32, 32)) -> Image:
         with Image.open(filename) as image:
             image.thumbnail(size, Image.ANTIALIAS)
             return image.convert('RGB')
-
     else:
         logging.error(f"Couldn't find image {filename}")
         return None
