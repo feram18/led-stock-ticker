@@ -2,46 +2,39 @@ import pytest
 import sys
 import logging
 import PIL
+import rgbmatrix
 import utils
-from rgbmatrix.graphics import Font
-
-TEST_FILE = 'tests/test_file.json'
-INVALID_FILE = 'invalid.txt'
-ORIGINAL_DATA = {
-    'key_bool': True,
-    'key_string': 'value',
-    'key_int': 1
-}
-TEST_STRING = 'Lorem ipsum'
-TEST_IMAGE = 'assets/img/error.png'
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestUtils:
-    def test_read_json(self):
-        j = utils.read_json(TEST_FILE)
-        assert j == ORIGINAL_DATA
+    def test_read_json(self, tmpdir):
+        tmp_file = tmpdir.join('temp.json')
+        content = {
+            "key_bool": True,
+            "key_string": "String",
+            "key_int": 1
+        }
+        utils.write_json(tmp_file, content)
+        dict_ = utils.read_json(tmp_file)
+        assert dict_ == content
 
     def test_read_json_2(self, caplog):
         caplog.clear()
         with caplog.at_level(logging.ERROR):
-            utils.read_json(INVALID_FILE)
-        assert f"Couldn't find file at {INVALID_FILE}" in caplog.text
+            utils.read_json('invalid.json')
+        assert "Couldn't find file at invalid.json" in caplog.text
 
-    @pytest.fixture
-    def teardown_write_json_method(self):
-        yield
-        utils.write_json(TEST_FILE, ORIGINAL_DATA)  # Reset file content
-
-    def test_write_json(self, teardown_write_json_method):
+    def test_write_json(self, tmpdir):
+        tmp_file = tmpdir.join('temp.json')
         new_data = {
-            'new_bool': False,
-            'new_string': 'String',
-            'new_int': 2
+            "key_bool": False,
+            "key_string": None,
+            "key_int": 0
         }
-        utils.write_json(TEST_FILE, new_data)
-        j = utils.read_json(TEST_FILE)
-        assert j == new_data
+        utils.write_json(tmp_file, new_data)
+        dict_ = utils.read_json(tmp_file)
+        assert dict_ == new_data
 
     def test_text_offscreen(self):
         long_text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
@@ -54,19 +47,23 @@ class TestUtils:
         assert result is False
 
     def test_align_text_center(self):
-        x, y = utils.align_text_center(TEST_STRING, 64, 32, 4, 6)
+        x, y = utils.align_text_center('Lorem ipsum', 64, 32, 4, 6)
         assert (x, y) == (10, 19)
 
     def test_align_text_center_2(self):
-        x, y = utils.align_text_center(TEST_STRING, canvas_width=64, font_width=4)
+        x, y = utils.align_text_center('Lorem ipsum', canvas_width=64, font_width=4)
         assert (x, y) == (10, 0)
 
     def test_align_text_center_3(self):
-        x, y = utils.align_text_center(TEST_STRING, canvas_height=32, font_height=6)
+        x, y = utils.align_text_center('Lorem ipsum', canvas_height=32, font_height=6)
         assert (x, y) == (0, 19)
 
+    def test_align_text_center_4(self):
+        x, y = utils.align_text_center('Lorem ipsum')
+        assert (x, y) == (0, 0)
+
     def test_align_text_right(self):
-        x = utils.align_text_right(TEST_STRING, 64, 4)
+        x = utils.align_text_right('Lorem ipsum', 64, 4)
         assert x == 20
 
     def test_center_image(self):
@@ -81,6 +78,10 @@ class TestUtils:
         x, y = utils.center_image(canvas_height=32, image_height=28)
         assert (x, y) == (0, 2)
 
+    def test_center_image_4(self):
+        x, y = utils.center_image()
+        assert (x, y) == (0, 0)
+
     def test_scroll_text(self):
         x = utils.scroll_text(64, 45, 63)
         assert x == 44
@@ -91,33 +92,59 @@ class TestUtils:
 
     def test_load_font(self):
         font = utils.load_font('rpi-rgb-led-matrix/fonts/5x7.bdf')
-        assert isinstance(font, Font)
+        assert isinstance(font, rgbmatrix.graphics.Font)
+
+    def test_load_font_2(self):
+        font = utils.load_font('rpi-rgb-led-matrix/fonts/5x7.bdf')
         assert font.baseline, 6
+
+    def test_load_font_3(self):
+        font = utils.load_font('rpi-rgb-led-matrix/fonts/5x7.bdf')
         assert font.height, 7
 
-    def test_load_font_2(self, caplog):
+    def test_load_font_4(self, caplog):
         caplog.clear()
         with caplog.at_level(logging.WARNING):
-            font = utils.load_font(INVALID_FILE)
-        assert f"Couldn't find font {INVALID_FILE}. Setting font to default 4x6." in caplog.text
-        assert isinstance(font, Font)
+            utils.load_font('invalid.bdf')
+        assert f"Couldn't find font invalid.bdf. Setting font to default 4x6." in caplog.text
+
+    def test_load_font_5(self):
+        font = utils.load_font('invalid.bdf')
+        assert isinstance(font, rgbmatrix.graphics.Font)
+
+    def test_load_font_6(self):
+        font = utils.load_font('invalid.bdf')
         assert font.baseline == 5
+
+    def test_load_font_7(self):
+        font = utils.load_font('invalid.bdf')
         assert font.height == 6
 
     def test_load_image(self):
-        image = utils.load_image(TEST_IMAGE, (15, 15))
+        image = utils.load_image('assets/img/error.png', (15, 15))
         assert isinstance(image, PIL.Image.Image)
 
     def test_load_image_2(self):
-        image = utils.load_image(TEST_IMAGE)
+        image = utils.load_image('assets/img/error.png', (15, 15))
+        assert image.size <= (15, 15)
+
+    def test_load_image_3(self):
+        image = utils.load_image('assets/img/error.png')
         assert isinstance(image, PIL.Image.Image)
 
-    def test_load_image_3(self, caplog):
+    def test_load_image_4(self):
+        image = utils.load_image('assets/img/error.png')
+        assert image.size <= (32, 32)
+
+    def test_load_image_5(self, caplog):
         caplog.clear()
         with caplog.at_level(logging.ERROR):
-            image = utils.load_image(INVALID_FILE)
+            utils.load_image('invalid.png')
+        assert f"Couldn't find image invalid.png" in caplog.text
+
+    def test_load_image_6(self):
+        image = utils.load_image('invalid.png')
         assert image is None
-        assert f"Couldn't find image {INVALID_FILE}" in caplog.text
 
     def test_convert_currency(self):
         result = utils.convert_currency('USD', 'EUR', 15.0)
