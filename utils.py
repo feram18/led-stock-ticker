@@ -8,7 +8,7 @@ import requests
 import constants
 from rgbmatrix import RGBMatrixOptions
 from rgbmatrix.graphics import Font
-from typing import Optional
+from typing import Optional, Tuple
 from PIL import Image
 from datetime import datetime
 from pytz import timezone
@@ -129,7 +129,7 @@ def load_font(filename: str) -> Font:
     return font
 
 
-def load_image(filename: str, size: Optional[(int, int)] = (32, 32)) -> Image:
+def load_image(filename: str, size: Optional[Tuple[(int, int)]] = (32, 32)) -> Image:
     """
     Return Image object from given file.
     :param filename: (str) Location of image file
