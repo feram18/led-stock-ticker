@@ -2,6 +2,7 @@ import logging
 import time
 import yfinance as yf
 from abc import abstractmethod
+from typing import Optional
 from requests.exceptions import Timeout
 from constants import UPDATE_RATE
 from utils import convert_currency
@@ -75,7 +76,7 @@ class Ticker:
         except Timeout:
             return Status.NETWORK_ERROR
 
-    def update(self, force: bool = False) -> Status:
+    def update(self, force: Optional[bool] = False) -> Status:
         """
         Update only the data that may have changed since last update
         i.e. Exclude the ticker's name, previous day close price, and logo image.
