@@ -1,6 +1,6 @@
 import time
 import utils
-from rgbmatrix.graphics import DrawText, DrawLine
+from rgbmatrix.graphics import DrawLine
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 from renderer.ticker import TickerRenderer
 from data.stock import Stock
@@ -9,6 +9,8 @@ from data.color import Color
 
 class StockRenderer(TickerRenderer):
     """
+    Renderer for Stock objects
+
     Arguments:
         matrix (rgbmatrix.RGBMatrix):                       RGBMatrix instance
         canvas (rgbmatrix.Canvas):                          Canvas associated with matrix
