@@ -16,3 +16,6 @@ class TestData:
     def test_should_update(self):
         time.sleep(UPDATE_RATE)
         assert self.data.should_update() is True
+
+    def test_should_update_2(self):
+        assert self.data.should_update() is False
