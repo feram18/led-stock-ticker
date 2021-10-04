@@ -14,13 +14,13 @@ class TestCrypto:
         del self.crypto
 
     def test_update(self):
-        status = self.crypto.update(True)
+        status = self.crypto.update()
         assert status == Status.SUCCESS
 
     def test_update_2(self, caplog):
         caplog.clear()
         with caplog.at_level(logging.DEBUG):
-            self.crypto.update(True)
+            self.crypto.update()
         assert f'Fetching new data for {self.crypto.symbol}.' in caplog.text
 
     def test_get_name(self):

@@ -15,13 +15,13 @@ class TestStock:
         del self.stock
 
     def test_update(self):
-        status = self.stock.update(True)
+        status = self.stock.update()
         assert status == Status.SUCCESS
 
     def test_update_2(self, caplog):
         caplog.clear()
         with caplog.at_level(logging.DEBUG):
-            self.stock.update(True)
+            self.stock.update()
         assert f'Fetching new data for {self.stock.symbol}.' in caplog.text
 
     def test_get_name(self):
