@@ -28,7 +28,7 @@ before_install:
   - chmod +x install.sh
 
 install:
-  - python3 -m pip install -r requirements_dev.txt
+  - sudo pip3 install -r requirements_dev.txt
   - ./install.sh
 
 script:

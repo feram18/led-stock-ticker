@@ -22,7 +22,7 @@ function updateRepository() {
 # Installs dependencies
 function installDependencies(){
   printf "\nInstalling dependencies...\n"
-  python3 -m pip install -r requirements.txt
+  sudo pip3 install -r requirements.txt
 }
 
 # Creates configuration file (config.json)
