@@ -1,5 +1,4 @@
 import logging
-import time
 import yfinance as yf
 import requests
 from requests.exceptions import MissingSchema, Timeout, ConnectionError
@@ -44,7 +43,6 @@ class Stock(Ticker):
             self.chart_prices = self.get_chart_prices()
             self.logo = self.get_logo()
 
-            self.last_updated = time.time()
             self.initialized = True
             return Status.SUCCESS
         except KeyError:

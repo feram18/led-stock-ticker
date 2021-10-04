@@ -31,7 +31,11 @@ class MainRenderer(Renderer):
                 self.render_stocks()
                 self.render_cryptos()
 
-                self.data.update()  # Update data for next run
+                if self.data.should_update():
+                    self.status = self.data.update()
+
+                self.data.update_clock()
+
             except KeyboardInterrupt as e:
                 raise SystemExit(' Exiting...') from e
 

@@ -2,7 +2,7 @@ import time
 import logging
 import multitasking
 from requests.exceptions import Timeout
-from constants import DATE_FORMAT
+from constants import DATE_FORMAT, UPDATE_RATE
 from utils import retry
 from data.crypto import Crypto
 from data.stock import Stock
@@ -41,6 +41,7 @@ class Data:
         multitasking.set_max_threads(threads)
 
         self.status = self.update()
+        self.last_updated = time.time()
 
     def initialize(self) -> Status:
         """
@@ -61,7 +62,6 @@ class Data:
 
             self.date = self.get_date()
             self.time = self.get_time()
-
             return Status.SUCCESS
         except Timeout:
             retry(self.initialize())
@@ -80,11 +80,16 @@ class Data:
                 for ticker in self.stocks + self.cryptos:
                     self.update_ticker(ticker)
 
-                self.date = self.get_date()
-                self.time = self.get_time()
+                self.last_updated = time.time()
+
                 return Status.SUCCESS
         except Timeout:
             return Status.NETWORK_ERROR
+
+    def update_clock(self):
+        """Update date & time"""
+        self.date = self.get_date()
+        self.time = self.get_time()
 
     @multitasking.task
     def fetch_stock(self, stock: str, currency: str):
@@ -134,3 +139,13 @@ class Data:
         :return: date: (str) Current date
         """
         return time.strftime(DATE_FORMAT)
+
+    def should_update(self) -> bool:
+        """
+        Returns Boolean value to determine if tickers should be updated.
+        i.e. If 10 minutes have passed since data was last fetched, an update is needed.
+        :return: should_update: (bool)
+        """
+        current_time = time.time()
+        time_delta = current_time - self.last_updated
+        return time_delta >= UPDATE_RATE

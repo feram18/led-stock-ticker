@@ -1,10 +1,7 @@
 import logging
-import time
 import yfinance as yf
 from abc import abstractmethod
-from typing import Optional
 from requests.exceptions import Timeout
-from constants import UPDATE_RATE
 from utils import convert_currency
 from data.status import Status
 
@@ -27,7 +24,6 @@ class Ticker:
         chart_prices (list):                List of close prices over the past two days
         valid (bool):                       Indicates if ticker is valid
         initialized (bool):                 Indicates if data has been initialized
-        last_updated (float):               Time Ticker's data was last updated
         update_status (data.Status):        Indicates update status.
     """
 
@@ -45,7 +41,6 @@ class Ticker:
 
         self.initialized = False
         self.update_status = self.update()  # Force an initial update
-        self.last_updated = time.time()
 
     def initialize(self) -> Status:
         """
@@ -66,7 +61,6 @@ class Ticker:
             self.pct_change = self.get_percentage_change()
             self.chart_prices = self.get_chart_prices()
 
-            self.last_updated = time.time()
             self.initialized = True
             return Status.SUCCESS
         except KeyError:
@@ -76,17 +70,16 @@ class Ticker:
         except Timeout:
             return Status.NETWORK_ERROR
 
-    def update(self, force: Optional[bool] = False) -> Status:
+    def update(self) -> Status:
         """
         Update only the data that may have changed since last update
         i.e. Exclude the ticker's name, previous day close price, and logo image.
-        :param force: (bool default=False) Force update
         :return status: (data.Status) Update status
         :exception Timeout: If the request timed out
         """
         if not self.initialized:
             return self.initialize()
-        elif force or self.should_update():
+        else:
             logging.debug(f'Fetching new data for {self.symbol}.')
             try:
                 self.data = yf.Ticker(self.symbol)
@@ -95,7 +88,6 @@ class Ticker:
                 self.pct_change = self.get_percentage_change()
                 self.chart_prices = self.get_chart_prices()
 
-                self.last_updated = time.time()
                 return Status.SUCCESS
             except Timeout:
                 return Status.NETWORK_ERROR
@@ -169,17 +161,6 @@ class Ticker:
             self.update_status = Status.FAIL
             chart_prices.append(0.00)
         return chart_prices
-
-    def should_update(self) -> bool:
-        """
-        Returns Boolean value to determine if the ticker's data should be updated.
-        i.e. If 2 minutes have passed since data was last fetched, an update is needed.
-        Update rate depends on number of tickers selected by user.
-        :return: should_update: (bool)
-        """
-        current_time = time.time()
-        time_delta = current_time - self.last_updated
-        return time_delta >= UPDATE_RATE
 
     def __str__(self):
         return f'<{self.__class__.__name__} {hex(id(self))}> ' \
