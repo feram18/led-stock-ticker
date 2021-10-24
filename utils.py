@@ -129,7 +129,7 @@ def load_font(filename: str) -> Font:
     return font
 
 
-def load_image(filename: str, size: Optional[Tuple[(int, int)]] = (32, 32)) -> Image:
+def load_image(filename: str, size: Optional[Tuple[int, int]] = (32, 32)) -> Image:
     """
     Return Image object from given file.
     :param filename: (str) Location of image file
