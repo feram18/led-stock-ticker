@@ -16,16 +16,17 @@ class Data:
     config: MatrixConfig
     date: str = None
     time: str = None
-    time_format: str = field(init=False)
-    cryptos: List[Ticker] = None
-    stocks: List[Ticker] = None
-    valid_tickers: int = field(init=False)
+    time_format: str = None
+    cryptos: List[Ticker] = field(default_factory=list)
+    stocks: List[Ticker] = field(default_factory=list)
+    valid_tickers: int = 0
     status: Status = Status.SUCCESS
     last_updated: float = None
 
     def __post_init__(self):
         self.time_format = self.config.time_format
         self.valid_tickers = len(self.config.stocks + self.config.cryptos)
+        self.last_updated = time.time()
 
         threads = min([self.valid_tickers, multitasking.cpu_count() * 2])
         multitasking.set_max_threads(threads)
@@ -41,9 +42,9 @@ class Data:
         logging.info('Initializing data...')
 
         for stock in self.config.stocks:  # Initialize stocks
-            self.fetch_stock(stock, self.config.currency)
+            self.fetch_stock(self.config.currency, stock)
         for crypto in self.config.cryptos:  # Initialize cryptos
-            self.fetch_crypto(crypto, self.config.currency)
+            self.fetch_crypto(self.config.currency, crypto)
         # Wait until all tickers are initialized
         while len(self.stocks + self.cryptos) < self.valid_tickers:
             time.sleep(0.1)
@@ -76,7 +77,10 @@ class Data:
         :param currency: (str) Stock's prices currency
         """
         stock = Stock(symbol, currency)
-        self.stocks.append(stock) if stock.valid else self.valid_tickers -= 1
+        if stock.valid:
+            self.stocks.append(stock)
+        else:
+            self.valid_tickers -= 1
 
     @multitasking.task
     def fetch_crypto(self, symbol: str, currency: str):
@@ -86,7 +90,10 @@ class Data:
         :param currency: (str) Crypto's prices currency
         """
         crypto = Crypto(symbol, currency)
-        self.cryptos.append(crypto) if crypto.valid else self.valid_tickers -= 1
+        if crypto.valid:
+            self.cryptos.append(crypto)
+        else:
+            self.valid_tickers -= 1
 
     @multitasking.task
     def update_ticker(self, ticker: Ticker):

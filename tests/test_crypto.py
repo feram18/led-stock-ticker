@@ -8,7 +8,7 @@ from data.status import Status
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestCrypto:
     def setup_method(self):
-        self.crypto = Crypto('ETH-USD', 'USD')
+        self.crypto = Crypto('USD', 'ETH-USD')
 
     def teardown_method(self):
         del self.crypto
@@ -23,34 +23,18 @@ class TestCrypto:
             self.crypto.update()
         assert f'Fetching new data for {self.crypto.symbol}.' in caplog.text
 
-    def test_get_name(self):
-        name = self.crypto.get_name()
-        assert name == 'Ethereum'
-
-    def test_get_current_price(self):
-        current_price = self.crypto.get_current_price()
+    def test_get_price(self):
+        current_price = self.crypto.get_price(self.crypto.yf_ticker.info['regularMarketPrice'])
         assert isinstance(current_price, float)
 
-    def test_get_previous_close_price(self):
-        prev_close_price = self.crypto.get_previous_close_price()
+    def test_get_prev_close(self):
+        prev_close_price = self.crypto.get_prev_close(self.crypto.yf_ticker)
         assert isinstance(prev_close_price, float)
 
-    def test_get_value_change(self):
-        value_change = self.crypto.get_value_change()
-        assert isinstance(value_change, float)
-
-    def test_get_percentage_change(self):
-        pct_change = self.crypto.get_percentage_change()
-        assert isinstance(pct_change, str)
-
-    def test_get_percentage_change_2(self):
-        pct_change = self.crypto.get_percentage_change()
-        assert '%' in pct_change
-
     def test_get_chart_prices(self):
-        chart_prices = self.crypto.get_chart_prices()
+        chart_prices = self.crypto.get_chart_prices(self.crypto.yf_ticker)
         assert isinstance(chart_prices, list)
 
     def test_get_chart_prices_2(self):
-        chart_prices = self.crypto.get_chart_prices()
+        chart_prices = self.crypto.get_chart_prices(self.crypto.yf_ticker)
         assert len(chart_prices) > 0

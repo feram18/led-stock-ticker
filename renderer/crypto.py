@@ -1,39 +1,36 @@
 import time
-import utils
 from renderer.ticker import TickerRenderer
 from data.crypto import Crypto
-from constants import TEXT_SCROLL_SPEED, TEXT_SCROLL_DELAY, ROTATION_RATE
+from utils import text_offscreen, scroll_text
+from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
 class CryptoRenderer(TickerRenderer):
     """
     Renderer for Crypto objects
 
-    Arguments:
-        matrix (rgbmatrix.RGBMatrix):       RGBMatrix instance
-        canvas (rgbmatrix.Canvas):          Canvas associated with matrix
-        data (data.Data):                   Data instance
-
     Attributes:
-        cryptos (list):                     List of Crypto objects
+        cryptos (list):         List of Crypto objects
+        symbol_x (int):         Crypto's symbol x-coord
     """
 
-    def __init__(self, matrix, canvas, data):
-        super().__init__(matrix, canvas, data)
-        self.symbol_x = 0
+    def __init__(self, matrix, canvas, config, data):
+        super().__init__(matrix, canvas, config, data)
         self.cryptos = self.data.cryptos
+        self.symbol_x = 0
 
     def render(self):
         for crypto in self.cryptos:
             self.populate_data(crypto)
             self.canvas.Clear()
 
-            if utils.text_offscreen(self.name, self.canvas.width, self.primary_font.baseline - 1):
+            finished_scrolling = False
+            if text_offscreen(self.name, self.canvas.width, self.primary_font.baseline - 1):
                 time_started = time.time()
                 first_run = True
-                self.name_x = 1
+                x = 1
 
-                while not self.finished_scrolling:
+                while not finished_scrolling:
                     self.canvas.Clear()
 
                     # Render elements
@@ -49,15 +46,11 @@ class CryptoRenderer(TickerRenderer):
 
                     time.sleep(TEXT_SCROLL_SPEED)
 
-                    self.name_x = utils.scroll_text(self.canvas.width, self.name_x, pos)
+                    x = scroll_text(self.canvas.width, x, pos)
 
                     if time.time() - time_started >= ROTATION_RATE:
-                        self.finished_scrolling = True
+                        finished_scrolling = True
             else:
-                self.name_x = utils.align_text_center(string=self.name,
-                                                      canvas_width=self.canvas.width,
-                                                      font_width=self.primary_font.baseline - 1)[0]
-
                 # Render elements
                 self.render_chart()
                 self.render_name()
@@ -67,7 +60,6 @@ class CryptoRenderer(TickerRenderer):
 
                 time.sleep(ROTATION_RATE)
 
-            self.finished_scrolling = False
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def populate_data(self, crypto: Crypto):

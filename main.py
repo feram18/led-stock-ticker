@@ -6,7 +6,7 @@ from rgbmatrix import RGBMatrix
 from utils import args, led_matrix_options
 from version import __version__
 from config.matrix_config import MatrixConfig
-from data.data import Data
+from api.data import Data
 from renderer.main import MainRenderer
 from renderer.loading import Loading
 
@@ -28,7 +28,7 @@ def main(matrix_):
     data = Data(config)
 
     # Begin rendering screen rotation
-    MainRenderer(matrix_, canvas, data).render()
+    MainRenderer(matrix_, canvas, config, data).render()
 
 
 if __name__ == '__main__':

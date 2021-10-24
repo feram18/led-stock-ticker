@@ -11,16 +11,14 @@ class MainRenderer(Renderer):
     Handle the rendering of different boards/screens (Clock, Stocks, Cryptos)
 
     Arguments:
-        matrix (rgbmatrix.RGBMatrix):       RGBMatrix instance
-        canvas (rgbmatrix.Canvas):          Canvas associated with matrix
-        data (data.Data):                   Data instance
+        data (api.Data):            Data instance
 
     Attributes:
-        status (data.Status):               Update status
+        status (data.Status):       Update status
     """
 
-    def __init__(self, matrix, canvas, data):
-        super().__init__(matrix, canvas)
+    def __init__(self, matrix, canvas, config, data):
+        super().__init__(matrix, canvas, config)
         self.data = data
         self.status = self.data.status
 
@@ -42,13 +40,13 @@ class MainRenderer(Renderer):
         self.render_error()
 
     def render_clock(self):
-        ClockRenderer(self.matrix, self.canvas, self.data).render()
+        ClockRenderer(self.matrix, self.canvas, self.config, self.data).render()
 
     def render_stocks(self):
-        StockRenderer(self.matrix, self.canvas, self.data).render()
+        StockRenderer(self.matrix, self.canvas, self.config, self.data).render()
 
     def render_cryptos(self):
-        CryptoRenderer(self.matrix, self.canvas, self.data).render()
+        CryptoRenderer(self.matrix, self.canvas, self.config, self.data).render()
 
     def render_error(self):
-        ErrorRenderer(self.matrix, self.canvas, self.data).render()
+        ErrorRenderer(self.matrix, self.canvas, self.config, self.data).render()
