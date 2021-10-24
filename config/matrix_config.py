@@ -1,6 +1,7 @@
 import logging
 from typing import List
-from constants import CONFIG_FILE, LAYOUT_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, \
+from config.layout import Layout
+from constants import CONFIG_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, \
     TWENTY_FOUR_HOURS_FORMAT
 from utils import read_json
 from data.currency import currencies
@@ -16,9 +17,9 @@ class MatrixConfig:
 
     Attributes:
         config (dict):              Configurations dictionary
-        layout (dict):              Layout dictionary
-        stocks (list):              List of stock strings
+        layout (Layout):            Layout instance
         cryptos (list):             List of crypto strings
+        stocks (list):              List of stock strings
         currency (str):             Currency prices will be displayed on
         time_format (str):          Clock's time format
     """
@@ -26,12 +27,8 @@ class MatrixConfig:
     def __init__(self, width: int, height: int):
         self.config = read_json(CONFIG_FILE)
 
-        # Matrix dimensions
-        self.width = width
-        self.height = height
-
         # Layout configuration
-        self.layout = read_json(LAYOUT_FILE.format(self.width, self.height))
+        self.layout = Layout(width, height)
 
         # Validate and set configurations
         self.cryptos = self.validate_cryptos(self.config['tickers']['cryptos'])
