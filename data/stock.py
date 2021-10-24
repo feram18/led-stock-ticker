@@ -1,84 +1,45 @@
+import requests
 import logging
 import yfinance as yf
-import requests
-from requests.exceptions import MissingSchema, Timeout, ConnectionError
+from dataclasses import dataclass
 from PIL import Image, UnidentifiedImageError
+from requests.exceptions import MissingSchema, ConnectionError
 from data.ticker import Ticker
-from data.status import Status
 from utils import convert_currency
 
 
+@dataclass
 class Stock(Ticker):
-    """
-    Class to represent a Stock object
+    logo: Image = None
 
-    Arguments:
-        symbol (str):               Symbol string
-        currency (str):             Currency prices will be displayed on
+    def initialize(self):
+        super(Stock, self).initialize()
+        self.logo = self.get_logo(self.yf_ticker.info['logo_url'])
 
-    Attributes:
-        logo (PIL.Image):           Ticker's company/brand logo
-    """
-    def __init__(self, symbol: str, currency: str):
-        super().__init__(symbol, currency)
-        self.logo = None
-
-    def initialize(self) -> Status:
-        """
-        Setup stock's initial data.
-        :return status: (data.Status) Update status
-        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
-        :exception Timeout: If the request timed out
-        """
-        logging.debug(f'Fetching initial data for {self.symbol}.')
-
-        try:
-            self.data = yf.Ticker(self.symbol)
-
-            self.name = self.get_name()
-            self.current_price = self.get_current_price()
-            self.previous_close = self.get_previous_close_price()
-            self.value_change = self.get_value_change()
-            self.pct_change = self.get_percentage_change()
-            self.chart_prices = self.get_chart_prices()
-            self.logo = self.get_logo()
-
-            self.initialized = True
-            return Status.SUCCESS
-        except KeyError:
-            logging.error(f'No data available for {self.symbol}.')
-            self.valid = False
-            return Status.FAIL
-        except Timeout:
-            return Status.NETWORK_ERROR
-
-    def get_previous_close_price(self) -> float:
+    def get_prev_close(self, ticker: yf.Ticker) -> float:
         """
         Fetch the stock's previous close price.
         If currency is not set to USD, convert value to user-selected currency.
-        :return: prev_close: (float) Previous day's close price
+        :param ticker: Yfinance Ticker instance
+        :return: prev_close: Previous day's close price
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
-        try:
-            prev_close = self.data.info['regularMarketPreviousClose']
-            if self.currency != 'USD':
-                prev_close = convert_currency('USD', self.currency, prev_close)
-            return prev_close
-        except KeyError:
-            self.valid = False
-            self.update_status = Status.FAIL
-            return 0.00
+        prev_close = ticker.info['regularMarketPreviousClose']
+        if self.currency != 'USD':
+            prev_close = convert_currency('USD', self.currency, prev_close)
+        return prev_close
 
-    def get_logo(self) -> Image:
+    def get_logo(self, img_url: str) -> Image:
         """
-        Fetch the ticker's logo.
-        :return: logo: (PIL.Image)
+        Fetch the stock's company logo.
+        :param img_url: URL to logo image
+        :return: logo: Stock's company logo image
         :exception MissingSchema: If the URL schema is missing.
-        :exception UnidentifiedImageError: If an image cannot be opened and identified
-        :exception ConnectionError: If a Connection error occurred
+        :exception UnidentifiedImageError: If image cannot be opened/identified
+        :exception ConnectionError: If connection error occurred
         """
         try:
-            logo = Image.open(requests.get(self.data.info['logo_url'], stream=True).raw)
+            logo = Image.open(requests.get(img_url, stream=True).raw)
             logo.thumbnail((8, 8), Image.ANTIALIAS)
             return logo.convert('RGB')
         except MissingSchema:
@@ -87,13 +48,3 @@ class Stock(Ticker):
             logging.exception(f'Invalid image format for {self.symbol} logo image.')
         except ConnectionError:
             logging.exception(f'Unable to fetch {self.symbol} logo image.')
-
-    def __str__(self):
-        return f'<{self.__class__.__name__} {hex(id(self))}> ' \
-               f'Symbol: {self.symbol}; ' \
-               f'Name: {self.name}; ' \
-               f'Previous Close Price: {self.previous_close}; ' \
-               f'Current Price: {self.current_price}; ' \
-               f'Value Change: {self.value_change}; ' \
-               f'Percentage Change: {self.pct_change}; ' \
-               f'Logo: {self.logo};'
