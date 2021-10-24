@@ -3,7 +3,7 @@
 # Directories & Files
 CONFIG_FILE = 'config/config.json'
 LAYOUT_FILE = 'config/layout/w{}h{}.json'
-LOADING_IMAGE = 'assets/img/led-stock-ticker_loading.png'
+LOADING_IMAGE = 'assets/img/logo.png'
 ERROR_IMAGE = 'assets/img/error.png'
 
 # Software Defaults
