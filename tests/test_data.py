@@ -1,6 +1,6 @@
 import pytest
 import time
-from data.data import Data
+from api.data import Data
 from config.matrix_config import MatrixConfig
 from constants import UPDATE_RATE
 
