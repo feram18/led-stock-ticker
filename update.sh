@@ -5,7 +5,7 @@ ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Cleans up repository directory
 function clean() {
-  rm -f led-stock-ticker.log  # Log file
+  rm -f "*.log*"  # Log files
   sudo rm -rf "*/__pycache__"  # pycache
   sudo rm -rf "__pycache__"
 }
