@@ -68,18 +68,4 @@ class CryptoRenderer(TickerRenderer):
         :param crypto: (data.Crypto) Crypto instance
         """
         super().populate_data(crypto)
-        self.symbol = self.format_symbol(crypto.symbol)
-
-    @staticmethod
-    def format_symbol(symbol: str) -> str:
-        """
-        Format cryptocurrency string to remove currency exchange from it.
-        i.e. BTC-USD -> BTC
-        :param symbol: (str) Symbol string to format
-        :return: symbol: (str) Formatted symbol string
-        """
-        currency_postfix = '-USD'
-        if currency_postfix in symbol.upper():
-            return symbol.replace(currency_postfix, '')
-        else:
-            return symbol
+        self.symbol = crypto.symbol.replace('-USD', '')  # Remove currency exchange
