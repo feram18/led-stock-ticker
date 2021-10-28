@@ -14,7 +14,7 @@ class Stock(Ticker):
 
     def initialize(self):
         super(Stock, self).initialize()
-        self.logo = self.get_logo(self.yf_ticker.info['logo_url'])
+        self.logo = self.get_logo(self.yf_ticker.info.get('logo_url', None))
 
     def get_prev_close(self, ticker: yf.Ticker) -> float:
         """
@@ -24,7 +24,7 @@ class Stock(Ticker):
         :return: prev_close: Previous day's close price
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
-        prev_close = ticker.info['regularMarketPreviousClose']
+        prev_close = ticker.info.get('regularMarketPreviousClose', 0.00)
         if self.currency != 'USD':
             prev_close = convert_currency('USD', self.currency, prev_close)
         return prev_close
@@ -34,17 +34,15 @@ class Stock(Ticker):
         Fetch the stock's company logo.
         :param img_url: URL to logo image
         :return: logo: Stock's company logo image
-        :exception MissingSchema: If the URL schema is missing.
         :exception UnidentifiedImageError: If image cannot be opened/identified
         :exception ConnectionError: If connection error occurred
         """
-        try:
-            logo = Image.open(requests.get(img_url, stream=True).raw)
-            logo.thumbnail((8, 8), Image.ANTIALIAS)
-            return logo.convert('RGB')
-        except MissingSchema:
-            logging.exception(f'Invalid URL for {self.symbol} logo image provided.')
-        except UnidentifiedImageError:
-            logging.exception(f'Invalid image format for {self.symbol} logo image.')
-        except ConnectionError:
-            logging.exception(f'Unable to fetch {self.symbol} logo image.')
+        if img_url is not None and len(img_url) > 0:
+            try:
+                logo = Image.open(requests.get(img_url, stream=True).raw)
+                logo.thumbnail((8, 8), Image.ANTIALIAS)
+                return logo.convert('RGB')
+            except UnidentifiedImageError:
+                logging.exception(f'Invalid image format for {self.symbol} logo image.')
+            except ConnectionError:
+                logging.exception(f'Unable to fetch {self.symbol} logo image.')

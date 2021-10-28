@@ -1,6 +1,6 @@
 import logging
 import yfinance as yf
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from abc import abstractmethod
 from typing import List
 from requests.exceptions import Timeout
@@ -12,23 +12,23 @@ from utils import convert_currency
 class Ticker:
     currency: str
     symbol: str
-    yf_ticker: yf.Ticker = None
-    name: str = None
-    price: float = None
-    prev_close: float = None
-    value_change: float = None
-    pct_change: str = None
-    chart_prices: List[float] = None
+    yf_ticker: yf.Ticker = field(init=False)
+    name: str = field(init=False)
+    price: float = field(init=False)
+    prev_close: float = field(init=False)
+    value_change: float = field(init=False)
+    pct_change: str = field(init=False)
+    chart_prices: List[float] = field(default_factory=list)
     valid: bool = True
     status: Status = Status.SUCCESS
 
     def __post_init__(self):
         self.initialize()
 
-    def initialize(self):
+    def initialize(self) -> Status:
         """
         Setup ticker's initial data.
-        :return status: (data.Status) Update status
+        :return status: Update status
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         :exception Timeout: If the request timed out
         """
@@ -36,7 +36,7 @@ class Ticker:
         try:
             self.yf_ticker = yf.Ticker(self.symbol)
             self.name = self.yf_ticker.info['shortName']
-            self.price = self.get_price(self.yf_ticker.info['regularMarketPrice'])
+            self.price = self.get_price(self.yf_ticker.info.get('regularMarketPrice', 0.00))
             self.prev_close = self.get_prev_close(self.yf_ticker)
             self.value_change = float(format((self.price - self.prev_close), '.2f'))
             self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'
@@ -50,16 +50,16 @@ class Ticker:
 
     def update(self) -> Status:
         """
-        Update only the data that may have changed since last update
+        Update only the data that may have changed since last update.
         i.e. Exclude the ticker's name and previous day close price.
-        :return status: (data.Status) Update status
+        :return status: Update status
         :exception Timeout: If the request timed out
         """
         logging.debug(f'Fetching new data for {self.symbol}.')
 
         try:
             self.yf_ticker = yf.Ticker(self.symbol)
-            self.price = self.get_price(self.yf_ticker.info['regularMarketPrice'])
+            self.price = self.get_price(self.yf_ticker.info.get('regularMarketPrice', 0.00))
             self.value_change = float(format((self.price - self.prev_close), '.2f'))
             self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'
             self.chart_prices = self.get_chart_prices(self.yf_ticker)
@@ -71,7 +71,7 @@ class Ticker:
         """
         Fetch the ticker's current price.
         If currency is not set to USD, convert value to user-selected currency.
-        :return: price: (float) Current price
+        :return: price: Current price
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
         if self.currency != 'USD':
@@ -85,7 +85,7 @@ class Ticker:
     def get_chart_prices(self, ticker: yf.Ticker) -> List[float]:
         """
         Fetch historical market data for chart.
-        :return: chart_prices: (list) List of historical prices
+        :return: chart_prices: List of historical prices
         """
         prices = ticker.history(interval='1m', period='1d')['Close'].tolist()
         if len(prices) < 100:
