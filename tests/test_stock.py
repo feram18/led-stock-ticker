@@ -43,3 +43,7 @@ class TestStock:
     def test_get_logo(self):
         logo = self.stock.get_logo(self.stock.yf_ticker.info['logo_url'])
         assert isinstance(logo, Image)
+
+    def test_get_logo_2(self):
+        logo = self.stock.get_logo(None)
+        assert logo is None
