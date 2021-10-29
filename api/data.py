@@ -70,26 +70,26 @@ class Data:
         self.time = self.get_time()
 
     @multitasking.task
-    def fetch_stock(self, symbol: str, currency: str):
+    def fetch_stock(self, currency: str, symbol: str):
         """
         Fetch stock's data
-        :param symbol: (str) Stock symbol
-        :param currency: (str) Stock's prices currency
+        :param symbol: Stock symbol
+        :param currency: Stock's prices currency
         """
-        stock = Stock(symbol, currency)
+        stock = Stock(currency, symbol)
         if stock.valid:
             self.stocks.append(stock)
         else:
             self.valid_tickers -= 1
 
     @multitasking.task
-    def fetch_crypto(self, symbol: str, currency: str):
+    def fetch_crypto(self, currency: str, symbol: str):
         """
         Fetch crypto's data
-        :param symbol: (str) Crypto symbol
-        :param currency: (str) Crypto's prices currency
+        :param symbol: Crypto symbol
+        :param currency: Crypto's prices currency
         """
-        crypto = Crypto(symbol, currency)
+        crypto = Crypto(currency, symbol)
         if crypto.valid:
             self.cryptos.append(crypto)
         else:
@@ -99,14 +99,14 @@ class Data:
     def update_ticker(self, ticker: Ticker):
         """
         Update ticker's data
-        :param ticker: (data.Ticker) Ticker object to update
+        :param ticker: Ticker object to update
         """
         ticker.update()
 
     def get_time(self) -> str:
         """
         Get current time as a string
-        :return: time: (str) Current time
+        :return: time: Current time
         """
         return time.strftime(self.time_format)
 
@@ -114,7 +114,7 @@ class Data:
     def get_date() -> str:
         """
         Get current date as a string
-        :return: date: (str) Current date
+        :return: date: Current date
         """
         return time.strftime(DATE_FORMAT)
 
@@ -122,7 +122,7 @@ class Data:
         """
         Returns Boolean value to determine if tickers should be updated.
         i.e. If 10 minutes have passed since data was last fetched, an update is needed.
-        :return: should_update: (bool)
+        :return: should_update:
         """
         logging.info('Checking for update')
         time_delta = time.time() - self.last_updated
