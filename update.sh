@@ -30,7 +30,7 @@ function createConfigFile() {
   echo "$(tput setaf 7)Creating new config.json file..."
   cp config.json.example config.json
   chown "$USER": config.json
-  echo "Set your preferences using the command $(tput setaf 3)./config$(tput setaf 7)"
+  echo "Set your preferences using the command $(tput setaf 3)./config.py$(tput setaf 7)"
 }
 
 # Checks if configuration file exists/requires update
