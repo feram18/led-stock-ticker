@@ -9,10 +9,6 @@ from utils import convert_currency
 
 @dataclass
 class Crypto(Ticker):
-    def initialize(self):
-        super(Crypto, self).initialize()
-        self.name.replace(' USD', '')
-
     def get_prev_close(self, ticker: yf.Ticker) -> float:
         """
         Fetch the crypto's price 24h ago.
