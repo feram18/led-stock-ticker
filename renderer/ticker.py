@@ -53,12 +53,8 @@ class TickerRenderer(Renderer, ABC):
     def render(self):
         pass
 
-    def render_name(self):
-        x = utils.align_text_center(string=self.name,
-                                    canvas_width=self.canvas.width,
-                                    font_width=self.secondary_font.baseline - 1)[0]
+    def render_name(self, x: int) -> int:
         y = self.coords['name']['y']
-
         return DrawText(self.canvas, self.secondary_font, x, y, self.text_color, self.name)
 
     def render_symbol(self):

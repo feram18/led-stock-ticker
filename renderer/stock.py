@@ -3,7 +3,7 @@ from rgbmatrix.graphics import DrawText, DrawLine
 from renderer.ticker import TickerRenderer
 from data.stock import Stock
 from data.color import Color
-from utils import market_closed, text_offscreen, scroll_text, center_image
+from utils import market_closed, text_offscreen, scroll_text, center_image, align_text_center
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
@@ -41,7 +41,7 @@ class StockRenderer(TickerRenderer):
 
                     # Render elements
                     self.render_chart()
-                    pos = self.render_name()
+                    pos = self.render_name(x)
                     self.render_market_status()
                     self.render_symbol()
                     self.render_price()
@@ -60,7 +60,10 @@ class StockRenderer(TickerRenderer):
             else:
                 # Render elements
                 self.render_chart()
-                self.render_name()
+                x = align_text_center(string=self.name,
+                                      canvas_width=self.canvas.width,
+                                      font_width=self.secondary_font.baseline - 1)[0]
+                self.render_name(x)
                 self.render_market_status()
                 self.render_symbol()
                 self.render_price()
@@ -82,7 +85,10 @@ class StockRenderer(TickerRenderer):
 
     def render_market_status(self):
         for x in range(2):
-            DrawLine(self.canvas, x, self.symbol_y, x, self.symbol_y - self.large_font.height, self.market_status_color)
+            DrawLine(self.canvas,
+                     x, self.symbol_y,
+                     x, self.symbol_y - self.secondary_font.height,
+                     self.market_status_color)
 
     def render_logo(self):
         x_offset = center_image(canvas_width=self.canvas.width,
