@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.com/feram18/led-stock-ticker.svg?branch=master)](https://travis-ci.com/feram18/led-stock-ticker)
 ![GitHub](https://img.shields.io/github/license/feram18/led-stock-ticker)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/feram18/led-stock-ticker)
+[![GitHub release (latest by date)](https://badgen.net/github/release/feram18/led-stock-ticker?label=version)](https://github.com/feram18/led-stock-ticker/releases/latest)
 ![GitHub Release Date](https://img.shields.io/github/release-date/feram18/led-stock-ticker)
 
 An LED display for real-time prices of stocks and cryptocurrencies. Requires a Raspberry Pi, and a 64×32 LED board 
