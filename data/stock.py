@@ -3,7 +3,7 @@ import logging
 import yfinance as yf
 from dataclasses import dataclass
 from PIL import Image, UnidentifiedImageError
-from requests.exceptions import MissingSchema, ConnectionError
+from requests.exceptions import ConnectionError
 from data.ticker import Ticker
 from utils import convert_currency
 
@@ -25,9 +25,10 @@ class Stock(Ticker):
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
         prev_close = ticker.info.get('regularMarketPreviousClose', 0.00)
-        if self.currency != 'USD':
-            prev_close = convert_currency('USD', self.currency, prev_close)
-        return prev_close
+        if self.currency == 'USD':
+            return prev_close
+        else:
+            return convert_currency('USD', self.currency, prev_close)
 
     def get_logo(self, img_url: str) -> Image:
         """
@@ -37,7 +38,7 @@ class Stock(Ticker):
         :exception UnidentifiedImageError: If image cannot be opened/identified
         :exception ConnectionError: If connection error occurred
         """
-        if img_url is not None and len(img_url) > 0:
+        if img_url:
             try:
                 logo = Image.open(requests.get(img_url, stream=True).raw)
                 logo.thumbnail((8, 8), Image.ANTIALIAS)
