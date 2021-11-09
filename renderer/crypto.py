@@ -1,7 +1,8 @@
 import time
 from renderer.ticker import TickerRenderer
 from data.crypto import Crypto
-from utils import text_offscreen, scroll_text, align_text_center
+from data.position import Position
+from utils import text_offscreen, scroll_text, align_text
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
@@ -53,9 +54,10 @@ class CryptoRenderer(TickerRenderer):
             else:
                 # Render elements
                 self.render_chart()
-                x = align_text_center(string=self.name,
-                                      canvas_width=self.canvas.width,
-                                      font_width=self.secondary_font.baseline - 1)[0]
+                x = align_text(text=self.name,
+                               x=Position.CENTER,
+                               col_width=self.canvas.width,
+                               font_width=self.secondary_font.baseline - 1)
                 self.render_name(x)
                 self.render_symbol()
                 self.render_price()

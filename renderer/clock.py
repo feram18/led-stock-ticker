@@ -1,7 +1,8 @@
 import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
-from utils import align_text_center
+from data.position import Position
+from utils import align_text
 from constants import ROTATION_RATE
 
 
@@ -36,17 +37,19 @@ class ClockRenderer(Renderer):
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_date(self):
-        x = align_text_center(string=self.date,
-                              canvas_width=self.canvas.width,
-                              font_width=self.secondary_font.baseline - 1)[0] + 1
+        x = align_text(text=self.date,
+                       x=Position.CENTER,
+                       col_width=self.canvas.width,
+                       font_width=self.secondary_font.baseline - 1) + 1
         y = self.config.layout.coords['date']['y']
 
         DrawText(self.canvas, self.secondary_font, x, y, self.text_color, self.date)
 
     def render_time(self):
         font = self.config.layout.time_font
-        x = align_text_center(string=self.time,
-                              canvas_width=self.canvas.width,
-                              font_width=font.baseline - 2)[0]
+        x = align_text(text=self.time,
+                       x=Position.CENTER,
+                       col_width=self.canvas.width,
+                       font_width=font.baseline - 2)
         y = self.config.layout.coords['time']['y']
         DrawText(self.canvas, font, x, y, self.text_color, self.time)

@@ -1,9 +1,10 @@
 import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
-from utils import align_text_center, load_font, load_image
-from constants import ERROR_IMAGE, ROTATION_RATE
 from data.color import Color
+from data.position import Position
+from utils import align_text, load_image
+from constants import ERROR_IMAGE, ROTATION_RATE
 
 
 class ErrorRenderer(Renderer):
@@ -31,11 +32,13 @@ class ErrorRenderer(Renderer):
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_error_msg(self):
-        x, y = align_text_center(self.error_msg,
-                                 self.canvas.width,
-                                 self.canvas.height,
-                                 self.secondary_font.baseline - 1,
-                                 self.secondary_font.height)
+        x, y = align_text(self.error_msg,
+                          Position.CENTER,
+                          Position.CENTER,
+                          self.canvas.width,
+                          self.canvas.height,
+                          self.secondary_font.baseline - 1,
+                          self.secondary_font.height)
         DrawText(self.canvas, self.secondary_font, x, y, Color.RED, self.error_msg)
 
     def render_image(self):

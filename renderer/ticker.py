@@ -5,6 +5,7 @@ from renderer.renderer import Renderer
 from data.currency import currencies
 from data.color import Color
 from data.ticker import Ticker
+from data.position import Position
 
 
 class TickerRenderer(Renderer, ABC):
@@ -61,17 +62,19 @@ class TickerRenderer(Renderer, ABC):
         DrawText(self.canvas, self.large_font, self.symbol_x, self.symbol_y, self.text_color, self.symbol)
 
     def render_price(self):
-        x = utils.align_text_center(string=self.price,
-                                    canvas_width=self.canvas.width,
-                                    font_width=self.secondary_font.baseline - 1)[0]
+        x = utils.align_text(text=self.price,
+                             x=Position.RIGHT,
+                             col_width=self.canvas.width,
+                             font_width=self.secondary_font.baseline - 1)
         y = self.coords['price']['y']
 
         DrawText(self.canvas, self.primary_font, x, y, self.text_color, self.price)
 
     def render_percentage_change(self):
-        x = utils.align_text_right(self.pct_change,
-                                   self.canvas.width,
-                                   self.secondary_font.baseline - 1)
+        x = utils.align_text(text=self.pct_change,
+                             x=Position.CENTER,
+                             col_width=self.canvas.width,
+                             font_width=self.secondary_font.baseline - 1)
         y = self.coords['value_change']['y']
 
         DrawText(self.canvas, self.primary_font, x, y, self.value_change_color, self.pct_change)

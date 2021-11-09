@@ -3,7 +3,8 @@ from rgbmatrix.graphics import DrawText, DrawLine
 from renderer.ticker import TickerRenderer
 from data.stock import Stock
 from data.color import Color
-from utils import market_closed, text_offscreen, scroll_text, center_image, align_text_center
+from data.position import Position
+from utils import market_closed, text_offscreen, scroll_text, align_image, align_text
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
@@ -58,9 +59,10 @@ class StockRenderer(TickerRenderer):
             else:
                 # Render elements
                 self.render_chart()
-                x = align_text_center(string=self.name,
-                                      canvas_width=self.canvas.width,
-                                      font_width=self.secondary_font.baseline - 1)[0]
+                x = align_text(text=self.name,
+                               x=Position.CENTER,
+                               col_width=self.canvas.width,
+                               font_width=self.secondary_font.baseline - 1)
                 self.render_name(x)
                 self.render_market_status()
                 self.render_symbol()
@@ -87,7 +89,9 @@ class StockRenderer(TickerRenderer):
                      Color.RED if market_closed() else Color.GREEN)
 
     def render_logo(self):
-        x_offset = center_image(canvas_width=self.canvas.width,
-                                image_width=self.logo.size[0])[0]
-        y_offset = self.canvas.height - self.logo.height
+        x_offset, y_offset = align_image(self.logo,
+                                         Position.CENTER,
+                                         Position.BOTTOM,
+                                         self.canvas.width,
+                                         self.canvas.height)
         self.canvas.SetImage(self.logo, x_offset, y_offset)
