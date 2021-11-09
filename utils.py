@@ -83,7 +83,7 @@ def align_text(text: str,
         if y == Position.CENTER:
             y = abs(col_height // 2 + font_height // 2)
         elif y == Position.BOTTOM:
-            y = col_height - font_height
+            y = col_height
         else:
             y = font_height
         if y and not x:
