@@ -12,10 +12,9 @@ class StockRenderer(TickerRenderer):
     Renderer for Stock objects
 
     Attributes:
-        stocks (list):                                          List of Stock objects
-        symbol_x (int):                                         Stock's symbol x-coord
-        logo (PIL.Image):                                       Stock's company logo image
-        market_status_color (rgbmatrix.graphics.Color):         Color that indicates stock market's current status
+        stocks (list):          List of Stock objects
+        symbol_x (int):         Stock's symbol x-coord
+        logo (PIL.Image):       Stock's company logo image
     """
 
     def __init__(self, matrix, canvas, config, data):
@@ -23,7 +22,6 @@ class StockRenderer(TickerRenderer):
         self.stocks = self.data.stocks
         self.symbol_x = self.coords['symbol']['x']
         self.logo = None
-        self.market_status_color = Color.RED if market_closed() else Color.GREEN
 
     def render(self):
         for stock in self.stocks:
@@ -79,16 +77,14 @@ class StockRenderer(TickerRenderer):
         :param stock: (data.Stock) Stock instance
         """
         super().populate_data(stock)
-        self.symbol = stock.symbol
-        if stock.logo is not None:
-            self.logo = stock.logo
+        self.logo = stock.logo
 
     def render_market_status(self):
         for x in range(2):
             DrawLine(self.canvas,
                      x, self.symbol_y,
                      x, self.symbol_y - self.secondary_font.height,
-                     self.market_status_color)
+                     Color.RED if market_closed() else Color.GREEN)
 
     def render_logo(self):
         x_offset = center_image(canvas_width=self.canvas.width,

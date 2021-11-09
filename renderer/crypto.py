@@ -71,4 +71,4 @@ class CryptoRenderer(TickerRenderer):
         :param crypto: (data.Crypto) Crypto instance
         """
         super().populate_data(crypto)
-        self.symbol = crypto.symbol.replace('-USD', '')  # Remove currency exchange
+        self.symbol = self.symbol.replace('-USD', '')  # Remove currency exchange

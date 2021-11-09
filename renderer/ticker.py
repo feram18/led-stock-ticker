@@ -117,14 +117,12 @@ class TickerRenderer(Renderer, ABC):
         Populate attributes from Ticker instance's attributes.
         :param ticker: (data.Ticker) Ticker instance
         """
+        self.symbol = ticker.symbol
         self.name = ticker.name
         self.price = self.format_price(self.currency, ticker.price)
-        if self.currency == 'USD':
-            self.previous_close = ticker.prev_close
-        else:  # Convert back to USD for chart calculations purposes
-            self.previous_close = utils.convert_currency(self.currency,
-                                                         'USD',
-                                                         ticker.prev_close)
+        self.previous_close = ticker.prev_close
+        if self.currency != 'USD':  # Convert back to USD for chart calculations purposes
+            self.previous_close = utils.convert_currency(self.currency, 'USD', ticker.prev_close)
         self.pct_change = ticker.pct_change
         self.value_change_color = self.set_change_color(ticker.value_change)
         self.chart_prices = ticker.chart_prices
