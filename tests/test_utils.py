@@ -4,6 +4,7 @@ import logging
 import PIL
 import rgbmatrix
 import utils
+from data.position import Position
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
@@ -46,40 +47,48 @@ class TestUtils:
         result = utils.text_offscreen(short_text, 64, 6)
         assert result is False
 
-    def test_align_text_center(self):
-        x, y = utils.align_text_center('Lorem ipsum', 64, 32, 4, 6)
+    def test_align_text(self):
+        x, y = utils.align_text('Lorem ipsum', Position.CENTER, Position.CENTER, 64, 32, 4, 6)
         assert (x, y) == (10, 19)
 
-    def test_align_text_center_2(self):
-        x, y = utils.align_text_center('Lorem ipsum', canvas_width=64, font_width=4)
+    def test_align_text_2(self):
+        x, y = utils.align_text('Lorem ipsum', x=Position.CENTER, col_width=64, font_width=4)
         assert (x, y) == (10, 0)
 
-    def test_align_text_center_3(self):
-        x, y = utils.align_text_center('Lorem ipsum', canvas_height=32, font_height=6)
+    def test_align_text_3(self):
+        x, y = utils.align_text('Lorem ipsum', y=Position.CENTER, col_height=32, font_height=6)
         assert (x, y) == (0, 19)
 
-    def test_align_text_center_4(self):
-        x, y = utils.align_text_center('Lorem ipsum')
+    def test_align_text_4(self):
+        x, y = utils.align_text('Lorem ipsum')
         assert (x, y) == (0, 0)
 
-    def test_align_text_right(self):
-        x = utils.align_text_right('Lorem ipsum', 64, 4)
+    def test_align_text_5(self):
+        x = utils.align_text('Lorem ipsum', x=Position.RIGHT, col_width=64, font_width=4)
         assert x == 20
 
-    def test_center_image(self):
-        x, y = utils.center_image(64, 32, 28, 28)
+    def test_align_text_6(self):
+        x = utils.align_text('Lorem ipsum', y=Position.BOTTOM, col_height=32)
+        assert x == 32
+
+    def test_align_image(self):
+        img = utils.load_image('assets/img/logo.png', (15, 15))
+        x, y = utils.align_image(img, Position.CENTER, Position.CENTER, 64, 32)
         assert (x, y) == (18, 2)
 
-    def test_center_image_2(self):
-        x, y = utils.center_image(canvas_width=64, image_width=28)
+    def test_align_image_2(self):
+        img = utils.load_image('assets/img/logo.png', (15, 15))
+        x, y = utils.align_image(img, x=Position.CENTER, col_width=64)
         assert (x, y) == (18, 0)
 
-    def test_center_image_3(self):
-        x, y = utils.center_image(canvas_height=32, image_height=28)
+    def test_align_image_3(self):
+        img = utils.load_image('assets/img/logo.png', (15, 15))
+        x, y = utils.align_image(img, y=Position.CENTER, col_height=32)
         assert (x, y) == (0, 2)
 
-    def test_center_image_4(self):
-        x, y = utils.center_image()
+    def test_align_image_4(self):
+        img = utils.load_image('assets/img/logo.png', (15, 15))
+        x, y = utils.align_image(img)
         assert (x, y) == (0, 0)
 
     def test_scroll_text(self):
