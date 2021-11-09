@@ -19,11 +19,13 @@ class Loading(Renderer):
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     def render_version(self):
-        x = align_text(text=__version__,
-                       x=Position.CENTER,
-                       col_width=self.canvas.width,
-                       font_width=self.secondary_font.baseline - 1)
-        y = self.canvas.height
+        x, y = align_text(__version__,
+                          Position.CENTER,
+                          Position.BOTTOM,
+                          self.canvas.width,
+                          self.canvas.height,
+                          self.secondary_font.baseline - 1,
+                          self.secondary_font.height)
 
         DrawText(self.canvas, self.secondary_font, x, y, Color.ORANGE, __version__)
 
