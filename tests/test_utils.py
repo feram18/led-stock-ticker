@@ -52,44 +52,35 @@ class TestUtils:
         assert (x, y) == (10, 19)
 
     def test_align_text_2(self):
-        x, y = utils.align_text('Lorem ipsum', x=Position.CENTER, col_width=64, font_width=4)
-        assert (x, y) == (10, 0)
+        x = utils.align_text('Lorem ipsum', x=Position.CENTER, col_width=64, font_width=4)
+        assert x == 10
 
     def test_align_text_3(self):
-        x, y = utils.align_text('Lorem ipsum', y=Position.CENTER, col_height=32, font_height=6)
-        assert (x, y) == (0, 19)
+        y = utils.align_text('Lorem ipsum', y=Position.CENTER, col_height=32, font_height=6)
+        assert y == 19
 
     def test_align_text_4(self):
-        x, y = utils.align_text('Lorem ipsum')
-        assert (x, y) == (0, 0)
-
-    def test_align_text_5(self):
         x = utils.align_text('Lorem ipsum', x=Position.RIGHT, col_width=64, font_width=4)
         assert x == 20
 
-    def test_align_text_6(self):
+    def test_align_text_5(self):
         x = utils.align_text('Lorem ipsum', y=Position.BOTTOM, col_height=32)
         assert x == 32
 
     def test_align_image(self):
         img = utils.load_image('assets/img/logo.png', (15, 15))
         x, y = utils.align_image(img, Position.CENTER, Position.CENTER, 64, 32)
-        assert (x, y) == (18, 2)
+        assert (x, y) == (25, 10)
 
     def test_align_image_2(self):
         img = utils.load_image('assets/img/logo.png', (15, 15))
-        x, y = utils.align_image(img, x=Position.CENTER, col_width=64)
-        assert (x, y) == (18, 0)
+        x = utils.align_image(img, x=Position.CENTER, col_width=64)
+        assert x == 25
 
     def test_align_image_3(self):
         img = utils.load_image('assets/img/logo.png', (15, 15))
-        x, y = utils.align_image(img, y=Position.CENTER, col_height=32)
-        assert (x, y) == (0, 2)
-
-    def test_align_image_4(self):
-        img = utils.load_image('assets/img/logo.png', (15, 15))
-        x, y = utils.align_image(img)
-        assert (x, y) == (0, 0)
+        y = utils.align_image(img, y=Position.CENTER, col_height=32)
+        assert y == 10
 
     def test_scroll_text(self):
         x = utils.scroll_text(64, 45, 63)
