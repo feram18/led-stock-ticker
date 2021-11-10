@@ -63,7 +63,7 @@ class TickerRenderer(Renderer, ABC):
 
     def render_price(self):
         x = utils.align_text(text=self.price,
-                             x=Position.RIGHT,
+                             x=Position.CENTER,
                              col_width=self.canvas.width,
                              font_width=self.secondary_font.baseline - 1)
         y = self.coords['price']['y']
@@ -72,7 +72,7 @@ class TickerRenderer(Renderer, ABC):
 
     def render_percentage_change(self):
         x = utils.align_text(text=self.pct_change,
-                             x=Position.CENTER,
+                             x=Position.RIGHT,
                              col_width=self.canvas.width,
                              font_width=self.secondary_font.baseline - 1)
         y = self.coords['value_change']['y']
