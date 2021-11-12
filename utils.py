@@ -14,8 +14,10 @@ from PIL import Image
 from datetime import datetime
 from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
+from pandas.tseries.offsets import WeekOfMonth
+from pandas.tseries.holiday import AbstractHolidayCalendar, Holiday, sunday_to_monday, GoodFriday, USMemorialDay, \
+    USLaborDay, USThanksgivingDay
 from retry import retry
-from data.market_holiday_calendar import MarketHolidayCalendar
 
 
 class Position(Enum):
@@ -24,6 +26,39 @@ class Position(Enum):
     RIGHT = 1
     CENTER = 2
     BOTTOM = 3
+
+
+class MarketHolidayCalendar(AbstractHolidayCalendar):
+    """
+    NYSE-observed US federal holidays calendar.
+    Based on holidays listed at https://www.nyse.com/markets/hours-calendars
+    """
+    rules = [
+        Holiday("New Year's Day",
+                month=1,
+                day=1,
+                observance=sunday_to_monday),
+        Holiday('Martin Luther King, Jr. Day',
+                month=1,
+                day=1,
+                offset=WeekOfMonth(week=3, weekday=1)),
+        Holiday("Washington's Birthday",
+                month=2,
+                day=1,
+                offset=WeekOfMonth(week=3, weekday=1)),
+        GoodFriday,
+        USMemorialDay,
+        Holiday('Independence Day',
+                month=7,
+                day=4,
+                observance=sunday_to_monday),
+        USLaborDay,
+        USThanksgivingDay,
+        Holiday('Christmas Day',
+                month=12,
+                day=25,
+                observance=sunday_to_monday),
+    ]
 
 
 def read_json(filename: str) -> dict:
