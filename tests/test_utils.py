@@ -4,7 +4,7 @@ import logging
 import PIL
 import rgbmatrix
 import utils
-from data.position import Position
+from utils import Position
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
