@@ -37,12 +37,12 @@ class StockRenderer(TickerRenderer):
                     self.canvas.Clear()
 
                     # Render elements
-                    self.render_chart()
                     pos = self.render_name(x)
                     self.render_market_status()
                     self.render_symbol()
                     self.render_price()
                     self.render_percentage_change()
+                    self.render_chart()
 
                     if first_run:
                         time.sleep(TEXT_SCROLL_DELAY)
@@ -56,7 +56,6 @@ class StockRenderer(TickerRenderer):
                         finished_scrolling = True
             else:
                 # Render elements
-                self.render_chart()
                 x = align_text(text=self.name,
                                x=Position.CENTER,
                                col_width=self.canvas.width,
@@ -66,6 +65,7 @@ class StockRenderer(TickerRenderer):
                 self.render_symbol()
                 self.render_price()
                 self.render_percentage_change()
+                self.render_chart()
 
                 time.sleep(ROTATION_RATE)
 
