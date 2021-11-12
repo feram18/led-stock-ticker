@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from data.color import Color
+from utils import Color
 
 
 class Renderer(ABC):

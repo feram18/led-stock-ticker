@@ -2,9 +2,8 @@ from abc import ABC, abstractmethod
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from data.currency import currencies
-from data.color import Color
 from data.ticker import Ticker
-from utils import align_text, Position, convert_currency
+from utils import Color, align_text, Position, convert_currency
 
 
 class TickerRenderer(Renderer, ABC):

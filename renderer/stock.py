@@ -2,8 +2,7 @@ import time
 from rgbmatrix.graphics import DrawText, DrawLine
 from renderer.ticker import TickerRenderer
 from data.stock import Stock
-from data.color import Color
-from utils import market_closed, text_offscreen, scroll_text, Position, align_image, align_text
+from utils import Color, market_closed, text_offscreen, scroll_text, Position, align_image, align_text
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
