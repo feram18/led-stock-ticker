@@ -2,8 +2,7 @@ import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from data.color import Color
-from data.position import Position
-from utils import align_text, load_image
+from utils import align_text, Position, load_image
 from constants import ERROR_IMAGE, ROTATION_RATE
 
 

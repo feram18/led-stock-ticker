@@ -1,8 +1,7 @@
 import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
-from data.position import Position
-from utils import align_text
+from utils import align_text, Position
 from constants import ROTATION_RATE
 
 

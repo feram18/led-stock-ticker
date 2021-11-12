@@ -1,11 +1,10 @@
-import utils
 from abc import ABC, abstractmethod
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from data.currency import currencies
 from data.color import Color
 from data.ticker import Ticker
-from data.position import Position
+from utils import align_text, Position, convert_currency
 
 
 class TickerRenderer(Renderer, ABC):
@@ -62,19 +61,19 @@ class TickerRenderer(Renderer, ABC):
         DrawText(self.canvas, self.large_font, self.symbol_x, self.symbol_y, self.text_color, self.symbol)
 
     def render_price(self):
-        x = utils.align_text(text=self.price,
-                             x=Position.CENTER,
-                             col_width=self.canvas.width,
-                             font_width=self.secondary_font.baseline - 1)
+        x = align_text(self.price,
+                       x=Position.CENTER,
+                       col_width=self.canvas.width,
+                       font_width=self.secondary_font.baseline - 1)
         y = self.coords['price']['y']
 
         DrawText(self.canvas, self.primary_font, x, y, self.text_color, self.price)
 
     def render_percentage_change(self):
-        x = utils.align_text(text=self.pct_change,
-                             x=Position.RIGHT,
-                             col_width=self.canvas.width,
-                             font_width=self.secondary_font.baseline - 1)
+        x = align_text(self.pct_change,
+                       x=Position.RIGHT,
+                       col_width=self.canvas.width,
+                       font_width=self.secondary_font.baseline - 1)
         y = self.coords['value_change']['y']
 
         DrawText(self.canvas, self.primary_font, x, y, self.value_change_color, self.pct_change)
@@ -125,7 +124,7 @@ class TickerRenderer(Renderer, ABC):
         self.price = self.format_price(self.currency, ticker.price)
         self.previous_close = ticker.prev_close
         if self.currency != 'USD':  # Convert back to USD for chart calculations purposes
-            self.previous_close = utils.convert_currency(self.currency, 'USD', ticker.prev_close)
+            self.previous_close = convert_currency(self.currency, 'USD', ticker.prev_close)
         self.pct_change = ticker.pct_change
         self.value_change_color = self.set_change_color(ticker.value_change)
         self.chart_prices = ticker.chart_prices

@@ -1,10 +1,9 @@
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from data.color import Color
-from data.position import Position
 from version import __version__
 from constants import LOADING_IMAGE
-from utils import align_text, load_image, align_image
+from utils import align_text, Position, load_image, align_image
 
 
 class Loading(Renderer):

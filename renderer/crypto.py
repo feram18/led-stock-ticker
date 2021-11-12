@@ -1,8 +1,7 @@
 import time
 from renderer.ticker import TickerRenderer
 from data.crypto import Crypto
-from data.position import Position
-from utils import text_offscreen, scroll_text, align_text
+from utils import text_offscreen, scroll_text, align_text, Position
 from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 

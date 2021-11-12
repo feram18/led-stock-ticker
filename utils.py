@@ -8,6 +8,7 @@ import requests
 import constants
 from rgbmatrix import RGBMatrixOptions
 from rgbmatrix.graphics import Font
+from enum import Enum
 from typing import Optional, Tuple
 from PIL import Image
 from datetime import datetime
@@ -15,7 +16,14 @@ from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
 from retry import retry
 from data.market_holiday_calendar import MarketHolidayCalendar
-from data.position import Position
+
+
+class Position(Enum):
+    """Enum class for positioning on matrix' canvas"""
+    TOP = 0
+    RIGHT = 1
+    CENTER = 2
+    BOTTOM = 3
 
 
 def read_json(filename: str) -> dict:
