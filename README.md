@@ -145,8 +145,7 @@ your execution command. This will enable debugging messages to be written to the
 - [X] Display ticker charts
 - [X] Create configuration script
 - [ ] Add board customization options
-- [ ] Support different matrix dimensions
-  -  [ ] 32×32
+- [ ] Configuration web interface
 
 ## Sources
 This project relies on the following:
