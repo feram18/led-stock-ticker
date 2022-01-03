@@ -1,7 +1,8 @@
 import pytest
 import sys
 from config.matrix_config import MatrixConfig
-from constants import DEFAULT_STOCKS, DEFAULT_CRYPTOS, TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT
+from constants import DEFAULT_STOCKS, DEFAULT_CRYPTOS, TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, \
+    DEFAULT_UPDATE_RATE
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
@@ -84,3 +85,18 @@ class TestMatrixConfig:
         invalid_clock_format = 'INVALID'
         validated_time_format = self.config.set_time_format(invalid_clock_format)
         assert validated_time_format == TWELVE_HOURS_FORMAT  # Default Time Format = 12h
+
+    def test_validate_update_rate(self):
+        update_rate = 7.0 * 60
+        validated_rate = self.config.validate_update_rate(update_rate)
+        assert validated_rate == update_rate
+
+    def test_validate_update_rate_2(self):
+        invalid_rate = 1.0 * 60
+        validated_rate = self.config.validate_update_rate(invalid_rate)
+        assert validated_rate == DEFAULT_UPDATE_RATE
+
+    def test_validate_update_rate_3(self):
+        invalid_input = "15.0"
+        validated_rate = self.config.validate_update_rate(invalid_input)
+        assert validated_rate == DEFAULT_UPDATE_RATE
