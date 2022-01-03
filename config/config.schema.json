@@ -34,6 +34,11 @@
       "type": "string",
       "enum": ["12h", "24h"],
       "default": "12h"
+    },
+    "update_rate": {
+      "type": "number",
+      "pattern": "([1-9]{1,2}.[0-9]{1,2})",
+      "default": 15.0
     }
   },
   "additionalProperties": false

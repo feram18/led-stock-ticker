@@ -12,5 +12,6 @@
         ]
     },
     "currency": "USD",
-    "clock_format": "12h"
+    "clock_format": "12h",
+    "update_rate": 15.0
 }

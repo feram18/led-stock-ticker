@@ -8,7 +8,7 @@ from data.crypto import Crypto
 from data.stock import Stock
 from data.ticker import Ticker
 from data.status import Status
-from constants import DATE_FORMAT, UPDATE_RATE
+from constants import DATE_FORMAT
 
 
 @dataclass
@@ -126,4 +126,4 @@ class Data:
         """
         logging.info('Checking for update')
         time_delta = time.time() - self.last_updated
-        return time_delta >= UPDATE_RATE
+        return time_delta >= self.config.update_rate

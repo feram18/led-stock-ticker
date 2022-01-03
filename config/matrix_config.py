@@ -2,7 +2,7 @@ import logging
 from typing import List
 from config.layout import Layout
 from constants import CONFIG_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, \
-    TWENTY_FOUR_HOURS_FORMAT
+    TWENTY_FOUR_HOURS_FORMAT, DEFAULT_UPDATE_RATE
 from utils import read_json
 from data.currency import currencies
 
@@ -22,6 +22,7 @@ class MatrixConfig:
         stocks (list):              List of stock strings
         currency (str):             Currency prices will be displayed on
         time_format (str):          Clock's time format
+        update_rate (float):        Update rate
     """
 
     def __init__(self, width: int, height: int):
@@ -35,6 +36,7 @@ class MatrixConfig:
         self.stocks = self.validate_stocks(self.config['tickers']['stocks'])
         self.currency = self.validate_currency(self.config['currency'])
         self.time_format = self.set_time_format(self.config['clock_format'].lower())
+        self.update_rate = self.validate_update_rate(self.config['update_rate'])
 
     @staticmethod
     def format_cryptos(cryptos: List[str]) -> list:
@@ -105,3 +107,14 @@ class MatrixConfig:
         else:
             self.time_format = clock_format
         return TWENTY_FOUR_HOURS_FORMAT if self.time_format == '24h' else TWELVE_HOURS_FORMAT
+
+    @staticmethod
+    def validate_update_rate(update_rate: float) -> float:
+        """
+        Determine if the update rate value provided by user is valid
+        :param update_rate: (float) update rate in seconds
+        :return: validated_rate: (float) Validated update rate in seconds
+        """
+        if not isinstance(update_rate, float) or update_rate < 1.0 * 60:
+            return DEFAULT_UPDATE_RATE
+        return update_rate
