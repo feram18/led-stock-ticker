@@ -87,10 +87,13 @@ class Ticker:
         Fetch historical market data for chart.
         :return: chart_prices: List of historical prices
         """
-        prices = ticker.history(interval='1m', period='1d')['Close'].tolist()
-        if len(prices) < 100:
-            prices = ticker.history(interval='1m', period='3d')['Close'].tolist()
-        elif not prices:
+        period, attempts = 1, 0
+        prices = []
+        while len(prices) < 100 and attempts < 5:
+            prices = ticker.history(interval='1m', period=f'{period}d')['Close'].tolist()
+            period += 1  # Go back an additional day
+            attempts += 1
+        if not prices:
             self.valid = False
             prices.append(0.0)
         return prices
