@@ -115,6 +115,6 @@ class MatrixConfig:
         :param update_rate: (float) update rate in seconds
         :return: validated_rate: (float) Validated update rate in seconds
         """
-        if not isinstance(update_rate, float) or update_rate < 1.0 * 60:
+        if not isinstance(update_rate, float) or update_rate <= 1.0 * 60:
             return DEFAULT_UPDATE_RATE
         return update_rate
