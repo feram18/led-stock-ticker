@@ -22,7 +22,6 @@ from retry import retry
 
 class Color:
     """Predefined Color objects class"""
-
     RED = RGB(171, 0, 3)
     ORANGE = RGB(128, 128, 128)
     YELLOW = RGB(239, 178, 30)
@@ -87,8 +86,7 @@ def read_json(filename: str) -> dict:
         with open(filename, 'r') as json_file:
             logging.debug(f'Reading JSON file at {filename}')
             return json.load(json_file)
-    else:
-        logging.error(f"Couldn't find file at {filename}")
+    logging.error(f"Couldn't find file at {filename}")
 
 
 def write_json(filename: str, data: dict):
@@ -209,26 +207,36 @@ def load_font(filename: str) -> Font:
     font = Font()
     if os.path.isfile(filename):
         font.LoadFont(filename)
-    else:
+    else:  # Load default font
         logging.warning(f"Couldn't find font {filename}. Setting font to default 4x6.")
         font.LoadFont(constants.DEFAULT_FONT_PATH)
     return font
 
 
-def load_image(filename: str, size: Optional[Tuple[int, int]] = (32, 32)) -> Image:
+def load_image(filename: str,
+               size: Tuple[int, int] = (64, 32),
+               background: Color = Color.BLACK) -> Image:
     """
-    Return Image object from given file.
-    :param filename: (str) Location of image file
-    :param size: (int, int) Maximum width and height of image
-    :return: image: (PIL.Image) Image file
+    Open Image file from given path
+    :param background: Background color for PNG images
+    :param filename: Path to the image file
+    :param size: Maximum width and height of the image
+    :return: image: Image file
     """
     if os.path.isfile(filename):
-        with Image.open(filename) as image:
-            image.thumbnail(size, Image.ANTIALIAS)
-            return image.convert('RGB')
-    else:
-        logging.error(f"Couldn't find image {filename}")
-        return None
+        with Image.open(filename) as original:
+            if '.png' in filename:
+                original = original.crop(original.getbbox())  # Non-empty pixels
+                image = Image.new('RGB',  # Background img
+                                  (original.width, original.height),
+                                  (background.red, background.green, background.blue, 255))
+                image.paste(original)  # Paste original on background
+                image.thumbnail(size)  # Resize
+                return image
+            else:  # Non-transparent images
+                original.thumbnail(size)
+                return original.convert('RGB')
+    logging.error(f"Couldn't find image {filename}")
 
 
 @retry((Timeout, ConnectionError), total_tries=3)
@@ -290,8 +298,8 @@ def holiday() -> bool:
     :return: holiday: (bool)
     """
     today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    sdt = today.replace(month=1, day=1)  # Year start date
-    edt = today.replace(month=12, day=31)  # Year end date
+    sdt = today.replace(month=1, day=1)  # Year start-date
+    edt = today.replace(month=12, day=31)  # Year end-date
     holidays = MarketHolidayCalendar().holidays(start=sdt, end=edt).to_pydatetime()
     return today in holidays
 
