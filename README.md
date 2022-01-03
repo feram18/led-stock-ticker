@@ -48,7 +48,7 @@ Materials needed:
 ### Software
 **Pre-requisites**
 
-You'll need to make sure Git and PIP are installed on your Raspberry Pi.
+You'll need to make sure Git and PIP are installed on your Raspberry Pi, as well as Python 3.7+.
 
 ```sh
 sudo apt-get update
@@ -96,6 +96,7 @@ The `config.json` file follows the following format:
                                   Example: "EUR" (Default: USD)
   "clock_format"      String      Sets the preferred clock format
                                   Accepted values are "12h" and "24h" (Default: 12h).
+  "update_rate"       Float       Update rate at which new data is fetched (Default: 10min).
 ```
 
 Additionally, you will want to ensure the timezone on your Raspberry Pi is correct. It will often have London by 
@@ -144,7 +145,8 @@ your execution command. This will enable debugging messages to be written to the
 - [X] Support currency selection
 - [X] Display ticker charts
 - [X] Create configuration script
-- [ ] Add board customization options
+- [ ] Board customization options
+  - [ ] Update rate
 - [ ] Configuration web interface
 
 ## Sources
@@ -154,6 +156,7 @@ This project relies on the following:
 - [rpi-rgb-led-matrix] library to make everything work with the LED board, included as a submodule.
 
 ## Disclaimer
+This project is still a work in progress (all feedback is appreciated!). 
 This application is dependent on the [YFinance] library, and [Exchange Rates] API relaying accurate and updated data.
 
 ## License
