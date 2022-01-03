@@ -27,8 +27,7 @@ class Stock(Ticker):
         prev_close = ticker.info.get('regularMarketPreviousClose', 0.00)
         if self.currency == 'USD':
             return prev_close
-        else:
-            return convert_currency('USD', self.currency, prev_close)
+        return convert_currency('USD', self.currency, prev_close)
 
     def get_logo(self, img_url: str) -> Image:
         """

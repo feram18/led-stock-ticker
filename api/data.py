@@ -14,9 +14,9 @@ from constants import DATE_FORMAT, UPDATE_RATE
 @dataclass
 class Data:
     config: MatrixConfig
-    date: str = None
-    time: str = None
-    time_format: str = None
+    date: str = field(init=False)
+    time: str = field(init=False)
+    time_format: str = field(init=False)
     cryptos: List[Ticker] = field(default_factory=list)
     stocks: List[Ticker] = field(default_factory=list)
     valid_tickers: int = 0
