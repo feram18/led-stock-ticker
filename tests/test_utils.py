@@ -1,8 +1,8 @@
 import pytest
 import sys
 import logging
-import PIL
 import rgbmatrix
+from PIL.Image import Image
 import utils
 from utils import Position
 
@@ -70,7 +70,7 @@ class TestUtils:
     def test_align_image(self):
         img = utils.load_image('assets/img/logo.png', (15, 15))
         x, y = utils.align_image(img, Position.CENTER, Position.CENTER, 64, 32)
-        assert (x, y) == (25, 10)
+        assert (x, y) == (25, 11)
 
     def test_align_image_2(self):
         img = utils.load_image('assets/img/logo.png', (15, 15))
@@ -80,7 +80,7 @@ class TestUtils:
     def test_align_image_3(self):
         img = utils.load_image('assets/img/logo.png', (15, 15))
         y = utils.align_image(img, y=Position.CENTER, col_height=32)
-        assert y == 10
+        assert y == 11
 
     def test_scroll_text(self):
         x = utils.scroll_text(64, 45, 63)
@@ -122,7 +122,7 @@ class TestUtils:
 
     def test_load_image(self):
         image = utils.load_image('assets/img/error.png', (15, 15))
-        assert isinstance(image, PIL.Image.Image)
+        assert isinstance(image, Image)
 
     def test_load_image_2(self):
         image = utils.load_image('assets/img/error.png', (15, 15))
@@ -130,11 +130,11 @@ class TestUtils:
 
     def test_load_image_3(self):
         image = utils.load_image('assets/img/error.png')
-        assert isinstance(image, PIL.Image.Image)
+        assert isinstance(image, Image)
 
     def test_load_image_4(self):
         image = utils.load_image('assets/img/error.png')
-        assert image.size <= (32, 32)
+        assert image.size <= (64, 32)
 
     def test_load_image_5(self, caplog):
         caplog.clear()
