@@ -96,6 +96,8 @@ The `config.json` file follows the following format:
                                   Example: "EUR" (Default: USD)
   "clock_format"      String      Sets the preferred clock format
                                   Accepted values are "12h" and "24h" (Default: 12h)
+  "date_format"       String      Sets the preferred date format
+                                  (Default: "%a, %b %d" - eg. Fri, Jan 14)
   "update_rate"       Integer     Rate at which data is fetched/updated (in minutes)
                                   (Default: 10min)
   "rotation_rate"     Integer     Rate at which tickers will rotate (in seconds)
@@ -151,7 +153,7 @@ your execution command. This will enable debugging messages to be written to the
 - [ ] Board customization options
   - [X] Update rate
   - [X] Rotation rate
-  - [ ] Date format options
+  - [X] Date format options
 - [ ] Configuration web interface
 
 ## Sources
