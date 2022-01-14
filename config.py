@@ -3,7 +3,8 @@
 
 import questionary
 import math
-from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, ROTATION_RATE
+from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, DEFAULT_ROTATION_RATE,\
+    DEFAULT_UPDATE_RATE
 from data.currency import currencies as valid_currencies
 from utils import read_json, write_json
 
@@ -18,7 +19,8 @@ def get_current_preferences() -> dict:
         'stocks': ' '.join(preferences['tickers']['stocks']),
         'cryptos': ' '.join(preferences['tickers']['cryptos']),
         'currency': preferences['currency'],
-        'clock_format': preferences['clock_format']
+        'clock_format': preferences['clock_format'],
+        'rotation_rate': preferences['rotation_rate']
     }
 
 
@@ -74,14 +76,28 @@ def get_clock_format(curr_preference: str) -> str:
                               qmark='\U0001F552').ask()
 
 
-def get_update_rate(total_tickers: int) -> float:
+def get_rotation_rate(curr_preference: int) -> int:
+    """
+    Get user's preferred rotation rate
+    :param curr_preference: (int) Current preferred rotation rate
+    :return: rotation_rate: Rotation rate
+    """
+    return int(questionary.select('Select rotation rate:',
+                                  choices=['5', '10', '15'],
+                                  default=str(curr_preference) if curr_preference else DEFAULT_ROTATION_RATE,
+                                  qmark='\U0011F504',
+                                  instruction='(in seconds)').ask())
+
+
+def get_update_rate(total_tickers: int, rotation_rate: int) -> int:
     """
     Get update rate based on the number of tickers.
+    :param rotation_rate: ticker rotation rate
     :param total_tickers: total number of tickers
-    :return: update_rate: (float) update rate in seconds
+    :return: update_rate: (int) update rate in seconds
     """
     # Ensure a full rotation is complete before an update is requested
-    min_rate = math.ceil((total_tickers * ROTATION_RATE) + ROTATION_RATE) // 60  # in minutes
+    min_rate = math.ceil((total_tickers * rotation_rate) + rotation_rate) // 60  # in minutes
 
     choices = ['5', '10', '15', '20']
     if 1 < min_rate < 5:
@@ -89,11 +105,11 @@ def get_update_rate(total_tickers: int) -> float:
     elif 5 < min_rate < 10:
         choices[0] = str(min_rate)
 
-    return float(questionary.select('Select update rate:',
-                                    choices=choices,
-                                    default='15',
-                                    qmark='\U0011F504',
-                                    instruction='(in minutes)').ask()) * 60
+    return int(questionary.select('Select update rate:',
+                                  choices=choices,
+                                  default=str(DEFAULT_UPDATE_RATE),
+                                  qmark='\U0011F504',
+                                  instruction='(in minutes)').ask()) * 60
 
 
 def set_preferences(config: dict, current_config: dict) -> dict:
@@ -107,7 +123,9 @@ def set_preferences(config: dict, current_config: dict) -> dict:
     config['tickers']['cryptos'] = get_cryptos(current_config['cryptos'])
     config['currency'] = get_currency(current_config['currency'])
     config['clock_format'] = get_clock_format(current_config['clock_format'])
-    config['update_rate'] = get_update_rate(len(config['tickers']['stocks'] + config['tickers']['cryptos']))
+    config['rotation_rate'] = get_rotation_rate(current_config['rotation_rate'])
+    config['update_rate'] = get_update_rate(len(config['tickers']['stocks'] + config['tickers']['cryptos']),
+                                            config['rotation_rate'])
     return config
 
 

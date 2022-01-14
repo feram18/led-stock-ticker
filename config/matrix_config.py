@@ -2,7 +2,7 @@ import logging
 from typing import List
 from config.layout import Layout
 from constants import CONFIG_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, \
-    TWENTY_FOUR_HOURS_FORMAT, DEFAULT_UPDATE_RATE
+    TWENTY_FOUR_HOURS_FORMAT, DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
 from utils import read_json
 from data.currency import currencies
 
@@ -37,6 +37,7 @@ class MatrixConfig:
         self.currency = self.validate_currency(self.config['currency'])
         self.time_format = self.set_time_format(self.config['clock_format'].lower())
         self.update_rate = self.validate_update_rate(self.config['update_rate'])
+        self.rotation_rate = self.validate_rotation_rate(self.config['rotation_rate'])
 
     @staticmethod
     def format_cryptos(cryptos: List[str]) -> list:
@@ -109,12 +110,23 @@ class MatrixConfig:
         return TWENTY_FOUR_HOURS_FORMAT if self.time_format == '24h' else TWELVE_HOURS_FORMAT
 
     @staticmethod
-    def validate_update_rate(update_rate: float) -> float:
+    def validate_update_rate(update_rate: int) -> int:
         """
         Determine if the update rate value provided by user is valid
-        :param update_rate: (float) update rate in seconds
-        :return: validated_rate: (float) Validated update rate in seconds
+        :param update_rate: (int) update rate in seconds
+        :return: validated_rate: (int) Validated update rate in seconds
         """
-        if not isinstance(update_rate, float) or update_rate <= 1.0 * 60:
+        if not isinstance(update_rate, int) or update_rate <= 60:
             return DEFAULT_UPDATE_RATE
         return update_rate
+
+    @staticmethod
+    def validate_rotation_rate(rotation_rate: int) -> int:
+        """
+        Determine if the rotation rate value provided by user is valid
+        :param rotation_rate: (int) rotation rate in seconds
+        :return: validated_rate: (int) Validated rotation rate in seconds
+        """
+        if not isinstance(rotation_rate, int) or rotation_rate < 5:
+            return DEFAULT_ROTATION_RATE
+        return rotation_rate

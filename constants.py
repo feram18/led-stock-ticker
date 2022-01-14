@@ -11,8 +11,8 @@ DEFAULT_STOCKS = ['TSLA', 'AMZN', 'MSFT']
 DEFAULT_CRYPTOS = ['BTC', 'ETH', 'LTC']
 CLOCK_FORMATS = ['12h', '24h']
 DEFAULT_FONT_PATH = 'rpi-rgb-led-matrix/fonts/4x6.bdf'
-DEFAULT_UPDATE_RATE = 10.0 * 60  # 10 minutes
-ROTATION_RATE = 10.0  # 10 seconds
+DEFAULT_UPDATE_RATE = 10 * 60  # 10 minutes
+DEFAULT_ROTATION_RATE = 10  # 10 seconds
 TEXT_SCROLL_DELAY = 0.5  # 0.5 seconds
 TEXT_SCROLL_SPEED = 0.1  # 0.1 seconds
 

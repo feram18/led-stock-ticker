@@ -2,7 +2,7 @@ import time
 from renderer.ticker import TickerRenderer
 from data.crypto import Crypto
 from utils import text_offscreen, scroll_text, align_text, Position
-from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
+from constants import TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
 class CryptoRenderer(TickerRenderer):
@@ -48,7 +48,7 @@ class CryptoRenderer(TickerRenderer):
 
                     x = scroll_text(self.canvas.width, x, pos)
 
-                    if time.time() - time_started >= ROTATION_RATE:
+                    if time.time() - time_started >= self.config.rotation_rate:
                         finished_scrolling = True
             else:
                 # Render elements
@@ -62,7 +62,7 @@ class CryptoRenderer(TickerRenderer):
                 self.render_percentage_change()
                 self.render_chart()
 
-                time.sleep(ROTATION_RATE)
+                time.sleep(self.config.rotation_rate)
 
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 

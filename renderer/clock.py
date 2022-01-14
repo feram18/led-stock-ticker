@@ -2,7 +2,6 @@ import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from utils import align_text, Position
-from constants import ROTATION_RATE
 
 
 class ClockRenderer(Renderer):
@@ -31,7 +30,7 @@ class ClockRenderer(Renderer):
         self.render_date()
         self.render_time()
 
-        time.sleep(ROTATION_RATE)
+        time.sleep(self.config.rotation_rate)
 
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 

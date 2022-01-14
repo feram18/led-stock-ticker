@@ -2,7 +2,7 @@ import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from utils import Color, align_text, Position, load_image
-from constants import ERROR_IMAGE, ROTATION_RATE
+from constants import ERROR_IMAGE
 
 
 class ErrorRenderer(Renderer):
@@ -25,7 +25,7 @@ class ErrorRenderer(Renderer):
         self.canvas.Clear()
 
         self.render_error_msg()
-        time.sleep(ROTATION_RATE)
+        time.sleep(self.config.rotation_rate)
 
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 

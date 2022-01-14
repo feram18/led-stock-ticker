@@ -3,7 +3,7 @@ from rgbmatrix.graphics import DrawText, DrawLine
 from renderer.ticker import TickerRenderer
 from data.stock import Stock
 from utils import Color, market_closed, text_offscreen, scroll_text, Position, align_image, align_text
-from constants import ROTATION_RATE, TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
+from constants import TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
 class StockRenderer(TickerRenderer):
@@ -54,7 +54,7 @@ class StockRenderer(TickerRenderer):
 
                     x = scroll_text(self.canvas.width, x, pos)
 
-                    if time.time() - time_started >= ROTATION_RATE:
+                    if time.time() - time_started >= self.config.rotation_rate:
                         finished_scrolling = True
             else:
                 # Render elements
@@ -69,7 +69,7 @@ class StockRenderer(TickerRenderer):
                 self.render_percentage_change()
                 self.render_chart()
 
-                time.sleep(ROTATION_RATE)
+                time.sleep(self.config.rotation_rate)
 
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
