@@ -1,8 +1,7 @@
 import pytest
 import sys
 from config.matrix_config import MatrixConfig
-from constants import DEFAULT_STOCKS, DEFAULT_CRYPTOS, TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, \
-    DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
+from constants import TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
@@ -30,7 +29,7 @@ class TestMatrixConfig:
     def test_validate_cryptos_2(self):
         invalid_cryptos = [12, 35, 85]
         validated_cryptos = self.config.validate_cryptos(invalid_cryptos)
-        assert validated_cryptos == DEFAULT_CRYPTOS
+        assert validated_cryptos == []
 
     def test_validate_cryptos_3(self):
         partly_valid_cryptos = ['BTC', 45, 'ETH']
@@ -55,7 +54,7 @@ class TestMatrixConfig:
     def test_validate_stocks_3(self):
         invalid_stocks = [12, 35, 85]
         validated_stocks = self.config.validate_stocks(invalid_stocks)
-        assert validated_stocks == DEFAULT_STOCKS
+        assert validated_stocks == []
 
     def test_validate_stocks_4(self):
         partly_valid_stocks = ['C', 35, 'GE']
