@@ -2,7 +2,7 @@ import pytest
 import sys
 from config.matrix_config import MatrixConfig
 from constants import DEFAULT_STOCKS, DEFAULT_CRYPTOS, TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, \
-    DEFAULT_UPDATE_RATE
+    DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
@@ -87,16 +87,31 @@ class TestMatrixConfig:
         assert validated_time_format == TWELVE_HOURS_FORMAT  # Default Time Format = 12h
 
     def test_validate_update_rate(self):
-        update_rate = 7.0 * 60
+        update_rate = 420  # Seconds
         validated_rate = self.config.validate_update_rate(update_rate)
         assert validated_rate == update_rate
 
     def test_validate_update_rate_2(self):
-        invalid_rate = 1.0 * 60
+        invalid_rate = 60
         validated_rate = self.config.validate_update_rate(invalid_rate)
         assert validated_rate == DEFAULT_UPDATE_RATE
 
     def test_validate_update_rate_3(self):
-        invalid_input = "15.0"
+        invalid_input = "15"
         validated_rate = self.config.validate_update_rate(invalid_input)
         assert validated_rate == DEFAULT_UPDATE_RATE
+
+    def test_validate_rotation_rate(self):
+        rotation_rate = 15
+        validated_rate = self.config.validate_update_rate(rotation_rate)
+        assert validated_rate == rotation_rate
+
+    def test_validate_rotation_rate_2(self):
+        invalid_rate = 4
+        validated_rate = self.config.validate_update_rate(invalid_rate)
+        assert validated_rate == DEFAULT_ROTATION_RATE
+
+    def test_validate_rotation_rate_3(self):
+        invalid_input = "10"
+        validated_rate = self.config.validate_update_rate(invalid_input)
+        assert validated_rate == DEFAULT_ROTATION_RATE
