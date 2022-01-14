@@ -107,7 +107,7 @@ def get_update_rate(total_tickers: int, rotation_rate: int) -> int:
 
     return int(questionary.select('Select update rate:',
                                   choices=choices,
-                                  default=str(DEFAULT_UPDATE_RATE),
+                                  default=str(DEFAULT_UPDATE_RATE // 60),
                                   qmark='\U0001F504',
                                   instruction='(in minutes)').ask()) * 60
 
