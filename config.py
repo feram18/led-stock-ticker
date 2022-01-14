@@ -94,7 +94,7 @@ def get_date_format(pref: str) -> str:
     choices = [time.strftime(fmt) for fmt in formats]
     selection = questionary.select('Select your preferred date format:',
                                    choices=choices,
-                                   default=time.strftime(DEFAULT_DATE_FORMAT) if len(pref) < 1 else pref,
+                                   default=time.strftime(DEFAULT_DATE_FORMAT) if len(pref) < 1 else time.strftime(pref),
                                    qmark='\U0001F4C5').ask()
     return formats[choices.index(selection)]
 
