@@ -85,7 +85,7 @@ def get_rotation_rate(curr_preference: int) -> int:
     return int(questionary.select('Select rotation rate:',
                                   choices=['5', '10', '15'],
                                   default=str(curr_preference) if curr_preference else DEFAULT_ROTATION_RATE,
-                                  qmark='\U0011F504',
+                                  qmark='\U0001F504',
                                   instruction='(in seconds)').ask())
 
 
