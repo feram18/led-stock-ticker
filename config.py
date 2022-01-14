@@ -32,7 +32,7 @@ def get_stocks(pref: str) -> list:
     :param pref (str) Current preferred stocks list
     :return: stocks: (list) List of stocks
     """
-    stocks = questionary.text('Enter your preferred stocks:',
+    stocks = questionary.text('Enter stocks:',
                               default=' '.join(DEFAULT_STOCKS) if len(pref) < 1 else pref,
                               validate=lambda text: len(text) > 0,
                               qmark='\U0001F4C8',
@@ -46,7 +46,7 @@ def get_cryptos(pref: str) -> list:
     :param pref (str) Current preferred cryptos list
     :return: cryptos: (list) List of cryptos
     """
-    cryptos = questionary.text('Enter your preferred cryptos:',
+    cryptos = questionary.text('Enter cryptos:',
                                default=' '.join(DEFAULT_CRYPTOS) if len(pref) < 1 else pref,
                                qmark='\U0001F4B0',
                                instruction='(Separate each ticker by a space)').ask().upper().split()
@@ -60,7 +60,7 @@ def get_currency(pref: str) -> str:
     :return: currency: (str) Currency
     """
     currencies = list(valid_currencies.keys())
-    return questionary.select('Select your preferred currency:',
+    return questionary.select('Select currency:',
                               choices=currencies,
                               default='USD' if len(pref) < 1 else pref,
                               qmark='\U0001F4B1').ask()
@@ -72,7 +72,7 @@ def get_clock_format(pref: str) -> str:
     :param pref (str) Current preferred clock format
     :return: clock_format: (str) Clock format
     """
-    return questionary.select('Select your preferred clock format:',
+    return questionary.select('Select clock format:',
                               choices=CLOCK_FORMATS,
                               default=CLOCK_FORMATS[0] if len(pref) < 1 else pref,
                               qmark='\U0001F552').ask()
@@ -92,7 +92,7 @@ def get_date_format(pref: str) -> str:
         '%d/%m/%Y',  # DD/MM/YYYY
     ]
     choices = [time.strftime(fmt) for fmt in formats]
-    selection = questionary.select('Select your preferred date format:',
+    selection = questionary.select('Select date format:',
                                    choices=choices,
                                    default=time.strftime(DEFAULT_DATE_FORMAT) if len(pref) < 1 else time.strftime(pref),
                                    qmark='\U0001F4C5').ask()
