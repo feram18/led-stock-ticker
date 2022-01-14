@@ -103,15 +103,15 @@ class TestMatrixConfig:
 
     def test_validate_rotation_rate(self):
         rotation_rate = 15
-        validated_rate = self.config.validate_update_rate(rotation_rate)
+        validated_rate = self.config.validate_rotation_rate(rotation_rate)
         assert validated_rate == rotation_rate
 
     def test_validate_rotation_rate_2(self):
         invalid_rate = 4
-        validated_rate = self.config.validate_update_rate(invalid_rate)
+        validated_rate = self.config.validate_rotation_rate(invalid_rate)
         assert validated_rate == DEFAULT_ROTATION_RATE
 
     def test_validate_rotation_rate_3(self):
         invalid_input = "10"
-        validated_rate = self.config.validate_update_rate(invalid_input)
+        validated_rate = self.config.validate_rotation_rate(invalid_input)
         assert validated_rate == DEFAULT_ROTATION_RATE
