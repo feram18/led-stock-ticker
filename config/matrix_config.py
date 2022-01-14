@@ -1,8 +1,8 @@
 import logging
 from typing import List
 from config.layout import Layout
-from constants import CONFIG_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, \
-    TWENTY_FOUR_HOURS_FORMAT, DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
+from constants import CONFIG_FILE, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, \
+    DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
 from utils import read_json
 from data.currency import currencies
 
@@ -64,9 +64,7 @@ class MatrixConfig:
             validated_cryptos = [crypto for crypto in cryptos if isinstance(crypto, str)]
             if len(validated_cryptos) > 0:
                 return validated_cryptos
-        logging.warning('Cryptos should be an array of tickers or a single ticker string. '
-                        f'Using default cryptos, {DEFAULT_CRYPTOS}.')
-        return DEFAULT_CRYPTOS
+        return []
 
     @staticmethod
     def validate_stocks(stocks: List[str] or str) -> list:
@@ -82,9 +80,7 @@ class MatrixConfig:
             validated_stocks = [stock for stock in stocks if isinstance(stock, str)]
             if len(validated_stocks) > 0:
                 return validated_stocks
-        logging.warning('Stocks should be an array of tickers or a single ticker string. '
-                        f'Using default stocks, {DEFAULT_STOCKS}.')
-        return DEFAULT_STOCKS
+        return []
 
     @staticmethod
     def validate_currency(currency: str) -> str:

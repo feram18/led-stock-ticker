@@ -34,7 +34,6 @@ def get_stocks(pref: str) -> list:
     """
     stocks = questionary.text('Enter stocks:',
                               default=' '.join(DEFAULT_STOCKS) if len(pref) < 1 else pref,
-                              validate=lambda text: len(text) > 0,
                               qmark='\U0001F4C8',
                               instruction='(Separate each ticker by a space)').ask().upper().split()
     return [i for n, i in enumerate(stocks) if i not in stocks[:n]]
