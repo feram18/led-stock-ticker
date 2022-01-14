@@ -95,8 +95,11 @@ The `config.json` file follows the following format:
   "currency"          String      Currency in which you would like to see the prices displayed
                                   Example: "EUR" (Default: USD)
   "clock_format"      String      Sets the preferred clock format
-                                  Accepted values are "12h" and "24h" (Default: 12h).
-  "update_rate"       Float       Update rate at which new data is fetched (Default: 10min).
+                                  Accepted values are "12h" and "24h" (Default: 12h)
+  "update_rate"       Integer     Rate at which data is fetched/updated (in minutes)
+                                  (Default: 10min)
+  "rotation_rate"     Integer     Rate at which tickers will rotate (in seconds)
+                                  (Default: 10sec)
 ```
 
 Additionally, you will want to ensure the timezone on your Raspberry Pi is correct. It will often have London by 
@@ -146,7 +149,9 @@ your execution command. This will enable debugging messages to be written to the
 - [X] Display ticker charts
 - [X] Create configuration script
 - [ ] Board customization options
-  - [ ] Update rate
+  - [X] Update rate
+  - [X] Rotation rate
+  - [ ] Date format options
 - [ ] Configuration web interface
 
 ## Sources
