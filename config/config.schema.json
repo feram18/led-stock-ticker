@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "LED-Stock-Ticker Configuration File",
   "type": "object",
-  "required": ["tickers", "currency", "clock_format", "rotation_rate", "update_rate"],
+  "required": ["tickers", "currency", "clock_format", "date_format","rotation_rate", "update_rate"],
   "properties": {
     "tickers": {
       "type": "object",
@@ -34,6 +34,10 @@
       "type": "string",
       "enum": ["12h", "24h"],
       "default": "12h"
+    },
+    "date_format": {
+      "type": "string",
+      "default": "%a, %b %d"
     },
     "rotation_rate": {
       "type": "number",

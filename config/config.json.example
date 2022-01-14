@@ -13,6 +13,7 @@
     },
     "currency": "USD",
     "clock_format": "12h",
+    "date_format": "%a, %b %d",
     "rotation_rate": 10,
-    "update_rate": 15
+    "update_rate": 10
 }

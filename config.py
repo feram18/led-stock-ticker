@@ -3,8 +3,9 @@
 
 import questionary
 import math
-from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, DEFAULT_ROTATION_RATE,\
-    DEFAULT_UPDATE_RATE
+import time
+from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, DEFAULT_ROTATION_RATE, \
+    DEFAULT_UPDATE_RATE, DEFAULT_DATE_FORMAT
 from data.currency import currencies as valid_currencies
 from utils import read_json, write_json
 
@@ -20,60 +21,82 @@ def get_current_preferences() -> dict:
         'cryptos': ' '.join(preferences['tickers']['cryptos']),
         'currency': preferences['currency'],
         'clock_format': preferences['clock_format'],
+        'date_format': preferences['date_format'],
         'rotation_rate': preferences['rotation_rate']
     }
 
 
-def get_stocks(curr_preference: str) -> list:
+def get_stocks(pref: str) -> list:
     """
     Get user's preferred stocks.
-    :param curr_preference (str) Current preferred stocks list
+    :param pref (str) Current preferred stocks list
     :return: stocks: (list) List of stocks
     """
     stocks = questionary.text('Enter your preferred stocks:',
-                              default=' '.join(DEFAULT_STOCKS) if len(curr_preference) < 1 else curr_preference,
+                              default=' '.join(DEFAULT_STOCKS) if len(pref) < 1 else pref,
                               validate=lambda text: len(text) > 0,
                               qmark='\U0001F4C8',
                               instruction='(Separate each ticker by a space)').ask().upper().split()
     return [i for n, i in enumerate(stocks) if i not in stocks[:n]]
 
 
-def get_cryptos(curr_preference: str) -> list:
+def get_cryptos(pref: str) -> list:
     """
     Get user's preferred cryptos.
-    :param curr_preference (str) Current preferred cryptos list
+    :param pref (str) Current preferred cryptos list
     :return: cryptos: (list) List of cryptos
     """
     cryptos = questionary.text('Enter your preferred cryptos:',
-                               default=' '.join(DEFAULT_CRYPTOS) if len(curr_preference) < 1 else curr_preference,
+                               default=' '.join(DEFAULT_CRYPTOS) if len(pref) < 1 else pref,
                                qmark='\U0001F4B0',
                                instruction='(Separate each ticker by a space)').ask().upper().split()
     return [i for n, i in enumerate(cryptos) if i not in cryptos[:n]]
 
 
-def get_currency(curr_preference: str) -> str:
+def get_currency(pref: str) -> str:
     """
     Get user's preferred currency.
-    :param curr_preference (str) Current preferred currency
+    :param pref (str) Current preferred currency
     :return: currency: (str) Currency
     """
     currencies = list(valid_currencies.keys())
     return questionary.select('Select your preferred currency:',
                               choices=currencies,
-                              default='USD' if len(curr_preference) < 1 else curr_preference,
+                              default='USD' if len(pref) < 1 else pref,
                               qmark='\U0001F4B1').ask()
 
 
-def get_clock_format(curr_preference: str) -> str:
+def get_clock_format(pref: str) -> str:
     """
     Get user's preferred clock format.
-    :param curr_preference (str) Current preferred clock format
+    :param pref (str) Current preferred clock format
     :return: clock_format: (str) Clock format
     """
     return questionary.select('Select your preferred clock format:',
                               choices=CLOCK_FORMATS,
-                              default=CLOCK_FORMATS[0] if len(curr_preference) < 1 else curr_preference,
+                              default=CLOCK_FORMATS[0] if len(pref) < 1 else pref,
                               qmark='\U0001F552').ask()
+
+
+def get_date_format(pref: str) -> str:
+    """
+    Get user's preferred date format.
+    :param pref: (str) Current preferred date format
+    :return: date_format: (str) Date format
+    """
+    formats = [
+        '%a, %b %d',  # Sun, Jan 5
+        '%B %d',  # January 5
+        '%m/%d/%Y',  # MM/DD/YYYY
+        '%a, %d %b',  # Sun, 5 Jan
+        '%d/%m/%Y',  # DD/MM/YYYY
+    ]
+    choices = [time.strftime(fmt) for fmt in formats]
+    selection = questionary.select('Select your preferred date format:',
+                                   choices=choices,
+                                   default=time.strftime(DEFAULT_DATE_FORMAT) if len(pref) < 1 else pref,
+                                   qmark='\U0001F4C5').ask()
+    return formats[choices.index(selection)]
 
 
 def get_rotation_rate(curr_preference: int) -> int:
@@ -108,7 +131,7 @@ def get_update_rate(total_tickers: int, rotation_rate: int) -> int:
     return int(questionary.select('Select update rate:',
                                   choices=choices,
                                   default=str(DEFAULT_UPDATE_RATE // 60),
-                                  qmark='\U0001F504',
+                                  qmark='\U000123EC',
                                   instruction='(in minutes)').ask()) * 60
 
 
@@ -123,6 +146,7 @@ def set_preferences(config: dict, current_config: dict) -> dict:
     config['tickers']['cryptos'] = get_cryptos(current_config['cryptos'])
     config['currency'] = get_currency(current_config['currency'])
     config['clock_format'] = get_clock_format(current_config['clock_format'])
+    config['date_format'] = get_date_format(current_config['date_format'])
     config['rotation_rate'] = get_rotation_rate(current_config['rotation_rate'])
     config['update_rate'] = get_update_rate(len(config['tickers']['stocks'] + config['tickers']['cryptos']),
                                             config['rotation_rate'])

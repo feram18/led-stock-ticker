@@ -8,7 +8,6 @@ from data.crypto import Crypto
 from data.stock import Stock
 from data.ticker import Ticker
 from data.status import Status
-from constants import DATE_FORMAT
 
 
 @dataclass
@@ -16,7 +15,6 @@ class Data:
     config: MatrixConfig
     date: str = field(init=False)
     time: str = field(init=False)
-    time_format: str = field(init=False)
     cryptos: List[Ticker] = field(default_factory=list)
     stocks: List[Ticker] = field(default_factory=list)
     valid_tickers: int = 0
@@ -24,7 +22,6 @@ class Data:
     last_updated: float = None
 
     def __post_init__(self):
-        self.time_format = self.config.time_format
         self.valid_tickers = len(self.config.stocks + self.config.cryptos)
         self.last_updated = time.time()
 
@@ -108,15 +105,14 @@ class Data:
         Get current time as a string
         :return: time: Current time
         """
-        return time.strftime(self.time_format)
+        return time.strftime(self.config.time_format)
 
-    @staticmethod
-    def get_date() -> str:
+    def get_date(self) -> str:
         """
         Get current date as a string
         :return: date: Current date
         """
-        return time.strftime(DATE_FORMAT)
+        return time.strftime(self.config.date_format)
 
     def should_update(self) -> bool:
         """

@@ -22,6 +22,7 @@ class MatrixConfig:
         stocks (list):              List of stock strings
         currency (str):             Currency prices will be displayed on
         time_format (str):          Clock's time format
+        date_format (str):          Date format
         update_rate (float):        Update rate
     """
 
@@ -36,6 +37,7 @@ class MatrixConfig:
         self.stocks = self.validate_stocks(self.config['tickers']['stocks'])
         self.currency = self.validate_currency(self.config['currency'])
         self.time_format = self.set_time_format(self.config['clock_format'].lower())
+        self.date_format = self.config['date_format']
         self.update_rate = self.validate_update_rate(self.config['update_rate'])
         self.rotation_rate = self.validate_rotation_rate(self.config['rotation_rate'])
 

@@ -20,6 +20,6 @@ TEXT_SCROLL_SPEED = 0.1  # 0.1 seconds
 CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amount={}&places=2'
 
 # Date/Time Formatting
-DATE_FORMAT = '%a, %b %d'  # eg. Sun, Jan 5
+DEFAULT_DATE_FORMAT = '%a, %b %d'  # eg. Sun, Jan 5
 TWELVE_HOURS_FORMAT = '%I:%M %p'  # eg. 11:38 PM
 TWENTY_FOUR_HOURS_FORMAT = '%H:%M'  # eg. 23:38
