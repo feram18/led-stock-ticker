@@ -15,8 +15,9 @@ function updateRepository() {
   printf "Updating repository...\n"
   git reset --hard
   git checkout master
-  git fetch origin --prune
-  git pull
+  git fetch --tags
+  tag="$(git describe --tags "git rev-list --tags --max-count=1")"
+  git checkout tags/"$tag"
 }
 
 # Installs dependencies
