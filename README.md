@@ -92,7 +92,7 @@ The `config.json` file follows the following format:
                                   Example: ["TSLA", "AMZN", "MSFT"]
     "cryptos"         Array       Pass an array of cryptocurrency symbols
                                   Example: ["BTC", "ETH", "LTC"]
-  "currency"          String      Currency in which you would like to see the prices displayed
+  "currency"          String      Currency in which to display prices
                                   Example: "EUR" (Default: USD)
   "clock_format"      String      Sets the preferred clock format
                                   Accepted values are "12h" and "24h" (Default: 12h)
@@ -116,8 +116,8 @@ The LED matrix is configured with the flags provided by the [rpi-rgb-led-matrix]
 More details on these flags/arguments can be found in the library's documentation.
 
 ```
---led-rows                Display rows. 16 for 16x32, 32 for 32x32. (Default: 32)
---led-cols                Panel columns. Typically 32 or 64. (Default: 32)
+--led-rows                Display panel rows. (Default: 32)
+--led-cols                Display panel columns. (Default: 64)
 --led-chain               Daisy-chained boards. (Default: 1)
 --led-parallel            For Plus-models or RPi2: parallel chains. 1..3. (Default: 1)
 --led-pwm-bits            Bits used for PWM. Range 1..11. (Default: 11)
@@ -138,7 +138,7 @@ More details on these flags/arguments can be found in the library's documentatio
 From the `led-stock-ticker` directory run the command
 
 ```sh
-sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2 --led-cols=64
+sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2
 ```
 You can modify and include [flags](#Flags) as necessary. Running as root is necessary in order for the matrix to render.
 
@@ -150,11 +150,12 @@ your execution command. This will enable debugging messages to be written to the
 - [X] Support currency selection
 - [X] Display ticker charts
 - [X] Create configuration script
+- [ ] Forex prices
+- [ ] Configuration web interface
 - [ ] Board customization options
   - [X] Update rate
   - [X] Rotation rate
   - [X] Date format options
-- [ ] Configuration web interface
 
 ## Sources
 This project relies on the following:
