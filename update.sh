@@ -1,32 +1,28 @@
 #!/usr/bin/bash
-# Description: Update LED-Stock-Ticker software (github.com/feram18/led-stock-ticker)
+# Description: Update LED-Stock-Ticker (github.com/feram18/led-stock-ticker)
 
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Cleans up repository directory
 function clean() {
-  rm -f "*.log*"  # Log files
-  sudo rm -rf "*/__pycache__"  # pycache
+  rm -f "*.log*"
+  sudo rm -rf "*/__pycache__"
   sudo rm -rf "__pycache__"
 }
 
-# Updates repository
 function updateRepository() {
   printf "Updating repository...\n"
   git reset --hard
   git checkout master
   git fetch --tags
-  tag="$(git describe --tags "git rev-list --tags --max-count=1")"
+  tag="$(git describe --abbrev-0)"
   git checkout tags/"$tag"
 }
 
-# Installs dependencies
 function installDependencies(){
   printf "\nInstalling dependencies...\n"
   sudo pip3 install -r requirements.txt
 }
 
-# Creates configuration file (config.json)
 function createConfigFile() {
   echo "$(tput setaf 7)Creating new config.json file..."
   cp config.json.example config.json
@@ -38,15 +34,13 @@ function createConfigFile() {
 function checkConfigFile() {
   cd "${ROOT_DIR}/config/" || exit
   if [[ ! -e config.json ]]; then
-    # config.json file does not exist
     createConfigFile
   elif [[ -e config.json && config.json.example -nt config.json ]];then
-    # config.json file exists, but format has changed
     echo -e "\n$(tput setaf 1)Your config file is out of date"
     mv config.json old-config.json
     createConfigFile
   fi
-  cd "${ROOT_DIR}" || exit # Back to repo's root directory
+  cd "${ROOT_DIR}" || exit
 }
 
 function main() {
@@ -61,5 +55,4 @@ function main() {
   echo "$(tput setaf 2)Update completed$(tput setaf 7)"
 }
 
-# Execute script
 main
