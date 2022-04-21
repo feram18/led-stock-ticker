@@ -12,9 +12,8 @@ function clean() {
 function updateRepository() {
   printf "Updating repository...\n"
   git reset --hard
-  git checkout master
   git fetch --tags
-  tag="$(git describe --abbrev-0)"
+  tag="$(git describe --abbrev=0)"
   git checkout tags/"$tag"
 }
 
