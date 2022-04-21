@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from utils import Color
+from util.color import Color
 
 
 class Renderer(ABC):
@@ -9,7 +9,7 @@ class Renderer(ABC):
     Arguments:
         matrix (rgbmatrix.RGBMatrix):                   RGBMatrix instance
         canvas (rgbmatrix.Canvas):                      Canvas associated with matrix
-        config (config.MatrixConfig):                   MatrixConfig instance
+        config (config.MatrixConfig):                      MatrixConfig instance
 
     Attributes:
         primary_font (rgbmatrix.graphics.Font):         Primary font

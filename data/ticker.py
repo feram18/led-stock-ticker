@@ -5,7 +5,7 @@ from abc import abstractmethod
 from typing import List
 from requests.exceptions import Timeout
 from data.status import Status
-from utils import convert_currency
+from util.utils import convert_currency
 
 
 @dataclass

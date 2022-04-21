@@ -1,7 +1,7 @@
 import pytest
 import sys
 from renderer.ticker import TickerRenderer
-from utils import Color
+from util.color import Color
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')

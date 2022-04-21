@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from rgbmatrix.graphics import Font
-from utils import read_json, load_font
+from util.utils import read_json, load_font
 from constants import LAYOUT_FILE
 
 

@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from data.ticker import Ticker
 from data.status import Status
-from utils import convert_currency
+from util.utils import convert_currency
 
 
 @dataclass

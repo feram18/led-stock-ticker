@@ -3,7 +3,7 @@ from typing import List
 from config.layout import Layout
 from constants import CONFIG_FILE, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, \
     DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
-from utils import read_json
+from util.utils import read_json
 from data.currency import currencies
 
 

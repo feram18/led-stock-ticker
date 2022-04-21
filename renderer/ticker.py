@@ -3,7 +3,9 @@ from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from data.currency import currencies
 from data.ticker import Ticker
-from utils import Color, align_text, Position, convert_currency
+from util.utils import align_text, convert_currency
+from util.position import Position
+from util.color import Color
 
 
 class TickerRenderer(Renderer, ABC):
@@ -21,7 +23,7 @@ class TickerRenderer(Renderer, ABC):
         symbol (str):                                       Symbol string
         symbol_x (int):                                     Symbol's x-coord
         price (str):                                        Ticker's price string
-        previous_close (float):                             Ticker's previous close price
+        previous_close (float):                              Ticker's previous close price
         pct_change (str):                                   Ticker's percentage change string
         chart_prices (list):                                Ticker's chart data
     """
@@ -30,13 +32,10 @@ class TickerRenderer(Renderer, ABC):
         super().__init__(matrix, canvas, config)
         self.data = data
 
-        # Load coords
         self.coords = self.config.layout.coords['ticker']
 
-        # Load colors
         self.value_change_color = None
 
-        # Selected currency
         self.currency = self.data.config.currency
 
         self.name = None

@@ -1,7 +1,9 @@
 import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
-from utils import Color, align_text, Position, load_image
+from util.utils import align_text, load_image
+from util.position import Position
+from util.color import Color
 from constants import ERROR_IMAGE
 
 

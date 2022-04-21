@@ -1,7 +1,8 @@
 import time
 from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
-from utils import align_text, Position
+from util.utils import align_text
+from util.position import Position
 
 
 class ClockRenderer(Renderer):

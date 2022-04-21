@@ -1,8 +1,10 @@
 import time
-from rgbmatrix.graphics import DrawText, DrawLine
+from rgbmatrix.graphics import DrawLine
 from renderer.ticker import TickerRenderer
 from data.stock import Stock
-from utils import Color, market_closed, text_offscreen, scroll_text, Position, align_image, align_text
+from util.utils import market_closed, text_offscreen, scroll_text, align_image, align_text
+from util.position import Position
+from util.color import Color
 from constants import TEXT_SCROLL_DELAY, TEXT_SCROLL_SPEED
 
 
@@ -38,7 +40,6 @@ class StockRenderer(TickerRenderer):
                 while not finished_scrolling:
                     self.canvas.Clear()
 
-                    # Render elements
                     pos = self.render_name(x)
                     self.render_market_status()
                     self.render_symbol()
@@ -57,7 +58,6 @@ class StockRenderer(TickerRenderer):
                     if time.time() - time_started >= self.config.rotation_rate:
                         finished_scrolling = True
             else:
-                # Render elements
                 x = align_text(text=self.name,
                                x=Position.CENTER,
                                col_width=self.canvas.width,

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from PIL import Image, UnidentifiedImageError
 from requests.exceptions import ConnectionError
 from data.ticker import Ticker
-from utils import convert_currency
+from util.utils import convert_currency
 
 
 @dataclass

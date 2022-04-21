@@ -7,7 +7,7 @@ import time
 from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, DEFAULT_ROTATION_RATE, \
     DEFAULT_UPDATE_RATE, DEFAULT_DATE_FORMAT
 from data.currency import currencies as valid_currencies
-from utils import read_json, write_json
+from util.utils import read_json, write_json
 
 
 def get_current_preferences() -> dict:

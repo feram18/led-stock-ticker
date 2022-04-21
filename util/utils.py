@@ -1,4 +1,4 @@
-"""Class with utility functions"""
+"""Class with miscellaneous utility functions"""
 
 import argparse
 import logging
@@ -7,73 +7,16 @@ import os
 import requests
 import constants
 from rgbmatrix import RGBMatrixOptions
-from rgbmatrix.graphics import Font, Color as RGB
-from enum import Enum
+from rgbmatrix.graphics import Font
 from typing import Optional, Tuple
 from PIL import Image
 from datetime import datetime
 from pytz import timezone
 from requests.exceptions import Timeout, ConnectionError, RequestException
-from pandas.tseries.offsets import WeekOfMonth
-from pandas.tseries.holiday import AbstractHolidayCalendar, Holiday, sunday_to_monday, GoodFriday, USMemorialDay, \
-    USLaborDay, USThanksgivingDay
-from retry import retry
-
-
-class Color:
-    """Predefined Color objects class"""
-    RED = RGB(171, 0, 3)
-    ORANGE = RGB(128, 128, 128)
-    YELLOW = RGB(239, 178, 30)
-    GREEN = RGB(124, 252, 0)
-    BLUE = RGB(0, 45, 114)
-    PURPLE = RGB(51, 0, 111)
-    PINK = RGB(255, 143, 255)
-    BROWN = RGB(65, 29, 0)
-    GRAY = RGB(196, 206, 212)
-    BLACK = RGB(0, 0, 0)
-    WHITE = RGB(255, 255, 255)
-
-
-class Position(Enum):
-    """Enum class for positioning on matrix' canvas"""
-    TOP = 0
-    RIGHT = 1
-    CENTER = 2
-    BOTTOM = 3
-
-
-class MarketHolidayCalendar(AbstractHolidayCalendar):
-    """
-    NYSE-observed US federal holidays calendar.
-    Based on holidays listed at https://www.nyse.com/markets/hours-calendars
-    """
-    rules = [
-        Holiday("New Year's Day",
-                month=1,
-                day=1,
-                observance=sunday_to_monday),
-        Holiday('Martin Luther King, Jr. Day',
-                month=1,
-                day=1,
-                offset=WeekOfMonth(week=3, weekday=1)),
-        Holiday("Washington's Birthday",
-                month=2,
-                day=1,
-                offset=WeekOfMonth(week=3, weekday=1)),
-        GoodFriday,
-        USMemorialDay,
-        Holiday('Independence Day',
-                month=7,
-                day=4,
-                observance=sunday_to_monday),
-        USLaborDay,
-        USThanksgivingDay,
-        Holiday('Christmas Day',
-                month=12,
-                day=25,
-                observance=sunday_to_monday),
-    ]
+from util.retry import retry
+from util.color import Color
+from util.holiday_calendar import MarketHolidayCalendar
+from util.position import Position
 
 
 def read_json(filename: str) -> dict:
@@ -309,7 +252,7 @@ def args() -> argparse.Namespace:
     CLI argument parser to configure matrix.
     :return: arguments: (argsparse.Namespace) Argument parser
     """
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog='LED-Stock-Ticker')
 
     parser.add_argument('--led-rows',
                         action='store',
@@ -319,7 +262,7 @@ def args() -> argparse.Namespace:
     parser.add_argument('--led-cols',
                         action='store',
                         help='Panel columns. Typically 32 or 64. (Default: 32)',
-                        default=32,
+                        default=64,
                         type=int)
     parser.add_argument('--led-chain',
                         action='store',

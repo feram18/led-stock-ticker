@@ -2,7 +2,9 @@ from rgbmatrix.graphics import DrawText
 from renderer.renderer import Renderer
 from version import __version__
 from constants import LOADING_IMAGE
-from utils import Color, align_text, Position, load_image, align_image
+from util.utils import align_text, load_image, align_image
+from util.position import Position
+from util.color import Color
 
 
 class Loading(Renderer):
