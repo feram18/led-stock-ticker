@@ -334,6 +334,11 @@ def args() -> argparse.Namespace:
                              '5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven. (Default: 0)',
                         default=0,
                         type=int)
+    parser.add_argument('--led-panel-type',
+                        action='store',
+                        help='Chipset of the panel. Supported panel types: FM6126A, FM6127',
+                        default='',
+                        type=str)
 
     return parser.parse_args()
 
@@ -374,5 +379,8 @@ def led_matrix_options(args_: argparse.Namespace) -> RGBMatrixOptions:
 
     if args_.led_no_hardware_pulse:
         options.disable_hardware_pulsing = True
+
+    if args_.led_panel_type is not None:
+        options.panel_type = args_.led_panel_type
 
     return options
