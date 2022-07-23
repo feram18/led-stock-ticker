@@ -3,6 +3,7 @@
 # Directories & Files
 CONFIG_FILE = 'config/config.json'
 LAYOUT_FILE = 'config/layout/w{}h{}.json'
+LOG_FILE = 'led-stock-ticker.log'
 LOADING_IMAGE = 'assets/img/logo.png'
 ERROR_IMAGE = 'assets/img/error.png'
 
