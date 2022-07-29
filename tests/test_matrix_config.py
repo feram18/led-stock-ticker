@@ -21,45 +21,25 @@ class TestMatrixConfig:
         formatted_cryptos = self.config.format_cryptos([])
         assert formatted_cryptos == []
 
-    def test_validate_cryptos(self):
-        cryptos = ['XLM', 'BNB', 'XRP']
-        validated_cryptos = self.config.validate_cryptos(cryptos)
-        assert validated_cryptos == cryptos
+    def test_validate_tickers(self):
+        tickers = ['XLM', 'BNB', 'XRP']
+        validated_tickers = self.config.validate_tickers(tickers)
+        assert validated_tickers == tickers
 
-    def test_validate_cryptos_2(self):
-        invalid_cryptos = [12, 35, 85]
-        validated_cryptos = self.config.validate_cryptos(invalid_cryptos)
-        assert validated_cryptos == []
+    def test_validate_tickers_2(self):
+        invalid_tickers = [12, 35, 85]
+        validated_tickers = self.config.validate_tickers(invalid_tickers)
+        assert validated_tickers == []
 
-    def test_validate_cryptos_3(self):
-        partly_valid_cryptos = ['BTC', 45, 'ETH']
-        validated_cryptos = self.config.validate_cryptos(partly_valid_cryptos)
-        assert validated_cryptos == ['BTC', 'ETH']
+    def test_validate_tickers_3(self):
+        partly_valid_tickers = ['AAPL', 45, 'ETH']
+        validated_tickers = self.config.validate_tickers(partly_valid_tickers)
+        assert validated_tickers == ['AAPL', 'ETH']
 
-    def test_validate_cryptos_4(self):
-        cryptos = 'LTC'
-        validated_cryptos = self.config.validate_cryptos(cryptos)
-        assert validated_cryptos == [cryptos]
-
-    def test_validate_stocks(self):
-        stocks = ['AMD', 'GE', 'AAPL']
-        validated_stocks = self.config.validate_stocks(stocks)
-        assert validated_stocks == stocks
-
-    def test_validate_stocks_2(self):
-        stocks = 'VZ'
-        validated_stocks = self.config.validate_stocks(stocks)
-        assert validated_stocks == [stocks]
-
-    def test_validate_stocks_3(self):
-        invalid_stocks = [12, 35, 85]
-        validated_stocks = self.config.validate_stocks(invalid_stocks)
-        assert validated_stocks == []
-
-    def test_validate_stocks_4(self):
-        partly_valid_stocks = ['C', 35, 'GE']
-        validated_stocks = self.config.validate_stocks(partly_valid_stocks)
-        assert validated_stocks == ['C', 'GE']
+    def test_validate_tickers_4(self):
+        tickers = 'LTC'
+        validated_tickers = self.config.validate_tickers(tickers)
+        assert validated_tickers == [tickers]
 
     def test_validate_currency(self):
         currency = 'EUR'

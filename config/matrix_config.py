@@ -16,25 +16,24 @@ class MatrixConfig:
         height (int):               Matrix height
 
     Attributes:
-        layout (Layout):            Layout instance
+        layout (Layout):           Layout instance
         config (dict):              Configurations dictionary
-        cryptos (list):             List of crypto strings
-        stocks (list):              List of stock strings
-        currency (str):             Currency prices will be displayed on
-        time_format (str):          Clock's time format
-        date_format (str):          Date format
+        cryptos (list):            List of crypto strings
+        stocks (list):             List of stock strings
+        currency (str):            Currency prices will be displayed on
+        time_format (str):         Clock's time format
+        date_format (str):         Date format
         update_rate (float):        Update rate
+        rotation_rate (float):      Rotation rate
     """
 
     def __init__(self, width: int, height: int):
-        # Layout configuration
         self.layout = Layout(width, height)
 
-        # Validate and set configurations
         self.config = read_json(CONFIG_FILE)
-        self.cryptos = self.validate_cryptos(self.config['tickers']['cryptos'])
+        self.cryptos = self.validate_tickers(self.config['tickers']['cryptos'])
         self.cryptos = self.format_cryptos(self.cryptos)
-        self.stocks = self.validate_stocks(self.config['tickers']['stocks'])
+        self.stocks = self.validate_tickers(self.config['tickers']['stocks'])
         self.currency = self.validate_currency(self.config['currency'])
         self.time_format = self.set_time_format(self.config['clock_format'].lower())
         self.date_format = self.config['date_format']
@@ -51,35 +50,19 @@ class MatrixConfig:
         return [f'{crypto}-USD' for crypto in cryptos]
 
     @staticmethod
-    def validate_cryptos(cryptos: List[str] or str) -> list:
+    def validate_tickers(tickers: List[str] or str) -> list:
         """
-        Determine if cryptos on config are an instance of a list (several tickers) or a single instance of a string
-        (i.e. one ticker). Else, set cryptos list to default values (BTC, ETH, LTC).
-        :param cryptos: (list or str) List of cryptos to validate
-        :return validated_cryptos: (list) Validated list of cryptos
+        Determine if tickers on config are an instance of a list (several tickers) or a single instance of a string (one
+        ticker).
+        :param tickers: (list or str) List of tickers to validate
+        :return validated_tickers: (list) Validated list of tickers
         """
-        if isinstance(cryptos, str):
-            return [cryptos]
-        elif isinstance(cryptos, list):
-            validated_cryptos = [crypto for crypto in cryptos if isinstance(crypto, str)]
-            if len(validated_cryptos) > 0:
-                return validated_cryptos
-        return []
-
-    @staticmethod
-    def validate_stocks(stocks: List[str] or str) -> list:
-        """
-        Determine if stocks on config are an instance of a list (several tickers) or a single instance of a string
-        (i.e. one ticker). Else, set stocks list to default values (TSLA, AMZN, MSFT).
-        :param stocks: (List[str] or str) List of stocks to validate
-        :return result: (list) Validated list of stocks
-        """
-        if isinstance(stocks, str):
-            return [stocks]
-        elif isinstance(stocks, list):
-            validated_stocks = [stock for stock in stocks if isinstance(stock, str)]
-            if len(validated_stocks) > 0:
-                return validated_stocks
+        if isinstance(tickers, str) and 0 < len(tickers) < 6:
+            return [tickers]
+        elif isinstance(tickers, list):
+            validated_tickers = [ticker for ticker in tickers if isinstance(ticker, str) and 0 < len(tickers) < 6]
+            if len(validated_tickers) > 0:
+                return validated_tickers
         return []
 
     @staticmethod
