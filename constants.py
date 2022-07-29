@@ -17,6 +17,9 @@ DEFAULT_ROTATION_RATE = 10  # 10 seconds
 TEXT_SCROLL_DELAY = 0.5  # 0.5 seconds
 TEXT_SCROLL_SPEED = 0.1  # 0.1 seconds
 
+# ExchangeRate API
+CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amount={}&places=2'
+
 # Date/Time Formatting
 DATE_FORMATS = [
     '%a, %b %d',  # Sun, Jan 5
