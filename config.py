@@ -5,7 +5,7 @@ import questionary
 import math
 import time
 from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, DEFAULT_ROTATION_RATE, \
-    DEFAULT_UPDATE_RATE, DEFAULT_DATE_FORMAT
+    DEFAULT_UPDATE_RATE, DEFAULT_DATE_FORMAT, DATE_FORMATS
 from data.currency import currencies as valid_currencies
 from util.utils import read_json, write_json
 
@@ -83,19 +83,12 @@ def get_date_format(pref: str) -> str:
     :param pref: (str) Current preferred date format
     :return: date_format: (str) Date format
     """
-    formats = [
-        '%a, %b %d',  # Sun, Jan 5
-        '%B %d',  # January 5
-        '%m/%d/%Y',  # MM/DD/YYYY
-        '%a, %d %b',  # Sun, 5 Jan
-        '%d/%m/%Y',  # DD/MM/YYYY
-    ]
-    choices = [time.strftime(fmt) for fmt in formats]
+    choices = [time.strftime(fmt) for fmt in DATE_FORMATS]
     selection = questionary.select('Select date format:',
                                    choices=choices,
                                    default=time.strftime(DEFAULT_DATE_FORMAT) if len(pref) < 1 else time.strftime(pref),
                                    qmark='\U0001F4C5').ask()
-    return formats[choices.index(selection)]
+    return DATE_FORMATS[choices.index(selection)]
 
 
 def get_rotation_rate(curr_preference: int) -> int:
