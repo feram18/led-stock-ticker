@@ -52,7 +52,7 @@ You'll need to make sure Git and PIP are installed on your Raspberry Pi, as well
 
 ```sh
 sudo apt-get update
-sudo apt-get install git python-pip
+sudo apt-get install git python3-pip -y
 ```
 
 **Installation**
