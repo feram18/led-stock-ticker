@@ -1,5 +1,7 @@
-import pytest
 import sys
+
+import pytest
+
 from renderer.ticker import TickerRenderer
 from util.color import Color
 

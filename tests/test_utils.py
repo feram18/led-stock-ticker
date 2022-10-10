@@ -1,14 +1,20 @@
-import pytest
 import sys
 import logging
-import rgbmatrix
-from PIL.Image import Image
+
+import pytest
+from PIL import Image
+from PIL import ImageFont
+
+import constants
 from util import utils
 from util.position import Position
 
 
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestUtils:
+    def setup_method(self):
+        self.font = utils.load_font('4x6.pil')
+
     def test_read_json(self, tmpdir):
         tmp_file = tmpdir.join('temp.json')
         content = {
@@ -37,113 +43,75 @@ class TestUtils:
         dict_ = utils.read_json(tmp_file)
         assert dict_ == new_data
 
-    def test_text_offscreen(self):
+    def test_off_screen(self):
         long_text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        result = utils.text_offscreen(long_text, 64, 6)
+        result = utils.off_screen(64, self.font.getsize(long_text)[0])
         assert result is True
 
-    def test_text_offscreen_2(self):
+    def test_off_screen_2(self):
         short_text = 'Lorem'
-        result = utils.text_offscreen(short_text, 64, 6)
+        result = utils.off_screen(64, self.font.getsize(short_text))
         assert result is False
 
     def test_align_text(self):
-        x, y = utils.align_text('Lorem ipsum', Position.CENTER, Position.CENTER, 64, 32, 4, 6)
-        assert (x, y) == (10, 19)
+        x, y = utils.align_text(self.font.getsize('Lorem ipsum'), 64, 32, Position.CENTER, Position.CENTER)
+        assert (x, y) == (10, 13)
 
     def test_align_text_2(self):
-        x = utils.align_text('Lorem ipsum', x=Position.CENTER, col_width=64, font_width=4)
+        x = utils.align_text(self.font.getsize('Lorem ipsum'), col_width=64, x=Position.CENTER)[0]
         assert x == 10
 
     def test_align_text_3(self):
-        y = utils.align_text('Lorem ipsum', y=Position.CENTER, col_height=32, font_height=6)
-        assert y == 19
+        y = utils.align_text(self.font.getsize('Lorem ipsum'), col_height=32, y=Position.CENTER)[1]
+        assert y == 13
 
     def test_align_text_4(self):
-        x = utils.align_text('Lorem ipsum', x=Position.RIGHT, col_width=64, font_width=4)
+        x = utils.align_text(self.font.getsize('Lorem ipsum'), col_width=64, x=Position.RIGHT)[0]
         assert x == 20
 
     def test_align_text_5(self):
-        x = utils.align_text('Lorem ipsum', y=Position.BOTTOM, col_height=32)
-        assert x == 32
+        y = utils.align_text(self.font.getsize('Lorem ipsum'), col_height=32, y=Position.BOTTOM)[1]
+        assert y == 26
 
     def test_align_image(self):
         img = utils.load_image('assets/img/logo.png', (15, 15))
-        x, y = utils.align_image(img, Position.CENTER, Position.CENTER, 64, 32)
+        x, y = utils.align_image(img, 64, 32)
         assert (x, y) == (25, 11)
 
-    def test_align_image_2(self):
-        img = utils.load_image('assets/img/logo.png', (15, 15))
-        x = utils.align_image(img, x=Position.CENTER, col_width=64)
-        assert x == 25
-
-    def test_align_image_3(self):
-        img = utils.load_image('assets/img/logo.png', (15, 15))
-        y = utils.align_image(img, y=Position.CENTER, col_height=32)
-        assert y == 11
-
-    def test_scroll_text(self):
-        x = utils.scroll_text(64, 45, 63)
-        assert x == 44
-
-    def test_scroll_text_2(self):
-        x = utils.scroll_text(64, -2, 1)
-        assert x == 64
-
     def test_load_font(self):
-        font = utils.load_font('rpi-rgb-led-matrix/fonts/5x7.bdf')
-        assert isinstance(font, rgbmatrix.graphics.Font)
+        font = utils.load_font('4x6.pil')
+        assert isinstance(font, ImageFont.ImageFont)
 
     def test_load_font_2(self):
-        font = utils.load_font('rpi-rgb-led-matrix/fonts/5x7.bdf')
-        assert font.baseline, 6
+        font = utils.load_font('4x6.pil')
+        assert font.getsize(' ')[0], 4
 
     def test_load_font_3(self):
-        font = utils.load_font('rpi-rgb-led-matrix/fonts/5x7.bdf')
-        assert font.height, 7
+        font = utils.load_font('4x6.pil')
+        assert font.getsize(' ')[1], 6
 
     def test_load_font_4(self, caplog):
         caplog.clear()
         with caplog.at_level(logging.WARNING):
-            utils.load_font('invalid.bdf')
-        assert f"Couldn't find font invalid.bdf. Setting font to default 4x6." in caplog.text
-
-    def test_load_font_5(self):
-        font = utils.load_font('invalid.bdf')
-        assert isinstance(font, rgbmatrix.graphics.Font)
-
-    def test_load_font_6(self):
-        font = utils.load_font('invalid.bdf')
-        assert font.baseline == 5
-
-    def test_load_font_7(self):
-        font = utils.load_font('invalid.bdf')
-        assert font.height == 6
+            utils.load_font('invalid.pil')
+        assert f"Couldn't find font {constants.FONTS_DIR}/invalid.pil" in caplog.text
 
     def test_load_image(self):
         image = utils.load_image('assets/img/error.png', (15, 15))
-        assert isinstance(image, Image)
+        assert isinstance(image, Image.Image)
 
     def test_load_image_2(self):
         image = utils.load_image('assets/img/error.png', (15, 15))
         assert image.size <= (15, 15)
 
-    def test_load_image_3(self):
-        image = utils.load_image('assets/img/error.png')
-        assert isinstance(image, Image)
-
-    def test_load_image_4(self):
-        image = utils.load_image('assets/img/error.png')
-        assert image.size <= (64, 32)
-
-    def test_load_image_5(self, caplog):
+    def test_load_image_3(self, caplog):
         caplog.clear()
         with caplog.at_level(logging.ERROR):
-            utils.load_image('invalid.png')
+            utils.load_image('invalid.png', (15, 15))
         assert f"Couldn't find image invalid.png" in caplog.text
 
-    def test_load_image_6(self):
-        image = utils.load_image('invalid.png')
+    def test_load_image_4(self):
+        image = utils.load_image('invalid.png', (15, 15))
         assert image is None
 
     def test_convert_currency(self):

@@ -1,5 +1,7 @@
-import pytest
 import sys
+
+import pytest
+
 from config.matrix_config import MatrixConfig
 from constants import TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
 

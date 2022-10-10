@@ -1,7 +1,9 @@
-import pytest
 import sys
 import logging
+
+import pytest
 from PIL.Image import Image
+
 from data.status import Status
 from data.stock import Stock
 

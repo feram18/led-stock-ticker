@@ -1,6 +1,8 @@
-import pytest
 import sys
 import logging
+
+import pytest
+
 from data.crypto import Crypto
 from data.status import Status
 
