@@ -57,6 +57,7 @@ class Data:
         Update tickers' prices, date, and time.
         :return: status: (data.Status) Update status
         """
+        logging.debug('Checking for update')
         for ticker in self.stocks + self.cryptos:
             self.update_ticker(ticker)
         self.last_updated = time.time()
@@ -80,6 +81,7 @@ class Data:
             self.stocks.append(stock)
         else:
             self.valid_tickers -= 1
+            logging.warning(f'Stock: {stock.symbol} is not valid.')
 
     @multitasking.task
     def fetch_crypto(self, currency: str, symbol: str):
@@ -122,6 +124,5 @@ class Data:
         i.e. If 10 minutes have passed since data was last fetched, an update is needed.
         :return: should_update:
         """
-        logging.info('Checking for update')
         time_delta = time.time() - self.last_updated
         return time_delta >= self.config.update_rate
