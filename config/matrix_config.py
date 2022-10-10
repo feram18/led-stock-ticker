@@ -60,7 +60,7 @@ class MatrixConfig:
         if isinstance(tickers, str) and 0 < len(tickers) < 6:
             return [tickers]
         elif isinstance(tickers, list):
-            validated_tickers = [ticker for ticker in tickers if isinstance(ticker, str) and 0 < len(tickers) < 6]
+            validated_tickers = [ticker for ticker in tickers if isinstance(ticker, str) and 0 < len(ticker) < 6]
             if len(validated_tickers) > 0:
                 return validated_tickers
         return []
