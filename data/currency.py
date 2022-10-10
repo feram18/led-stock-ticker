@@ -4,7 +4,7 @@ Currencies whose symbols are not supported by the font are replaced by a substit
 i.e. AED -> Dhs. The original symbol commented next to the currency.
 """
 
-currencies = {
+CURRENCIES = {
     'AED': 'Dhs',  # د.إ
     'AFN': 'Afs',  # ؋
     'ALL': 'Lek',

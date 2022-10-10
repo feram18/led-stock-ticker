@@ -1,13 +1,15 @@
-import time
 import logging
-import multitasking
+import time
 from dataclasses import dataclass, field
 from typing import List
+
+import multitasking
+
 from config.matrix_config import MatrixConfig
 from data.crypto import Crypto
+from data.status import Status
 from data.stock import Stock
 from data.ticker import Ticker
-from data.status import Status
 
 
 @dataclass

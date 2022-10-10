@@ -1,4 +1,7 @@
 # Copyright 2021 Fabian Bosler
+import logging
+import time
+from functools import wraps
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -12,10 +15,6 @@
 # THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS
 # OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-import time
-import logging
-from functools import wraps
 
 
 def retry(exceptions, total_tries=4, initial_wait=0.5, backoff_factor=2):
@@ -49,7 +48,5 @@ def retry(exceptions, total_tries=4, initial_wait=0.5, backoff_factor=2):
                                         f'Retrying in {_delay} seconds!, args: {print_args}, kwargs: {kwargs}\n'))
                     time.sleep(_delay)
                     _delay *= backoff_factor
-
         return func_with_retries
-
     return retry_decorator

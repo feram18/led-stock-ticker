@@ -1,9 +1,11 @@
 import logging
-import yfinance as yf
-from dataclasses import dataclass, field
 from abc import abstractmethod
+from dataclasses import dataclass, field
 from typing import List
-from requests.exceptions import Timeout
+
+import yfinance as yf
+from requests import Timeout
+
 from data.status import Status
 from util.utils import convert_currency
 

@@ -1,10 +1,11 @@
 import logging
 from typing import List
+
 from config.layout import Layout
 from constants import CONFIG_FILE, CLOCK_FORMATS, TWELVE_HOURS_FORMAT, TWENTY_FOUR_HOURS_FORMAT, \
     DEFAULT_UPDATE_RATE, DEFAULT_ROTATION_RATE
+from data.currency import CURRENCIES
 from util.utils import read_json
-from data.currency import currencies
 
 
 class MatrixConfig:
@@ -18,8 +19,8 @@ class MatrixConfig:
     Attributes:
         layout (Layout):           Layout instance
         config (dict):              Configurations dictionary
-        cryptos (list):            List of crypto strings
-        stocks (list):             List of stock strings
+        cryptos (list):            List of cryptos
+        stocks (list):             List of stocks
         currency (str):            Currency prices will be displayed on
         time_format (str):         Clock's time format
         date_format (str):         Date format
@@ -28,17 +29,16 @@ class MatrixConfig:
     """
 
     def __init__(self, width: int, height: int):
-        self.layout = Layout(width, height)
-
-        self.config = read_json(CONFIG_FILE)
-        self.cryptos = self.validate_tickers(self.config['tickers']['cryptos'])
-        self.cryptos = self.format_cryptos(self.cryptos)
-        self.stocks = self.validate_tickers(self.config['tickers']['stocks'])
-        self.currency = self.validate_currency(self.config['currency'])
-        self.time_format = self.set_time_format(self.config['clock_format'].lower())
-        self.date_format = self.config['date_format']
-        self.update_rate = self.validate_update_rate(self.config['update_rate'])
-        self.rotation_rate = self.validate_rotation_rate(self.config['rotation_rate'])
+        self.layout: Layout = Layout(width, height)
+        self.config: dict = read_json(CONFIG_FILE)
+        self.cryptos: List[str] = self.validate_tickers(self.config['tickers']['cryptos'])
+        self.cryptos: List[str] = self.format_cryptos(self.cryptos)
+        self.stocks: List[str] = self.validate_tickers(self.config['tickers']['stocks'])
+        self.currency: str = self.validate_currency(self.config['currency'])
+        self.time_format: str = self.set_time_format(self.config['clock_format'].lower())
+        self.date_format: str = self.config['date_format']
+        self.update_rate: float = self.validate_update_rate(self.config['update_rate'])
+        self.rotation_rate: float = self.validate_rotation_rate(self.config['rotation_rate'])
 
     @staticmethod
     def format_cryptos(cryptos: List[str]) -> list:
@@ -72,7 +72,7 @@ class MatrixConfig:
         :param currency: (str) Currency to validate
         :return currency: (str) Validated currency
         """
-        if currency not in currencies:
+        if currency not in CURRENCIES:
             logging.warning(f'{currency} is not supported. Setting currency to USD.')
             return 'USD'
         return currency

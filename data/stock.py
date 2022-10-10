@@ -1,20 +1,18 @@
-import requests
-import logging
-import yfinance as yf
 from dataclasses import dataclass
-from PIL import Image, UnidentifiedImageError
-from requests.exceptions import ConnectionError
+
+import yfinance as yf
+
 from data.ticker import Ticker
 from util.utils import convert_currency
 
 
 @dataclass
 class Stock(Ticker):
-    logo: Image = None
+    logo_url: str = None
 
     def initialize(self):
         super(Stock, self).initialize()
-        self.logo = self.get_logo(self.yf_ticker.info.get('logo_url', None))
+        self.logo_url = self.yf_ticker.info.get('logo_url', None)
 
     def get_prev_close(self, ticker: yf.Ticker) -> float:
         """
@@ -28,21 +26,3 @@ class Stock(Ticker):
         if self.currency == 'USD':
             return prev_close
         return convert_currency('USD', self.currency, prev_close)
-
-    def get_logo(self, img_url: str) -> Image:
-        """
-        Fetch the stock's company logo.
-        :param img_url: URL to logo image
-        :return: logo: Stock's company logo image
-        :exception UnidentifiedImageError: If image cannot be opened/identified
-        :exception ConnectionError: If connection error occurred
-        """
-        if img_url:
-            try:
-                logo = Image.open(requests.get(img_url, stream=True).raw)
-                logo.thumbnail((8, 8), Image.ANTIALIAS)
-                return logo.convert('RGB')
-            except UnidentifiedImageError:
-                logging.exception(f'Invalid image format for {self.symbol} logo image.')
-            except ConnectionError:
-                logging.exception(f'Unable to fetch {self.symbol} logo image.')

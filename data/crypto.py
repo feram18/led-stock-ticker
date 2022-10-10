@@ -1,7 +1,9 @@
-import yfinance as yf
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+
+import yfinance as yf
 from pytz import timezone
+
 from data.ticker import Ticker
 from data.status import Status
 from util.utils import convert_currency

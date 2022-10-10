@@ -6,7 +6,7 @@ import math
 import time
 from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, DEFAULT_ROTATION_RATE, \
     DEFAULT_UPDATE_RATE, DEFAULT_DATE_FORMAT, DATE_FORMATS
-from data.currency import currencies as valid_currencies
+from data.currency import CURRENCIES
 from util.utils import read_json, write_json
 
 
@@ -58,9 +58,9 @@ def get_currency(pref: str) -> str:
     :param pref (str) Current preferred currency
     :return: currency: (str) Currency
     """
-    currencies = list(valid_currencies.keys())
+    choices = list(CURRENCIES.keys())
     return questionary.select('Select currency:',
-                              choices=currencies,
+                              choices=choices,
                               default='USD' if len(pref) < 1 else pref,
                               qmark='\U0001F4B1').ask()
 
