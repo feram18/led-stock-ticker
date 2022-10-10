@@ -1,39 +1,38 @@
-from rgbmatrix.graphics import DrawText
-from renderer.renderer import Renderer
-from version import __version__
 from constants import LOADING_IMAGE
-from util.utils import align_text, load_image, align_image
-from util.position import Position
+from renderer.renderer import Renderer
 from util.color import Color
+from util.position import Position
+from util.utils import align_text, load_image, align_image
+from version import __version__
 
 
 class Loading(Renderer):
     """Render a splash screen while tickers' data is being fetched"""
 
-    def render(self):
-        self.canvas.Clear()
+    def __init__(self, matrix, canvas, draw, config):
+        super().__init__(matrix, canvas, draw, config)
+        self.coords: dict = self.config.layout.coords['loading']
+        self.render()
 
+    def render(self):
         self.render_logo()
         self.render_version()
-
-        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        self.matrix.SetImage(self.canvas)
 
     def render_version(self):
-        x, y = align_text(__version__,
+        x, y = align_text(self.secondary_font.getsize(__version__),
+                          self.matrix.width,
+                          self.matrix.height,
                           Position.CENTER,
-                          Position.BOTTOM,
-                          self.canvas.width,
-                          self.canvas.height,
-                          self.secondary_font.baseline - 1,
-                          self.secondary_font.height)
-
-        DrawText(self.canvas, self.secondary_font, x, y, Color.ORANGE, __version__)
+                          Position.BOTTOM)
+        self.draw.text((x, y), __version__, Color.ORANGE, self.secondary_font)
 
     def render_logo(self):
-        img = load_image(LOADING_IMAGE, (28, 28))
-        x_offset, y_offset = align_image(img,
-                                         Position.CENTER,
-                                         Position.CENTER,
-                                         self.canvas.width,
-                                         self.canvas.height)
-        self.canvas.SetImage(img, x_offset, y_offset - 2)
+        img = load_image(LOADING_IMAGE, tuple(self.coords['image']['size']))
+        x, y = align_image(img,
+                           self.matrix.width,
+                           self.matrix.height,
+                           Position.CENTER,
+                           Position.TOP)
+        y += self.coords['image']['position']['offset']['y']
+        self.canvas.paste(img, (x, y))

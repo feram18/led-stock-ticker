@@ -1,52 +1,45 @@
+from data.status import Status
+from renderer.clock import ClockRenderer
+from renderer.crypto import CryptoRenderer
+from renderer.error import ErrorRenderer
 from renderer.renderer import Renderer
 from renderer.stock import StockRenderer
-from renderer.crypto import CryptoRenderer
-from renderer.clock import ClockRenderer
-from renderer.error import ErrorRenderer
-from data.status import Status
 
 
 class MainRenderer(Renderer):
     """
-    Handle the rendering of different boards/screens (Clock, Stocks, Cryptos)
+    Handle the rendering of different boards/screens (Clock, Stocks, Cryptos, Forex)
 
     Arguments:
-        data (api.Data):            Data instance
+        data (api.Data):                        Data instance
 
     Attributes:
-        status (data.Status):       Update status
+        status (data.Status):                   Update status
+        clock (renderer.ClockRenderer):         Clock renderer instance
+        stocks (renderer.StockRenderer):        Stocks renderer instance
+        crypto (renderer.CryptoRenderer):       Crypto renderer instance
+        error (renderer.ErrorRenderer):         Error renderer instance
     """
 
-    def __init__(self, matrix, canvas, config, data):
-        super().__init__(matrix, canvas, config)
+    def __init__(self, matrix, canvas, draw, config, data):
+        super().__init__(matrix, canvas, draw, config)
         self.data = data
         self.status = self.data.status
+        self.clock = ClockRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
+        self.stocks = StockRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
+        self.crypto = CryptoRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
+        self.error = ErrorRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
+        self.render()
 
     def render(self):
         while self.status is Status.SUCCESS:
             try:
-                self.render_clock()
-                self.render_stocks()
-                self.render_cryptos()
-
+                self.clock.render()
+                self.stocks.render()
+                self.crypto.render()
                 if self.data.should_update():
                     self.status = self.data.update()
-
                 self.data.update_clock()
-
             except KeyboardInterrupt as e:
                 raise SystemExit(' Exiting...') from e
-
-        self.render_error()
-
-    def render_clock(self):
-        ClockRenderer(self.matrix, self.canvas, self.config, self.data).render()
-
-    def render_stocks(self):
-        StockRenderer(self.matrix, self.canvas, self.config, self.data).render()
-
-    def render_cryptos(self):
-        CryptoRenderer(self.matrix, self.canvas, self.config, self.data).render()
-
-    def render_error(self):
-        ErrorRenderer(self.matrix, self.canvas, self.config, self.data).render()
+        self.error.render()

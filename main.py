@@ -2,28 +2,25 @@ import sys
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
+
+from PIL import Image, ImageDraw
 from rgbmatrix import RGBMatrix
+
+from api.data import Data
+from config.matrix_config import MatrixConfig
 from constants import LOG_FILE
+from renderer.loading import Loading
+from renderer.main import MainRenderer
 from util.utils import args, led_matrix_options
 from version import __version__
-from config.matrix_config import MatrixConfig
-from api.data import Data
-from renderer.main import MainRenderer
-from renderer.loading import Loading
 
 
 def main():
     print(f'\U0001F4CA LED-Stock-Ticker - v{__version__} ({matrix.width}x{matrix.height})')
-
     config = MatrixConfig(matrix.width, matrix.height)
-
-    canvas = matrix.CreateFrameCanvas()
-
-    Loading(matrix, canvas, config).render()
-
+    Loading(matrix, canvas, draw, config)
     data = Data(config)
-
-    MainRenderer(matrix, canvas, config, data).render()
+    MainRenderer(matrix, canvas, draw, config, data)
 
 
 if __name__ == '__main__':
@@ -43,6 +40,9 @@ if __name__ == '__main__':
     logger.addHandler(handler)
 
     matrix = RGBMatrix(options=led_matrix_options(args()))
+    canvas = Image.new('RGB', (matrix.width, matrix.height))
+    draw = ImageDraw.Draw(canvas)
+    matrix.SetImage(canvas)
 
     try:
         main()

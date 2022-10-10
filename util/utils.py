@@ -1,22 +1,23 @@
 """Class with miscellaneous utility functions"""
-
 import argparse
-import logging
 import json
+import logging
 import os
-import requests
-import constants
-from rgbmatrix import RGBMatrixOptions
-from rgbmatrix.graphics import Font
-from typing import Optional, Tuple
-from PIL import Image
 from datetime import datetime
+from io import BytesIO
+from typing import Tuple
+
+import requests
+from PIL import Image, ImageFont, BdfFontFile
+from rgbmatrix import RGBMatrixOptions
 from pytz import timezone
-from requests.exceptions import Timeout, ConnectionError, RequestException
-from util.retry import retry
+from requests import Timeout, RequestException, ConnectionError
+
+import constants
 from util.color import Color
 from util.holiday_calendar import MarketHolidayCalendar
 from util.position import Position
+from util.retry import retry
 
 
 def read_json(filename: str) -> dict:
@@ -43,136 +44,122 @@ def write_json(filename: str, data: dict):
         json.dump(data, json_file, indent=4)
 
 
-def text_offscreen(string: str, canvas_width: int, font_width: int) -> bool:
+def off_screen(canvas_width: int, text_size: int) -> bool:
     """
-    Determines if text will go off-screen.
-    :param string: (str) String of text to be displayed
-    :param canvas_width: (int) Canvas' width
-    :param font_width: (int) Font's width
-    :return: offscreen: (bool)
+    Determines if text will go off-screen
+    :param canvas_width: (int) Canvas width
+    :param text_size: (int) Text size in pixels
+    :return: off-screen: (bool)
     """
-    return len(string) > canvas_width/font_width
+    return text_size > canvas_width
 
 
-def align_text(text: str,
-               x: Position = None, y: Position = None,
-               col_width: int = 0, col_height: int = 0,
-               font_width: int = 0, font_height: int = 0) -> (int, Optional[int]):
+def align_text(text_size: Tuple[int, int],
+               col_width: int = 0,
+               col_height: int = 0,
+               x: Position = Position.CENTER,
+               y: Position = Position.CENTER) -> Tuple[int, int]:
     """
     Calculate x, y coords to align text on canvas
-    :param text: Text to align
+    :param text_size: (width, height) in pixels
     :param x: Text's horizontal position
     :param y: Text's vertical position
     :param col_width: Column's width
     :param col_height: Column's height
-    :param font_width: Font's width
-    :param font_height: Font's height
     :return: x, y: Coordinates
     """
-    if x:
-        if x == Position.RIGHT:
-            x = col_width - (len(text) * font_width)
-        elif x == Position.CENTER:
-            x = abs(col_width // 2 - (len(text) * font_width) // 2)
-        else:
-            x = 0
-        if x is not None and y is None:
-            return x
+    if x == Position.RIGHT:
+        x = col_width - text_size[0]
+    elif x == Position.CENTER:
+        x = abs(col_width//2 - text_size[0]//2)
+    elif x == Position.LEFT:
+        x = 0
 
-    if y:
-        if y == Position.CENTER:
-            y = abs(col_height // 2 + font_height // 2)
-        elif y == Position.BOTTOM:
-            y = col_height
-        else:
-            y = font_height
-        if y is not None and x is None:
-            return y
+    if y == Position.CENTER:
+        y = abs(col_height//2 - text_size[1]//2)
+    elif y == Position.BOTTOM:
+        y = col_height - text_size[1]
+    elif y == Position.TOP:
+        y = 0
 
     return x, y
 
 
 def align_image(image: Image,
-                x: Position = None, y: Position = None,
-                col_width: int = 0, col_height: int = 0) -> (int, Optional[int]):
+                col_width: int = 0,
+                col_height: int = 0,
+                x: Position = Position.CENTER,
+                y: Position = Position.CENTER) -> Tuple[int, int]:
     """
     Calculate the x, y offsets to align image on canvas
     :param image: Image to align
-    :param x: Image horizontal position
-    :param y: Image vertical position
     :param col_width: Column's width
     :param col_height: Column's height
-    :return: x, y: Coordinate offsets
+    :param x: Image horizontal position
+    :param y: Image vertical position
+    :return: x, y: Coordinates
     """
-    if x:
-        if x == Position.RIGHT:
-            x = col_width - image.width
-        elif x == Position.CENTER:
-            x = abs(col_width // 2 - image.width // 2)
-        else:
-            x = 0
-        if x is not None and y is None:
-            return x
+    if x == Position.RIGHT:
+        x = col_width - image.width
+    elif x == Position.CENTER:
+        x = abs(col_width//2 - image.width//2)
+    elif x == Position.LEFT:
+        x = 0
 
-    if y:
-        if y == Position.CENTER:
-            y = abs(col_height // 2 - image.height // 2)
-        elif y == Position.BOTTOM:
-            y = col_height - image.height
-        else:
-            y = 0
-        if y is not None and x is None:
-            return y
+    if y == Position.CENTER:
+        y = abs(col_height//2 - image.height//2)
+    elif y == Position.BOTTOM:
+        y = col_height - image.height
+    elif y == Position.TOP:
+        y = 0
 
     return x, y
 
 
-def scroll_text(canvas_width: int, text_x: int, curr_pos: int) -> int:
+def load_font(filename: str) -> ImageFont:
     """
-    Update x-coord on scrolling text.
-    :param canvas_width: (int) Canvas' width
-    :param text_x: (int) Text's previous x coordinate
-    :param curr_pos: (int) Text's current x coordinate
-    :return: x_coord: (int) X coordinate to displace to
+    Return ImageFont object from given font name
+    :param filename: Font filename
+    :return: font: ImageFont object
     """
-    if text_x + curr_pos < 1:
-        return canvas_width
-    else:
-        return text_x - 1
+    path = constants.FONTS_DIR + filename
+    if os.path.isfile(path):
+        return ImageFont.load(path)
+    logging.error(f"Couldn't find font {path}.")
 
 
-def load_font(filename: str) -> Font:
+def convert_font(filename: str) -> str:
     """
-    Return Font object from given path. If file at path does not exist, set default 4x6 font.
-    :param filename: (str) Location of font file
-    :return: font: (rgbmatrix.graphics.Font) Font object
+    Convert from BDF to PIL font
+    :param filename: Font filename
+    :return name: Font name
     """
-    font = Font()
-    if os.path.isfile(filename):
-        font.LoadFont(filename)
-    else:  # Load default font
-        logging.warning(f"Couldn't find font {filename}. Setting font to default 4x6.")
-        font.LoadFont(constants.DEFAULT_FONT_PATH)
-    return font
+    name = filename\
+        .replace(f'{constants.FONTS_DIR}', '') \
+        .replace('.bdf', '')
+    with open(filename, 'rb') as fp:
+        p = BdfFontFile.BdfFontFile(fp)
+        p.save(constants.FONTS_DIR + name)
+        return name
 
 
 def load_image(filename: str,
-               size: Tuple[int, int] = (64, 32),
-               background: Color = Color.BLACK) -> Image:
+               size: Tuple[int, int],
+               background: tuple = Color.BLACK) -> Image:
     """
     Open Image file from given path
-    :param background: Background color for PNG images
     :param filename: Path to the image file
     :param size: Maximum width and height of the image
+    :param background: Background color for PNG images
     :return: image: Image file
     """
-    if os.path.isfile(filename):
+    if filename and os.path.isfile(filename):
         with Image.open(filename) as original:
             if '.png' in filename:
                 original = original.crop(original.getbbox())  # Non-empty pixels
                 image = Image.new('RGB',  # Background img
                                   (original.width, original.height),
-                                  (background.red, background.green, background.blue, 255))
+                                  background)
                 image.paste(original)  # Paste original on background
                 image.thumbnail(size)  # Resize
                 return image
@@ -182,12 +169,31 @@ def load_image(filename: str,
     logging.error(f"Couldn't find image {filename}")
 
 
+def load_image_url(url: str, size: Tuple[int, int]) -> Image:
+    """
+    Fetch the stock's company logo.
+    :param url: URL to logo image
+    :param size: Image size
+    :return: image: Image from URL
+    :exception UnidentifiedImageError: If image cannot be opened/identified
+    :exception ConnectionError: If connection error occurred
+    """
+    if url:
+        response = requests.get(url)
+        if response.ok:
+            with Image.open(BytesIO(response.content)) as img:
+                img.thumbnail(size)
+                return img.convert('RGB')
+        logging.error(f'Could not get image at {url}')
+    logging.error('No url provided')
+
+
 @retry((Timeout, ConnectionError), total_tries=3)
-def convert_currency(from_curr: str, to_curr: str, amount: float) -> float:
+def convert_currency(currency_from: str, currency_to: str, amount: float) -> float:
     """
     Convert a value from one currency to another.
-    :param from_curr: (str) Currency to convert from
-    :param to_curr: (str) Currency to convert to
+    :param currency_from: (str) Currency to convert from
+    :param currency_to: (str) Currency to convert to
     :param amount: (float) Amount to convert
     :return: result: (float) Converted amount
     :exception TypeError: If incorrect data type is provided as an argument
@@ -196,8 +202,8 @@ def convert_currency(from_curr: str, to_curr: str, amount: float) -> float:
     :exception RequestException: If an ambiguous exception that occurred
     """
     try:
-        URL = constants.CURRENCY_EXCHANGE_URL.format(from_curr, to_curr, amount)
-        response = requests.get(URL).json()
+        url = constants.CURRENCY_EXCHANGE_URL.format(currency_from, currency_to, amount)
+        response = requests.get(url).json()
         return float(response['result'])
     except TypeError:
         return 0.0
@@ -216,7 +222,7 @@ def market_closed() -> bool:
 
 def after_hours() -> bool:
     """
-    Determine if it current time is after hours.
+    Determine if current time is after hours.
     i.e. Current time is not between 09:30 AM and 04:00 PM EST (Regular stock market hours), or it is a weekend.
     :return: after_hours: (bool)
     """
@@ -250,7 +256,7 @@ def holiday() -> bool:
 def args() -> argparse.Namespace:
     """
     CLI argument parser to configure matrix.
-    :return: arguments: (argsparse.Namespace) Argument parser
+    :return: parser: (argsparse.Namespace) Argument parser
     """
     parser = argparse.ArgumentParser(prog='LED-Stock-Ticker')
 
