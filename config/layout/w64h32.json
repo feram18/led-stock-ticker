@@ -25,8 +25,8 @@
     },
     "ticker": {
         "options": {
-            "chart": true,
-            "logo": false
+            "chart": false,
+            "logo": true
         },
         "stock": {
             "market_status": {
@@ -49,13 +49,30 @@
             "y": 13
         },
         "value_change": {
-            "y": 6
+            "y": 7
         },
         "chart": {
             "y": 20
         },
         "logo": {
-            "size": [14, 14]
+            "size": [64, 13]
+        }
+    },
+    "forex": {
+        "options": {
+            "image": true
+        },
+        "name": {
+            "y": 0
+        },
+        "price": {
+            "y": 6
+        },
+        "pct_change": {
+            "y": 6
+        },
+        "image": {
+            "size": [30, 20]
         }
     },
     "error": {
