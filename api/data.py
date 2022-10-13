@@ -19,6 +19,7 @@ class Data:
     config: MatrixConfig
     date: str = field(init=False)
     time: str = field(init=False)
+    market_status: MarketStatus = field(init=False)
     cryptos: List[Ticker] = field(default_factory=list)
     stocks: List[Ticker] = field(default_factory=list)
     valid_tickers: int = 0
@@ -42,6 +43,7 @@ class Data:
         """
         logging.info('Initializing data...')
 
+        self.market_status = market_status()
         for stock in self.config.stocks:  # Initialize stocks
             self.fetch_stock(self.config.currency, stock)
         for crypto in self.config.cryptos:  # Initialize cryptos
@@ -101,6 +103,7 @@ class Data:
             self.cryptos.append(crypto)
         else:
             self.valid_tickers -= 1
+            logging.warning(f'Crypto: {crypto.symbol} is not valid.')
 
     @multitasking.task
     def update_ticker(self, ticker: Ticker):
