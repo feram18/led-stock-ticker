@@ -14,6 +14,7 @@ from pytz import timezone
 from requests import Timeout, RequestException, ConnectionError
 
 import constants
+from util.market_status import MarketStatus
 from util.color import Color
 from util.holiday_calendar import MarketHolidayCalendar
 from util.position import Position
@@ -212,12 +213,12 @@ def convert_currency(currency_from: str, currency_to: str, amount: float) -> flo
         return amount
 
 
-def market_closed() -> bool:
+def market_status() -> MarketStatus:
     """
     Determine if the stock market is closed.
-    :return: market_closed: (bool)
+    :return: market_closed: (MarketStatus)
     """
-    return holiday() or after_hours()
+    return MarketStatus.CLOSED if holiday() or after_hours() else MarketStatus.OPEN
 
 
 def after_hours() -> bool:
