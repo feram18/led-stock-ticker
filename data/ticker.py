@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 import yfinance as yf
+from PIL import Image
 from requests import Timeout
 
 from data.status import Status
@@ -21,6 +22,7 @@ class Ticker:
     value_change: float = field(init=False)
     pct_change: str = field(init=False)
     chart_prices: List[float] = field(default_factory=list)
+    logo: Image = None
     valid: bool = True
     status: Status = Status.SUCCESS
 

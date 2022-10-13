@@ -1,7 +1,8 @@
 import time
 
-from data.crypto import Crypto
+from constants import CRYPTO_LOGO_URL
 from renderer.ticker import TickerRenderer
+from util.utils import convert_currency, load_image_url
 
 
 class CryptoRenderer(TickerRenderer):
@@ -16,27 +17,30 @@ class CryptoRenderer(TickerRenderer):
         super().__init__(matrix, canvas, draw, config, data)
         self.cryptos: list = self.data.cryptos
 
+        if self.coords['options']['logo']:
+            for crypto in self.cryptos:
+                crypto.logo = load_image_url(CRYPTO_LOGO_URL.format(crypto.symbol.replace('-USD', '').lower()),
+                                             tuple(self.coords['logo']['size']))
+
     def render(self):
         for crypto in self.cryptos:
-            self.populate_data(crypto)
+            previous_close = crypto.prev_close
+            if self.currency != 'USD':  # Convert back to USD for chart calculations purposes
+                previous_close = convert_currency(self.currency, 'USD', crypto.prev_close)
+
             self.clear()
-            self.render_name()
-            self.render_symbol()
-            self.render_price()
-            self.render_percentage_change()
-            self.render_chart()
+            self.render_name(crypto.name)
+            self.render_symbol(crypto.symbol.replace('-USD', ''))  # Remove currency exchange
+            self.render_price(self.format_price(self.currency, crypto.price))
+            self.render_percentage_change(crypto.pct_change, crypto.value_change)
+            if self.coords['options']['chart']:
+                self.render_chart(previous_close, crypto.chart_prices, crypto.value_change)
+            elif self.coords['options']['logo']:
+                self.render_logo(crypto.logo)
             self.matrix.SetImage(self.canvas)
             time.sleep(self.config.rotation_rate)
 
-    def populate_data(self, crypto: Crypto):
-        """
-        Populate attributes from Crypto instance's attributes.
-        :param crypto: (data.Crypto) Crypto instance
-        """
-        super().populate_data(crypto)
-        self.symbol = self.symbol.replace('-USD', '')  # Remove currency exchange
-
-    def render_symbol(self):
+    def render_symbol(self, symbol: str):
         x = self.coords['crypto']['symbol']['x']
         y = self.coords['crypto']['symbol']['y']
-        self.draw.text((x, y), self.symbol, self.text_color, self.large_font)
+        self.draw.text((x, y), symbol, self.text_color, self.large_font)

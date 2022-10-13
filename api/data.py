@@ -10,6 +10,8 @@ from data.crypto import Crypto
 from data.status import Status
 from data.stock import Stock
 from data.ticker import Ticker
+from util.market_status import MarketStatus
+from util.utils import market_status
 
 
 @dataclass
@@ -68,6 +70,10 @@ class Data:
         """Update date & time"""
         self.date = self.get_date()
         self.time = self.get_time()
+
+    def update_market_status(self):
+        """Update market status"""
+        self.market_status = market_status()
 
     @multitasking.task
     def fetch_stock(self, currency: str, symbol: str):
