@@ -127,7 +127,7 @@ class TestUtils:
         assert result == 0.0
 
     def test_market_closed(self):
-        assert isinstance(utils.market_closed(), bool)
+        assert isinstance(utils.market_status(), bool)
 
     def test_after_hours(self):
         assert isinstance(utils.after_hours(), bool)
