@@ -55,34 +55,31 @@ class Renderer(ABC):
         :param bg_color: (tuple) text background color
         :param start_pos: (int) text starting x-position
         """
+        x, begin = start_pos[0], start_pos[0]
         end = (self.matrix.width, start_pos[1] + font.getsize(text)[1] - 1)
-        shortened_text = text
-        removed_chars = []
         direction = Direction.LEFT
         new_direction = True
         time_started = time.time()
         finished = False
 
         while not finished:
-            self.draw.rectangle((start_pos, end), bg_color)
-            self.draw.text(start_pos, shortened_text, text_color, font)
+            self.draw.rectangle((0, end), bg_color)
+            self.draw.text((x, start_pos[1]), text, text_color, font)
             self.matrix.SetImage(self.canvas)
 
-            length = font.getsize(shortened_text)[0] + start_pos[0]
+            length = font.getsize(text)[0] + x
 
-            if length < self.matrix.width:  # Check if end of text is now visible
+            if length < self.matrix.width:  # End of text is now visible
                 direction = Direction.RIGHT
                 new_direction = True
-            elif shortened_text == text:  # Text is complete again
+            elif x == begin:  # Text is back to starting position
                 direction = Direction.LEFT
                 new_direction = True
 
             if direction is Direction.LEFT:
-                removed_chars.append(shortened_text[0])  # Save character to remove
-                shortened_text = shortened_text[1:]  # Remove character
+                x -= 1
             else:
-                shortened_text = removed_chars[-1] + shortened_text  # Add last-removed character
-                removed_chars.pop()  # Remove from saved characters
+                x += 1
 
             if new_direction:
                 time.sleep(2.5)
