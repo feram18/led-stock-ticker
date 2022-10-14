@@ -63,7 +63,7 @@ class Renderer(ABC):
         finished = False
 
         while not finished:
-            self.draw.rectangle((0, end), bg_color)
+            self.draw.rectangle(((x, start_pos[1]), end), bg_color)
             self.draw.text((x, start_pos[1]), text, text_color, font)
             self.matrix.SetImage(self.canvas)
 
