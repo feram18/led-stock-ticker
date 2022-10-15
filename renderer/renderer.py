@@ -82,7 +82,7 @@ class Renderer(ABC):
                 x += 1
 
             if new_direction:
-                time.sleep(2.5)
+                time.sleep(1.5)
                 new_direction = False
             else:
                 time.sleep(TEXT_SCROLL_SPEED)
