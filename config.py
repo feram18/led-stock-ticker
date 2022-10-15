@@ -137,7 +137,7 @@ def get_show_logos(pref: bool) -> bool:
     """
     return questionary.confirm('Show company stock & crypto logos? History chart will be displayed otherwise: ',
                                default=pref if pref else False,
-                               qmark='\U0011F5BC').ask()
+                               qmark='\U0001F5BC').ask()
 
 
 def set_preferences(config: dict, current_config: dict) -> dict:
