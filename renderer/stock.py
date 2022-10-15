@@ -20,7 +20,7 @@ class StockRenderer(TickerRenderer):
         super().__init__(matrix, canvas, draw, config, data)
         self.stocks: List[Stock] = self.data.stocks
 
-        if self.coords['options']['logo']:
+        if self.config.layout.show_logos:
             for stock in self.stocks:
                 stock.logo = load_image_url(stock.logo_url, tuple(self.coords['logo']['size']))
 
@@ -36,10 +36,10 @@ class StockRenderer(TickerRenderer):
             self.render_symbol(stock.symbol)
             self.render_price(self.format_price(self.currency, stock.price))
             self.render_percentage_change(stock.pct_change, stock.value_change)
-            if self.coords['options']['chart']:
-                self.render_chart(previous_close, stock.chart_prices, stock.value_change)
-            elif self.coords['options']['logo']:
+            if self.config.layout.show_logos:
                 self.render_logo(stock.logo)
+            else:
+                self.render_chart(previous_close, stock.chart_prices, stock.value_change)
             self.matrix.SetImage(self.canvas)
             time.sleep(self.config.rotation_rate)
 

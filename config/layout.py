@@ -16,6 +16,7 @@ class Layout:
     secondary_font: ImageFont = field(init=False)
     large_font: ImageFont = field(init=False)
     time_font: ImageFont = field(init=False)
+    show_logos: bool = field(init=False)
 
     def __post_init__(self):
         self.coords = read_json(LAYOUT_FILE.format(self.width, self.height))
@@ -23,3 +24,4 @@ class Layout:
         self.secondary_font = load_font(self.coords['fonts']['secondary'])
         self.large_font = load_font(self.coords['fonts']['large'])
         self.time_font = load_font(self.coords['fonts']['time'])
+        self.show_logos = False

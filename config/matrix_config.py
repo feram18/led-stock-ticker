@@ -34,11 +34,12 @@ class MatrixConfig:
         self.cryptos: List[str] = self.validate_tickers(self.config['tickers']['cryptos'])
         self.cryptos: List[str] = self.format_cryptos(self.cryptos)
         self.stocks: List[str] = self.validate_tickers(self.config['tickers']['stocks'])
-        self.currency: str = self.validate_currency(self.config['currency'])
-        self.time_format: str = self.set_time_format(self.config['clock_format'].lower())
-        self.date_format: str = self.config['date_format']
-        self.update_rate: float = self.validate_update_rate(self.config['update_rate'])
-        self.rotation_rate: float = self.validate_rotation_rate(self.config['rotation_rate'])
+        self.currency: str = self.validate_currency(self.config['options']['currency'])
+        self.time_format: str = self.set_time_format(self.config['options']['clock_format'].lower())
+        self.date_format: str = self.config['options']['date_format']
+        self.update_rate: float = self.validate_update_rate(self.config['options']['update_rate'])
+        self.rotation_rate: float = self.validate_rotation_rate(self.config['options']['rotation_rate'])
+        self.layout.show_logos = self.config['options']['show_logos']
 
     @staticmethod
     def format_cryptos(cryptos: List[str]) -> list:

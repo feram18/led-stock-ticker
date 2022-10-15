@@ -11,9 +11,12 @@
             "LTC"
         ]
     },
-    "currency": "USD",
-    "clock_format": "12h",
-    "date_format": "%a, %b %d",
-    "rotation_rate": 10,
-    "update_rate": 10
+    "options": {
+        "currency": "USD",
+        "clock_format": "12h",
+        "date_format": "%a, %b %d",
+        "rotation_rate": 10,
+        "update_rate": 10,
+        "show_logos": false
+    }
 }

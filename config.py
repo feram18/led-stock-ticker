@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """Software configuration script"""
-
-import questionary
 import math
 import time
-from constants import CONFIG_FILE, CLOCK_FORMATS, DEFAULT_CRYPTOS, DEFAULT_STOCKS, DEFAULT_ROTATION_RATE, \
-    DEFAULT_UPDATE_RATE, DEFAULT_DATE_FORMAT, DATE_FORMATS
+
+import questionary
+
+from constants import CONFIG_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, CLOCK_FORMATS, DATE_FORMATS, \
+    DEFAULT_DATE_FORMAT, DEFAULT_ROTATION_RATE, DEFAULT_UPDATE_RATE
 from data.currency import CURRENCIES
 from util.utils import read_json, write_json
 
@@ -19,10 +20,11 @@ def get_current_preferences() -> dict:
     return {
         'stocks': ' '.join(preferences['tickers']['stocks']),
         'cryptos': ' '.join(preferences['tickers']['cryptos']),
-        'currency': preferences['currency'],
-        'clock_format': preferences['clock_format'],
-        'date_format': preferences['date_format'],
-        'rotation_rate': preferences['rotation_rate']
+        'currency': preferences['options']['currency'],
+        'clock_format': preferences['options']['clock_format'],
+        'date_format': preferences['options']['date_format'],
+        'rotation_rate': preferences['options']['rotation_rate'],
+        'show_logos': preferences['options']['show_logos']
     }
 
 
@@ -62,7 +64,7 @@ def get_currency(pref: str) -> str:
     return questionary.select('Select currency:',
                               choices=choices,
                               default='USD' if len(pref) < 1 else pref,
-                              qmark='\U0001F4B1').ask()
+                              qmark='\U0001F4B2').ask()
 
 
 def get_clock_format(pref: str) -> str:
@@ -127,6 +129,17 @@ def get_update_rate(total_tickers: int, rotation_rate: int) -> int:
                                   instruction='(in minutes)').ask()) * 60
 
 
+def get_show_logos(pref: bool) -> bool:
+    """
+    Get user's choice to show company stock/crypto logos.
+    :param pref: current user preference
+    :return: (bool) show_logos preference
+    """
+    return questionary.confirm('Show company stock & crypto logos? History chart will be displayed otherwise: ',
+                               default=pref if pref else False,
+                               qmark='\U0011F5BC').ask()
+
+
 def set_preferences(config: dict, current_config: dict) -> dict:
     """
     Write preferences to config.json file.
@@ -136,12 +149,13 @@ def set_preferences(config: dict, current_config: dict) -> dict:
     """
     config['tickers']['stocks'] = get_stocks(current_config['stocks'])
     config['tickers']['cryptos'] = get_cryptos(current_config['cryptos'])
-    config['currency'] = get_currency(current_config['currency'])
-    config['clock_format'] = get_clock_format(current_config['clock_format'])
-    config['date_format'] = get_date_format(current_config['date_format'])
-    config['rotation_rate'] = get_rotation_rate(current_config['rotation_rate'])
-    config['update_rate'] = get_update_rate(len(config['tickers']['stocks'] + config['tickers']['cryptos']),
-                                            config['rotation_rate'])
+    config['options']['currency'] = get_currency(current_config['currency'])
+    config['options']['clock_format'] = get_clock_format(current_config['clock_format'])
+    config['options']['date_format'] = get_date_format(current_config['date_format'])
+    config['options']['rotation_rate'] = get_rotation_rate(current_config['rotation_rate'])
+    config['options']['update_rate'] = get_update_rate(len(config['tickers']['stocks'] + config['tickers']['cryptos']),
+                                                       config['options']['rotation_rate'])
+    config['options']['show_logos'] = get_show_logos(current_config['options']['show_logos'])
     return config
 
 

@@ -17,7 +17,7 @@ class CryptoRenderer(TickerRenderer):
         super().__init__(matrix, canvas, draw, config, data)
         self.cryptos: list = self.data.cryptos
 
-        if self.coords['options']['logo']:
+        if self.config.layout.show_logos:
             for crypto in self.cryptos:
                 crypto.logo = load_image_url(CRYPTO_LOGO_URL.format(crypto.symbol.replace('-USD', '').lower()),
                                              tuple(self.coords['logo']['size']))
@@ -33,10 +33,10 @@ class CryptoRenderer(TickerRenderer):
             self.render_symbol(crypto.symbol.replace('-USD', ''))  # Remove currency exchange
             self.render_price(self.format_price(self.currency, crypto.price))
             self.render_percentage_change(crypto.pct_change, crypto.value_change)
-            if self.coords['options']['chart']:
-                self.render_chart(previous_close, crypto.chart_prices, crypto.value_change)
-            elif self.coords['options']['logo']:
+            if self.config.layout.show_logos:
                 self.render_logo(crypto.logo)
+            else:
+                self.render_chart(previous_close, crypto.chart_prices, crypto.value_change)
             self.matrix.SetImage(self.canvas)
             time.sleep(self.config.rotation_rate)
 

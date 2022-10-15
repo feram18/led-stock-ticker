@@ -24,10 +24,6 @@
         }
     },
     "ticker": {
-        "options": {
-            "chart": false,
-            "logo": true
-        },
         "stock": {
             "market_status": {
                 "width": 2,
@@ -59,9 +55,6 @@
         }
     },
     "forex": {
-        "options": {
-            "image": true
-        },
         "name": {
             "y": 0
         },

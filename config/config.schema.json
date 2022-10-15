@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "LED-Stock-Ticker Configuration File",
   "type": "object",
-  "required": ["tickers", "currency", "clock_format", "date_format","rotation_rate", "update_rate"],
+  "required": ["tickers", "options"],
   "properties": {
     "tickers": {
       "type": "object",
@@ -25,29 +25,39 @@
       },
       "additionalProperties": false
     },
-    "currency": {
-      "type": "string",
-      "pattern": "^([A-Z]{3})$",
-      "default": "USD"
-    },
-    "clock_format": {
-      "type": "string",
-      "enum": ["12h", "24h"],
-      "default": "12h"
-    },
-    "date_format": {
-      "type": "string",
-      "default": "%a, %b %d"
-    },
-    "rotation_rate": {
-      "type": "number",
-      "pattern": "([5-9]|1[0-5])",
-      "default": 10
-    },
-    "update_rate": {
-      "type": "number",
-      "pattern": "([5-9]|1[0-9]|20)",
-      "default": 10
+    "options": {
+      "type": "object",
+      "required": ["currency", "clock_format", "date_format", "rotation_rate", "update_rate", "show_logos"],
+      "properties": {
+        "currency": {
+          "type": "string",
+          "pattern": "^([A-Z]{3})$",
+          "default": "USD"
+        },
+        "clock_format": {
+          "type": "string",
+          "enum": ["12h", "24h"],
+          "default": "12h"
+        },
+        "date_format": {
+          "type": "string",
+          "default": "%a, %b %d"
+        },
+        "rotation_rate": {
+          "type": "number",
+          "pattern": "([5-9]|1[0-5])",
+          "default": 10
+        },
+        "update_rate": {
+          "type": "number",
+          "pattern": "([5-9]|1[0-9]|20)",
+          "default": 10
+        },
+        "show_logos": {
+          "type": "boolean",
+          "default": false
+        }
+      }
     }
   },
   "additionalProperties": false
