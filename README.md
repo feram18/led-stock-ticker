@@ -92,20 +92,26 @@ The `config.json` file follows the following format:
                                   Example: ["TSLA", "AMZN", "MSFT"]
     "cryptos"         Array       Pass an array of cryptocurrency symbols
                                   Example: ["BTC", "ETH", "LTC"]
-  "currency"          String      Currency in which to display prices
+                                  
+  "options":                      Other miscellaneous preferences
+    "currency"        String      Currency in which to display prices
                                   Example: "EUR" (Default: USD)
-  "clock_format"      String      Sets the preferred clock format
+    "clock_format"    String      Sets the preferred clock format
                                   Accepted values are "12h" and "24h" (Default: 12h)
-  "date_format"       String      Sets the preferred date format
+    "date_format"     String      Sets the preferred date format
                                   (Default: "%a, %b %d" - eg. Fri, Jan 14)
-  "update_rate"       Integer     Rate at which data is fetched/updated (in minutes)
+    "update_rate"     Integer     Rate at which data is fetched/updated (in minutes)
                                   (Default: 10min)
-  "rotation_rate"     Integer     Rate at which tickers will rotate (in seconds)
+    "rotation_rate"   Integer     Rate at which tickers will rotate (in seconds)
                                   (Default: 10sec)
+    "show_logos"      Boolean     Display company stock & cryptocurrency logos in place
+                                  of history charts. (Default: false)
 ```
 
 Additionally, you will want to ensure the timezone on your Raspberry Pi is correct. It will often have London by 
 default, but can be changed through the Raspberry Pi configuration tool.
+
+`Localisation Options > Timezone > [Your Time Zone]`
 
 ```sh
 sudo raspi-config
@@ -147,8 +153,8 @@ sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2
 You can modify and include [flags](#Flags) as necessary. Running as root is necessary in order for the matrix to render.
 
 ### Debug
-If you are experiencing issues, you can turn on debug messages by running the software and appending the `--debug` flag 
-to your execution command, logs are written to the `led-stock-ticker.log` file.
+If you are experiencing issues, enable debug messages by appending the `--debug` flag to your execution command, logs are 
+written to the `led-stock-ticker.log` file.
 
 ## Roadmap
 - [X] Support currency selection
@@ -170,8 +176,8 @@ This project relies on the following:
 - [rpi-rgb-led-matrix] library to make everything work with the LED board, included as a submodule.
 
 ## Disclaimer
-This project is still a work in progress (all feedback is appreciated!). 
-This application is dependent on the [YFinance] library, and [Exchange Rates] API relaying accurate and updated data.
+This project is a work in progress (all feedback is appreciated!) and is dependent on the [YFinance] library & 
+[Exchange Rates] API relaying accurate and updated data.
 
 ## License
 GNU General Public License v3.0
