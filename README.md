@@ -161,6 +161,7 @@ to your execution command, logs are written to the `led-stock-ticker.log` file.
   - [X] Update rate
   - [X] Rotation rate
   - [X] Date format options
+  - [X] Stock/Crypto Logos
 
 ## Sources
 This project relies on the following:
