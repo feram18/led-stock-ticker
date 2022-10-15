@@ -2,7 +2,6 @@ import sys
 import logging
 
 import pytest
-from PIL.Image import Image
 
 from data.status import Status
 from data.stock import Stock
@@ -41,11 +40,3 @@ class TestStock:
     def test_get_chart_prices_2(self):
         chart_prices = self.stock.get_chart_prices(self.stock.yf_ticker)
         assert len(chart_prices) > 0
-
-    def test_get_logo(self):
-        logo = self.stock.get_logo(self.stock.yf_ticker.info['logo_url'])
-        assert isinstance(logo, Image)
-
-    def test_get_logo_2(self):
-        logo = self.stock.get_logo(None)
-        assert logo is None

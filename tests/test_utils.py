@@ -50,7 +50,7 @@ class TestUtils:
 
     def test_off_screen_2(self):
         short_text = 'Lorem'
-        result = utils.off_screen(64, self.font.getsize(short_text))
+        result = utils.off_screen(64, self.font.getsize(short_text)[0])
         assert result is False
 
     def test_align_text(self):
@@ -94,7 +94,7 @@ class TestUtils:
         caplog.clear()
         with caplog.at_level(logging.WARNING):
             utils.load_font('invalid.pil')
-        assert f"Couldn't find font {constants.FONTS_DIR}/invalid.pil" in caplog.text
+        assert f"Couldn't find font {constants.FONTS_DIR}invalid.pil" in caplog.text
 
     def test_load_image(self):
         image = utils.load_image('assets/img/error.png', (15, 15))
@@ -125,9 +125,6 @@ class TestUtils:
     def test_convert_currency_3(self):
         result = utils.convert_currency('EUR', 'USD', None)
         assert result == 0.0
-
-    def test_market_closed(self):
-        assert isinstance(utils.market_status(), bool)
 
     def test_after_hours(self):
         assert isinstance(utils.after_hours(), bool)
