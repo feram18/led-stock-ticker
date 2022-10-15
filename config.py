@@ -155,7 +155,7 @@ def set_preferences(config: dict, current_config: dict) -> dict:
     config['options']['rotation_rate'] = get_rotation_rate(current_config['rotation_rate'])
     config['options']['update_rate'] = get_update_rate(len(config['tickers']['stocks'] + config['tickers']['cryptos']),
                                                        config['options']['rotation_rate'])
-    config['options']['show_logos'] = get_show_logos(current_config['options']['show_logos'])
+    config['options']['show_logos'] = get_show_logos(current_config['show_logos'])
     return config
 
 
