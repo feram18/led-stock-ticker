@@ -1,18 +1,42 @@
 # LED Stock Ticker Display
 ***
+<p align="center">
 
-[![Build Status](https://travis-ci.com/feram18/led-stock-ticker.svg?branch=master)](https://travis-ci.com/feram18/led-stock-ticker)
-![GitHub](https://img.shields.io/github/license/feram18/led-stock-ticker)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/feram18/led-stock-ticker)
-[![GitHub release (latest by date)](https://badgen.net/github/release/feram18/led-stock-ticker?label=version)](https://github.com/feram18/led-stock-ticker/releases/latest)
-![GitHub Release Date](https://img.shields.io/github/release-date/feram18/led-stock-ticker)
+  [//]: # (Build Status)
+  <a href="https://travis-ci.com/feram18/led-stock-ticker">
+    <img src="https://travis-ci.com/feram18/led-stock-ticker.svg?branch=master" />
+  </a>
+
+  [//]: # (License)
+  <a href="https://img.shields.io/github/license/feram18/led-stock-ticker">
+    <img src="https://img.shields.io/github/license/feram18/led-stock-ticker" />
+  </a>
+
+  [//]: # (Dependencies)
+  <a href="https://img.shields.io/librariesio/github/feram18/led-stock-ticker">
+    <img src="https://img.shields.io/librariesio/github/feram18/led-stock-ticker" />
+  </a>
+
+  [//]: # (Release Version)
+  <a href="https://github.com/feram18/led-stock-ticker/releases/latest">
+    <img src="https://badgen.net/github/release/feram18/led-stock-ticker?label=version" />
+  </a>
+
+  [//]: # (Release Date)
+  <a href="https://img.shields.io/github/release-date/feram18/led-stock-ticker">
+    <img src="https://img.shields.io/github/release-date/feram18/led-stock-ticker" />
+  </a>
+
+</p>
 
 An LED display for real-time prices of stocks and cryptocurrencies. Requires a Raspberry Pi, and a 64×32 LED board 
 connected to the Raspberry Pi via the GPIO pins.
 
 <p align="center">
-  <img src="assets/img/led-stock-ticker_demo(v0-1-0).gif" title="LED-Stock-Ticker Demo #1"/><br>
-  <br><img src="assets/img/led-stock-ticker_demo(v0-1-0)-2.gif" title="LED-Stock-Ticker Demo #2"/><br>  
+  <img src="assets/img/led-stock-ticker_demo(v0-1-0).gif" title="LED-Stock-Ticker Demo #1" />
+  <br>
+  <img src="assets/img/led-stock-ticker_demo(v0-1-0)-2.gif" title="LED-Stock-Ticker Demo #2" />
+  <br>  
   Version 0.1.0
 </p>
 
@@ -150,7 +174,8 @@ From the `led-stock-ticker` directory run the command
 ```sh
 sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2
 ```
-You can modify and include [flags](#Flags) as necessary. Running as root is necessary in order for the matrix to render.
+Modify and include [flags](#Flags) as needed for your particular setup. Running as root is necessary in order for the 
+matrix to render. Privileges are dropped after initialization.
 
 ### Debug
 If you are experiencing issues, enable debug messages by appending the `--debug` flag to your execution command, logs are 
@@ -160,7 +185,10 @@ written to the `led-stock-ticker.log` file.
 - [X] Support currency selection
 - [X] Display ticker charts
 - [X] Create configuration script
-- [ ] 64x128 Layout
+- [ ] Layout Support (width × height)
+  - [ ] 32×16
+  - [X] 128×64
+  - [ ] 128×32
 - [ ] Forex prices
 - [ ] Configuration web interface
 - [ ] Board customization options

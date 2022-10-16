@@ -1,0 +1,74 @@
+{
+    "fonts": {
+        "primary": "7x13.pil",
+        "clock": "10x20.pil"
+    },
+    "loading": {
+        "image": {
+            "size": [56, 56],
+            "position": {
+                "offset": {
+                    "y": 6
+                }
+            }
+        }
+    },
+    "clock": {
+        "date": {
+            "y": 14
+        },
+        "time": {
+            "y": 25
+        }
+    },
+    "ticker": {
+        "stock": {
+            "market_status": {
+                "width": 2,
+                "top": 14,
+                "bottom": 22
+            },
+            "symbol": {
+                "x": 3,
+                "y": 12
+            }
+        },
+        "crypto": {
+            "symbol": {
+                "x": 1,
+                "y": 12
+            }
+        },
+        "price": {
+            "y": 23
+        },
+        "value_change": {
+            "y": 12
+        },
+        "chart": {
+            "y": 28
+        },
+        "logo": {
+            "size": [128, 28]
+        }
+    },
+    "forex": {
+        "name": {
+            "y": 0
+        },
+        "price": {
+            "y": 12
+        },
+        "pct_change": {
+            "y": 12
+        },
+        "image": {
+            "size": [60, 40]
+        }
+    },
+    "error": {
+        "image": {
+            "size": [20, 20]
+        }
+    }
+}
