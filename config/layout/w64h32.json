@@ -1,9 +1,7 @@
 {
     "fonts": {
-        "primary": "4x6.pil",
-        "secondary": "tom-thumb.pil",
-        "large": "6x9.pil",
-        "time": "cherry-10-b.pil"
+        "primary": "tom-thumb.pil",
+        "clock": "cherry-10-b.pil"
     },
     "loading": {
         "image": {
@@ -28,30 +26,30 @@
             "market_status": {
                 "width": 2,
                 "top": 6,
-                "bottom": 11
+                "bottom": 10
             },
             "symbol": {
                 "x": 3,
-                "y": 5
+                "y": 6
             }
         },
         "crypto": {
             "symbol": {
                 "x": 1,
-                "y": 5
+                "y": 6
             }
         },
         "price": {
-            "y": 13
+            "y": 12
         },
         "value_change": {
-            "y": 7
+            "y": 6
         },
         "chart": {
-            "y": 20
+            "y": 18
         },
         "logo": {
-            "size": [64, 13]
+            "size": [64, 15]
         }
     },
     "forex": {

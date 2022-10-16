@@ -29,18 +29,18 @@ class CryptoRenderer(TickerRenderer):
                 previous_close = convert_currency(self.currency, 'USD', crypto.prev_close)
 
             self.clear()
-            self.render_name(crypto.name)
-            self.render_symbol(crypto.symbol.replace('-USD', ''))  # Remove currency exchange
-            self.render_price(self.format_price(self.currency, crypto.price))
-            self.render_percentage_change(crypto.pct_change, crypto.value_change)
             if self.config.layout.show_logos:
                 self.render_logo(crypto.logo)
             else:
                 self.render_chart(previous_close, crypto.chart_prices, crypto.value_change)
+            self.render_name(crypto.name)
+            self.render_symbol(crypto.symbol.replace('-USD', ''))  # Remove currency exchange
+            self.render_price(self.format_price(self.currency, crypto.price))
+            self.render_percentage_change(crypto.pct_change, crypto.value_change)
             self.matrix.SetImage(self.canvas)
             time.sleep(self.config.rotation_rate)
 
     def render_symbol(self, symbol: str):
         x = self.coords['crypto']['symbol']['x']
         y = self.coords['crypto']['symbol']['y']
-        self.draw.text((x, y), symbol, self.text_color, self.large_font)
+        self.draw.text((x, y), symbol, self.text_color, self.primary_font)

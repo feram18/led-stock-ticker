@@ -32,15 +32,15 @@ class TickerRenderer(Renderer, ABC):
         pass
 
     def render_name(self, name: str):
-        x, y = align_text(self.secondary_font.getsize(name),
+        x, y = align_text(self.primary_font.getsize(name),
                           self.matrix.width,
                           self.matrix.height,
                           Position.CENTER,
                           Position.TOP)
-        if off_screen(self.matrix.width, self.secondary_font.getsize(name)[0]):
-            self.scroll_text(name, self.secondary_font, self.text_color, Color.BLACK, (1, y))
+        if off_screen(self.matrix.width, self.primary_font.getsize(name)[0]):
+            self.scroll_text(name, self.primary_font, self.text_color, Color.BLACK, (1, y))
         else:
-            self.draw.text((x, y), name, self.text_color, self.secondary_font)
+            self.draw.text((x, y), name, self.text_color, self.primary_font)
 
     @abstractmethod
     def render_symbol(self, symbol: str):

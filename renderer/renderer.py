@@ -23,8 +23,6 @@ class Renderer(ABC):
 
     Attributes:
         primary_font (PIL.ImageFont):           Primary font
-        secondary_font (PIL.ImageFont):         Secondary font
-        large_font (PIL.ImageFont):             Large font
         text_color (util.Color):                Default text color
     """
 
@@ -33,9 +31,7 @@ class Renderer(ABC):
         self.canvas: Image = canvas
         self.draw: ImageDraw = draw
         self.config: MatrixConfig = config
-        self.primary_font: ImageFont = self.config.layout.primary_font  # TomThumb
-        self.secondary_font: ImageFont = self.config.layout.secondary_font  # 4x6
-        self.large_font: ImageFont = self.config.layout.large_font  # 6x9
+        self.primary_font: ImageFont = self.config.layout.primary_font
         self.text_color: ImageFont = Color.WHITE
 
     @abstractmethod

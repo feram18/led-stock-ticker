@@ -28,15 +28,15 @@ class ClockRenderer(Renderer):
         time.sleep(self.config.rotation_rate)
 
     def render_date(self):
-        x = align_text(self.secondary_font.getsize(self.data.date),
+        x = align_text(self.primary_font.getsize(self.data.date),
                        self.matrix.width,
                        self.matrix.height)[0]
         y = self.coords['date']['y']
-        self.draw.text((x, y), self.data.date, self.text_color, self.secondary_font)
+        self.draw.text((x, y), self.data.date, self.text_color, self.primary_font)
 
     def render_time(self):
-        x = align_text(self.config.layout.time_font.getsize(self.data.time),
+        x = align_text(self.config.layout.clock_font.getsize(self.data.time),
                        self.matrix.width,
                        self.matrix.height)[0]
         y = self.coords['time']['y']
-        self.draw.text((x, y), self.data.time, self.text_color, self.config.layout.time_font)
+        self.draw.text((x, y), self.data.time, self.text_color, self.config.layout.clock_font)

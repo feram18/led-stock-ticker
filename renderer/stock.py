@@ -31,22 +31,22 @@ class StockRenderer(TickerRenderer):
                 previous_close = convert_currency(self.currency, 'USD', stock.prev_close)
 
             self.clear()
+            if self.config.layout.show_logos:
+                self.render_logo(stock.logo)
+            else:
+                self.render_chart(previous_close, stock.chart_prices, stock.value_change)
             self.render_name(stock.name)
             self.render_market_status()
             self.render_symbol(stock.symbol)
             self.render_price(self.format_price(self.currency, stock.price))
             self.render_percentage_change(stock.pct_change, stock.value_change)
-            if self.config.layout.show_logos:
-                self.render_logo(stock.logo)
-            else:
-                self.render_chart(previous_close, stock.chart_prices, stock.value_change)
             self.matrix.SetImage(self.canvas)
             time.sleep(self.config.rotation_rate)
 
     def render_symbol(self, symbol: str):
         x = self.coords['stock']['symbol']['x']
         y = self.coords['stock']['symbol']['y']
-        self.draw.text((x, y), symbol, self.text_color, self.large_font)
+        self.draw.text((x, y), symbol, self.text_color, self.primary_font)
 
     def render_market_status(self):
         ms_coords = self.coords['stock']['market_status']

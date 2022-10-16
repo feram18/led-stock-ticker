@@ -20,12 +20,12 @@ class Loading(Renderer):
         self.matrix.SetImage(self.canvas)
 
     def render_version(self):
-        x, y = align_text(self.secondary_font.getsize(__version__),
+        x, y = align_text(self.primary_font.getsize(__version__),
                           self.matrix.width,
                           self.matrix.height,
                           Position.CENTER,
                           Position.BOTTOM)
-        self.draw.text((x, y), __version__, Color.ORANGE, self.secondary_font)
+        self.draw.text((x, y), __version__, Color.ORANGE, self.primary_font)
 
     def render_logo(self):
         img = load_image(LOADING_IMAGE, tuple(self.coords['image']['size']))
