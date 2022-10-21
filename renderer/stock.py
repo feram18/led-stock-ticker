@@ -31,11 +31,11 @@ class StockRenderer(TickerRenderer):
                 previous_close = convert_currency(self.currency, 'USD', stock.prev_close)
 
             self.clear()
+            self.render_name(stock.name)
             if self.config.layout.show_logos:
                 self.render_logo(stock.logo)
             else:
                 self.render_chart(previous_close, stock.chart_prices, stock.value_change)
-            self.render_name(stock.name)
             self.render_market_status()
             self.render_symbol(stock.symbol)
             self.render_price(self.format_price(self.currency, stock.price))

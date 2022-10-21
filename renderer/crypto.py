@@ -29,11 +29,11 @@ class CryptoRenderer(TickerRenderer):
                 previous_close = convert_currency(self.currency, 'USD', crypto.prev_close)
 
             self.clear()
+            self.render_name(crypto.name)
             if self.config.layout.show_logos:
                 self.render_logo(crypto.logo)
             else:
                 self.render_chart(previous_close, crypto.chart_prices, crypto.value_change)
-            self.render_name(crypto.name)
             self.render_symbol(crypto.symbol.replace('-USD', ''))  # Remove currency exchange
             self.render_price(self.format_price(self.currency, crypto.price))
             self.render_percentage_change(crypto.pct_change, crypto.value_change)
