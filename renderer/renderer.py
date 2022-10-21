@@ -83,5 +83,5 @@ class Renderer(ABC):
             else:
                 time.sleep(TEXT_SCROLL_SPEED)
 
-            if time.time() - time_started >= self.config.rotation_rate:
+            if time.time() - time_started >= self.config.rotation_rate - 1.5:
                 finished = True
