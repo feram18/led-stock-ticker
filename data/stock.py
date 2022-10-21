@@ -13,6 +13,16 @@ class Stock(Ticker):
     def initialize(self):
         super(Stock, self).initialize()
         self.logo_url = self.yf_ticker.info.get('logo_url', None)
+        self.name = self.name\
+            .replace('Company', '')\
+            .replace('Corporation', '')\
+            .replace('Incorporated', '')\
+            .replace('Inc.', '')\
+            .replace('.com', '')\
+            .replace('(The)', '') \
+            .rstrip()\
+            .removesuffix('&')\
+            .removesuffix(',')
 
     def get_prev_close(self, ticker: yf.Ticker) -> float:
         """

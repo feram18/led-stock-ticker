@@ -39,7 +39,7 @@ class Ticker:
         logging.debug(f'Fetching initial data for {self.symbol}.')
         try:
             self.yf_ticker = yf.Ticker(self.symbol)
-            self.name = self.yf_ticker.info['shortName'].replace(' USD', '')
+            self.name = self.yf_ticker.info['shortName']
             self.price = self.get_price(self.yf_ticker.info.get('regularMarketPrice', 0.00))
             self.prev_close = self.get_prev_close(self.yf_ticker)
             self.value_change = float(format((self.price - self.prev_close), '.2f'))
