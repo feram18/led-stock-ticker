@@ -24,12 +24,12 @@
     "ticker": {
         "stock": {
             "market_status": {
-                "width": 2,
+                "width": 3,
                 "top": 14,
                 "bottom": 22
             },
             "symbol": {
-                "x": 3,
+                "x": 4,
                 "y": 12
             }
         },
