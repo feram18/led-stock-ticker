@@ -1,36 +1,21 @@
 # LED Stock Ticker Display
 ***
-<p align="center">
-
-  [//]: # (Build Status)
+<p align="middle">
   <a href="https://travis-ci.com/feram18/led-stock-ticker">
-    <img src="https://travis-ci.com/feram18/led-stock-ticker.svg?branch=master" />
+    <img src="https://travis-ci.com/feram18/led-stock-ticker.svg?branch=master" alt="Build Status" />
   </a>
-
-  [//]: # (License)
-  <a href="https://img.shields.io/github/license/feram18/led-stock-ticker">
-    <img src="https://img.shields.io/github/license/feram18/led-stock-ticker" />
+  <a href="LICENSE.md">
+    <img src="https://img.shields.io/github/license/feram18/led-stock-ticker" alt="License" />
   </a>
-
-  [//]: # (Dependencies)
-  <a href="https://img.shields.io/librariesio/github/feram18/led-stock-ticker">
-    <img src="https://img.shields.io/librariesio/github/feram18/led-stock-ticker" />
-  </a>
-
-  [//]: # (Release Version)
+  <img src="https://img.shields.io/librariesio/github/feram18/led-stock-ticker" alt="Dependency Status" />
   <a href="https://github.com/feram18/led-stock-ticker/releases/latest">
-    <img src="https://badgen.net/github/release/feram18/led-stock-ticker?label=version" />
+    <img src="https://badgen.net/github/release/feram18/led-stock-ticker?label=version" alt="Version"/>
   </a>
-
-  [//]: # (Release Date)
-  <a href="https://img.shields.io/github/release-date/feram18/led-stock-ticker">
-    <img src="https://img.shields.io/github/release-date/feram18/led-stock-ticker" />
-  </a>
-
+  <img src="https://img.shields.io/github/release-date/feram18/led-stock-ticker" alt="Release Date" />
 </p>
 
-An LED display for real-time prices of stocks and cryptocurrencies. Requires a Raspberry Pi, and a 64×32 LED board 
-connected to the Raspberry Pi via the GPIO pins.
+An LED display for real-time prices of stocks and cryptocurrencies. Requires a Raspberry Pi, and an LED board connected 
+to the Pi via the GPIO pins.
 
 <p align="center">
   <img src="assets/img/demo/v0.3.1/stock-chart.png" title="Stock Demo" width="32%" />
@@ -70,7 +55,9 @@ currencies [here](config/README.md).
 Materials needed:
 - [Raspberry Pi]
 - Adafruit RGB Matrix [HAT] or [Bonnet]
-- [64x32] RGB LED matrix
+- RGB LED Matrix. Supported sizes:
+  - 64×32
+  - 128×64
 
 ### Software
 **Pre-requisites**
@@ -214,7 +201,6 @@ This project is a work in progress (all feedback is appreciated!) and is depende
 GNU General Public License v3.0
 
 [Raspberry Pi]: <https://www.raspberrypi.org/products/>
-[64x32]: <https://www.adafruit.com/product/2279>
 [HAT]: <https://www.adafruit.com/product/2345>
 [Bonnet]: <https://www.adafruit.com/product/3211>
 [YFinance]: <https://github.com/ranaroussi/yfinance>
