@@ -1,5 +1,5 @@
 # LED Stock Ticker Display
-***
+
 <p align="middle">
   <a href="https://travis-ci.com/feram18/led-stock-ticker">
     <img src="https://travis-ci.com/feram18/led-stock-ticker.svg?branch=master" alt="Build Status" />
@@ -44,11 +44,12 @@ to the Pi via the GPIO pins.
 * [License](#license)
 
 ## Features
-- **Real-time prices**. Display the real-time prices of your preferred stocks and cryptocurrencies.
-- **Market status indicator**. Displays the stock market's current status (Located to the left of the ticker).
-- **Ticker chart**. Chart with ticker's value change over the past day.
-- **Currency selection**. You can select the currency you would like to see prices on. Check the list of supported 
-currencies [here](config/README.md).
+- **Real-time prices**. Real-time prices of your preferred stocks and cryptocurrencies.
+- **Market status indicator**. Displays the stock market's current status (Left of the stock symbol).
+- **History chart**. Ticker's value change over the past day.
+- **Company & Crypto Logos**. Display a logo in place of the history chart.
+- **Currency selection**. Select the currency you would like to see prices on. Check the list of supported currencies 
+[here](config/README.md).
 
 ## Installation
 ### Hardware
