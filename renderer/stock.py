@@ -51,4 +51,5 @@ class StockRenderer(TickerRenderer):
     def render_market_status(self):
         ms_coords = self.coords['stock']['market_status']
         color = Color.RED if self.data.market_status is MarketStatus.CLOSED else Color.GREEN
-        self.draw.line(((0, ms_coords['top']), (0, ms_coords['bottom'])), color, ms_coords['width'])
+        x = self.coords['stock']['symbol']['x'] - ms_coords['width']
+        self.draw.line(((x, ms_coords['top']), (x, ms_coords['bottom'])), color, ms_coords['width'])
