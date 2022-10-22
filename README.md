@@ -33,11 +33,14 @@ An LED display for real-time prices of stocks and cryptocurrencies. Requires a R
 connected to the Raspberry Pi via the GPIO pins.
 
 <p align="center">
-  <img src="assets/img/led-stock-ticker_demo(v0-1-0).gif" title="LED-Stock-Ticker Demo #1" />
-  <br>
-  <img src="assets/img/led-stock-ticker_demo(v0-1-0)-2.gif" title="LED-Stock-Ticker Demo #2" />
-  <br>  
-  Version 0.1.0
+  <img src="assets/img/demo/v0.3.1/stock-chart.png" title="Stock Demo" width="32%" />
+  <img src="assets/img/demo/v0.3.1/stock-2-chart.png" title="Stock Demo #2" width="32%" />
+  <img src="assets/img/demo/v0.3.1/crypto-chart.png" title="Crypto Demo" width="32%" />
+
+  <img src="assets/img/demo/v0.3.1/stock-logo.png" title="Stock (Logo) Demo" width="32%" />
+  <img src="assets/img/demo/v0.3.1/stock-2-logo.png" title="Stock (Logo) Demo #2" width="32%" />
+  <img src="assets/img/demo/v0.3.1/crypto-logo.png" title="Crypto (Logo) Demo" width="32%" />
+  <small>Version 0.3.1 (128×64)</small>
 </p>
 
 ## Table of Contents
