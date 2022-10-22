@@ -10,6 +10,7 @@
       "properties": {
         "stocks": {
           "type": "array",
+          "description": "List of stock tickers",
           "pattern": "^([A-Z]{1,5})$",
           "minItems": 0,
           "uniqueItems": true,
@@ -17,6 +18,7 @@
         },
         "cryptos": {
           "type": "array",
+          "description": "List of crypto tickers",
           "pattern": "^([A-Z]+)$",
           "minItems": 0,
           "uniqueItems": true,
@@ -27,34 +29,50 @@
     },
     "options": {
       "type": "object",
+      "description": "Miscellaneous options",
       "required": ["currency", "clock_format", "date_format", "rotation_rate", "update_rate", "show_logos"],
       "properties": {
         "currency": {
           "type": "string",
+          "description": "Currency to display prices on",
           "pattern": "^([A-Z]{3})$",
+          "enum": ["AED", "AFN", "ALL", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT", "BGN", "BMD", "BND", "BOB",
+            "BRL", "BSD", "BWP", "BYN", "BZD", "CAD", "CHF", "CLP", "CNY", "COP", "CRC", "CUP", "CZK", "DKK", "EGP",
+            "EUR", "FJD", "FKP", "GBP", "GEL", "GGP", "GHS", "GIP", "GTQ", "GYD", "HKD", "HNL", "HRK", "HUF", "IDR",
+            "ILS", "IMP", "INR", "IRR", "JMD", "JPY", "KES", "KGS", "KPW", "KRW", "KYD", "LAK", "LBP", "LKR", "LRD",
+            "MAD", "MKD", "MNT", "MUR", "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB",
+            "PEN", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "SAR", "SBD", "SCR", "SEK", "SGD", "SHP",
+            "SOS", "SRD", "SYP", "THB", "TRY", "TTD", "TWD", "UAH", "USD", "UYU", "UZS", "VND", "XCD", "YER", "ZAR"],
           "default": "USD"
         },
         "clock_format": {
           "type": "string",
+          "description": "Format to display time on",
           "enum": ["12h", "24h"],
           "default": "12h"
         },
         "date_format": {
           "type": "string",
+          "description": "Format to display date on",
           "default": "%a, %b %d"
         },
         "rotation_rate": {
           "type": "number",
+          "description": "Rate at which to rotate through tickers (in seconds)",
           "pattern": "([5-9]|1[0-5])",
+          "minimum": 5,
           "default": 10
         },
         "update_rate": {
           "type": "number",
+          "description": "Rate at which to update data (in minutes)",
           "pattern": "([5-9]|1[0-9]|20)",
+          "minimum": 1,
           "default": 10
         },
         "show_logos": {
           "type": "boolean",
+          "description": "Whether to display to display stock & crypto logos over history chart prices",
           "default": false
         }
       }
