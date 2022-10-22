@@ -1,3 +1,4 @@
+jsonschema~=4.16.0
 lxml>=4.5.1
 numpy>=1.16.6
 multitasking~=0.0.9

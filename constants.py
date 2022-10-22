@@ -2,6 +2,7 @@
 
 # Directories & Files
 CONFIG_FILE = 'config/config.json'
+CONFIG_SCHEMA = 'config/config.schema.json'
 LAYOUT_FILE = 'config/layout/w{}h{}.json'
 LOG_FILE = 'led-stock-ticker.log'
 LOADING_IMAGE = 'assets/img/logo.png'
@@ -24,6 +25,7 @@ DEFAULT_FOREX = [
     'EUR/JPY',
     'GBP/USD'
 ]
+DEFAULT_CURRENCY = 'USD'
 DEFAULT_DATE_FORMAT = '%a, %b %d'  # eg. Sun, Jan 5
 DEFAULT_UPDATE_RATE = 10 * 60  # 10 minutes
 DEFAULT_ROTATION_RATE = 10  # seconds

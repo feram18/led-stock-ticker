@@ -118,7 +118,7 @@ class Data:
         Get current time as a string
         :return: time: Current time
         """
-        return time.strftime(self.config.time_format)
+        return time.strftime(self.config.clock_format)
 
     def get_date(self) -> str:
         """
