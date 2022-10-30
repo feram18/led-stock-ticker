@@ -34,10 +34,10 @@ class ErrorRenderer(Renderer):
 
     def render_error_msg(self):
         self.msg = self.data.status
-        x, y = align_text(self.primary_font.getsize(self.msg),
+        x, y = align_text(self.font.getsize(self.msg),
                           self.matrix.width,
                           self.matrix.height)
-        self.draw.text((x, y), self.msg, Color.RED, self.primary_font)
+        self.draw.text((x, y), self.msg, Color.RED, self.font)
 
     def render_image(self):
         img = load_image(ERROR_IMAGE, tuple(self.coords['image']['size']))

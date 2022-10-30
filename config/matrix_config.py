@@ -44,7 +44,7 @@ class MatrixConfig:
             self.date_format = self.config['options']['date_format']
             self.rotation_rate = self.config['options']['rotation_rate']
             self.update_rate = self.config['options']['update_rate']
-            self.layout.show_logos = self.config['options']['show_logos']
+            self.layout.show_logos = self.config['options']['show_logos'] if self.height > 16 else False
         except ValidationError:
             errors = sorted(v.iter_errors(self.config), key=lambda e: e.path)
             logging.error('Invalid config.json file:')

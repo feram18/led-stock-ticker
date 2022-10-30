@@ -5,7 +5,8 @@ from data.stock import Stock
 from renderer.ticker import TickerRenderer
 from util.color import Color
 from util.market_status import MarketStatus
-from util.utils import load_image_url, convert_currency
+from util.position import Position
+from util.utils import load_image_url, convert_currency, align_text
 
 
 class StockRenderer(TickerRenderer):
@@ -19,6 +20,7 @@ class StockRenderer(TickerRenderer):
     def __init__(self, matrix, canvas, draw, config, data):
         super().__init__(matrix, canvas, draw, config, data)
         self.stocks: List[Stock] = self.data.stocks
+        self.symbol_x: int = 0
 
         if self.config.layout.show_logos:
             for stock in self.stocks:
@@ -31,25 +33,31 @@ class StockRenderer(TickerRenderer):
                 previous_close = convert_currency(self.currency, 'USD', stock.prev_close)
 
             self.clear()
-            self.render_name(stock.name)
-            if self.config.layout.show_logos:
+            if self.coords['options']['full_names']:
+                self.render_name(stock.name)
+            if self.coords['options']['logos'] and self.config.layout.show_logos:
                 self.render_logo(stock.logo)
-            else:
+            elif self.coords['options']['history_chart']:
                 self.render_chart(previous_close, stock.chart_prices, stock.value_change)
-            self.render_market_status()
-            self.render_symbol(stock.symbol)
             self.render_price(self.format_price(self.currency, stock.price))
+            self.render_symbol(stock.symbol)
+            self.render_market_status()
             self.render_percentage_change(stock.pct_change, stock.value_change)
             self.matrix.SetImage(self.canvas)
             time.sleep(self.config.rotation_rate)
 
     def render_symbol(self, symbol: str):
-        x = self.coords['stock']['symbol']['x']
+        pos = Position(self.coords['stock']['symbol']['x'])
+        offset = self.coords['stock']['market_status']['width'] if pos is Position.CENTER else 0
+        self.symbol_x = align_text(self.font.getsize(symbol),
+                                   col_width=self.matrix.width,
+                                   x=pos)[0]
+        x = self.symbol_x + self.coords['stock']['symbol']['offset'] + offset
         y = self.coords['stock']['symbol']['y']
-        self.draw.text((x, y), symbol, self.text_color, self.primary_font)
+        self.draw.text((x, y), symbol, self.text_color, self.font)
 
     def render_market_status(self):
         ms_coords = self.coords['stock']['market_status']
         color = Color.RED if self.data.market_status is MarketStatus.CLOSED else Color.GREEN
-        x = self.coords['stock']['symbol']['x'] - ms_coords['width']
+        x = self.symbol_x + ms_coords['offset']
         self.draw.line(((x, ms_coords['top']), (x, ms_coords['bottom'])), color, ms_coords['width'])

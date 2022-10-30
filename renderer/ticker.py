@@ -32,35 +32,38 @@ class TickerRenderer(Renderer, ABC):
         pass
 
     def render_name(self, name: str):
-        x, y = align_text(self.primary_font.getsize(name),
+        x, y = align_text(self.font.getsize(name),
                           self.matrix.width,
                           self.matrix.height,
                           Position.CENTER,
                           Position.TOP)
-        if off_screen(self.matrix.width, self.primary_font.getsize(name)[0]):
-            self.scroll_text(name, self.primary_font, self.text_color, Color.BLACK, (1, y))
+        if off_screen(self.matrix.width, self.font.getlength(name)):
+            self.scroll_text(name, self.font, self.text_color, Color.BLACK, (1, y))
         else:
-            self.draw.text((x, y), name, self.text_color, self.primary_font)
+            self.draw.text((x, y), name, self.text_color, self.font)
 
     @abstractmethod
     def render_symbol(self, symbol: str):
         pass
 
     def render_price(self, price: str):
-        x = align_text(self.primary_font.getsize(price),
-                       col_width=self.matrix.width,
-                       x=Position.CENTER)[0]
         y = self.coords['price']['y']
-        self.draw.text((x, y), price, self.text_color, self.primary_font)
+        if off_screen(self.matrix.width, self.font.getlength(price)):
+            self.scroll_text(price, self.font, self.text_color, Color.BLACK, (1, y))
+        else:
+            x = align_text(self.font.getsize(price),
+                           col_width=self.matrix.width,
+                           x=Position.CENTER)[0]
+            self.draw.text((x, y), price, self.text_color, self.font)
 
     def render_percentage_change(self, pct_change: str, value_change: float):
-        x = align_text(self.primary_font.getsize(pct_change),
+        x = align_text(self.font.getsize(pct_change),
                        col_width=self.matrix.width,
-                       x=Position.RIGHT)[0]
+                       x=Position(self.coords['value_change']['x']))[0]
         y = self.coords['value_change']['y']
 
         color = self.set_change_color(value_change)
-        self.draw.text((x, y), pct_change, color, self.primary_font)
+        self.draw.text((x, y), pct_change, color, self.font)
 
     def render_chart(self, prev_close: float, prices: list, value_change: float):
         chart_top = self.coords['chart']['y']

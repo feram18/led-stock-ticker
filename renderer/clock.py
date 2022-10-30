@@ -22,17 +22,18 @@ class ClockRenderer(Renderer):
 
     def render(self):
         self.clear()
-        self.render_date()
+        if self.coords['options']['date']:
+            self.render_date()
         self.render_time()
         self.matrix.SetImage(self.canvas)
         time.sleep(self.config.rotation_rate)
 
     def render_date(self):
-        x = align_text(self.primary_font.getsize(self.data.date),
+        x = align_text(self.font.getsize(self.data.date),
                        self.matrix.width,
                        self.matrix.height)[0]
         y = self.coords['date']['y']
-        self.draw.text((x, y), self.data.date, self.text_color, self.primary_font)
+        self.draw.text((x, y), self.data.date, self.text_color, self.font)
 
     def render_time(self):
         x = align_text(self.config.layout.clock_font.getsize(self.data.time),

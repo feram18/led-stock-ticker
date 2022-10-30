@@ -22,7 +22,7 @@ class Renderer(ABC):
         config (config.MatrixConfig):              MatrixConfig instance
 
     Attributes:
-        primary_font (PIL.ImageFont):           Primary font
+        font (PIL.ImageFont):                   Primary font
         text_color (util.Color):                Default text color
     """
 
@@ -31,7 +31,7 @@ class Renderer(ABC):
         self.canvas: Image = canvas
         self.draw: ImageDraw = draw
         self.config: MatrixConfig = config
-        self.primary_font: ImageFont = self.config.layout.primary_font
+        self.font: ImageFont = self.config.layout.font
         self.text_color: ImageFont = Color.WHITE
 
     @abstractmethod

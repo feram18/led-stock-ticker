@@ -3,6 +3,7 @@ Supported Layouts
 
 |          | History Chart | Stock/Crypto Logos | Full Ticker Name |
 |:--------:|:-------------:|:------------------:|:----------------:|
+| 32 × 16  |       ❌       |         ❌          |        ❌         |
 | 64 × 32  |       ✅       |         ✅          |        ✅         |
 | 128 × 64 |       ✅       |         ✅          |        ✅         |
 
