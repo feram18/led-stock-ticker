@@ -37,7 +37,7 @@ class TickerRenderer(Renderer, ABC):
                           self.matrix.height,
                           Position.CENTER,
                           Position.TOP)
-        if off_screen(self.matrix.width, self.font.getlength(name)):
+        if off_screen(self.matrix.width, self.font.getsize(name)[0]):
             self.scroll_text(name, self.font, self.text_color, Color.BLACK, (1, y))
         else:
             self.draw.text((x, y), name, self.text_color, self.font)
@@ -48,7 +48,7 @@ class TickerRenderer(Renderer, ABC):
 
     def render_price(self, price: str):
         y = self.coords['price']['y']
-        if off_screen(self.matrix.width, self.font.getlength(price)):
+        if off_screen(self.matrix.width, self.font.getsize(price)[0]):
             self.scroll_text(price, self.font, self.text_color, Color.BLACK, (1, y))
         else:
             x = align_text(self.font.getsize(price),
