@@ -14,6 +14,7 @@ python:
   - 3.7
   - 3.8
   - 3.9
+  - 3.10
 
 virtualenv:
   system-site-packages: true
@@ -24,9 +25,6 @@ addons:
       - git
       - python3-pip
       - python3-dev
-
-before_install:
-  - sudo apt-get update
 
 install:
   - python3 -m pip install -r requirements.txt -r requirements_dev.txt
