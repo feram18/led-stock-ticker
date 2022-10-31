@@ -177,7 +177,7 @@ written to the `led-stock-ticker.log` file.
 - [X] Display ticker charts
 - [X] Create configuration script
 - [ ] Layout Support (width × height)
-  - [ ] 32×16
+  - [X] 32×16
   - [X] 128×64
   - [ ] 128×32
 - [ ] Forex prices
