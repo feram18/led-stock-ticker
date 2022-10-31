@@ -13,6 +13,7 @@ language:
 python:
   - 3.7
   - 3.8
+  - 3.9
 
 virtualenv:
   system-site-packages: true
@@ -22,13 +23,18 @@ addons:
     packages:
       - git
       - python3-pip
+      - python3-dev
 
 before_install:
-  - chmod +x install.sh
+  - sudo apt-get update
 
 install:
   - python3 -m pip install -r requirements.txt -r requirements_dev.txt
-  - ./install.sh
+  - cd rpi-rgb-led-matrix/
+  - make build-python PYTHON="$(command -v python3)"
+  - sudo make install-python PYTHON="$(command -v python3)"
+  - cd ../
+  - cp config/config.json.example config/config.json
 
 script:
   - python3 -m pytest -m "not slow"

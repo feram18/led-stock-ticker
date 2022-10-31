@@ -20,9 +20,9 @@ class Stock(Ticker):
             .replace('Inc.', '')\
             .replace('.com', '')\
             .replace('(The)', '') \
-            .rstrip()\
-            .removesuffix('&')\
-            .removesuffix(',')
+            .rstrip('&')\
+            .rstrip(',')\
+            .rstrip()
 
     def get_prev_close(self, ticker: yf.Ticker) -> float:
         """
