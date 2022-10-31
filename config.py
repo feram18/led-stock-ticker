@@ -122,11 +122,11 @@ def get_update_rate(total_tickers: int, rotation_rate: int) -> int:
     elif 5 < min_rate < 10:
         choices[0] = str(min_rate)
 
-    return int(questionary.select('Select update rate:',
+    return int(questionary.select(' Select update rate:',
                                   choices=choices,
                                   default=str(DEFAULT_UPDATE_RATE // 60),
                                   qmark='\U000123EC',
-                                  instruction='(in minutes)').ask()) * 60
+                                  instruction='(in minutes)').ask())
 
 
 def get_show_logos(pref: bool) -> bool:
