@@ -59,8 +59,8 @@ class TickerRenderer(Renderer, ABC):
     def render_percentage_change(self, pct_change: str, value_change: float):
         x = align_text(self.font.getsize(pct_change),
                        col_width=self.matrix.width,
-                       x=Position(self.coords['value_change']['x']))[0]
-        y = self.coords['value_change']['y']
+                       x=Position(self.coords['change_pct']['x']))[0]
+        y = self.coords['change_pct']['y']
 
         color = self.set_change_color(value_change)
         self.draw.text((x, y), pct_change, color, self.font)

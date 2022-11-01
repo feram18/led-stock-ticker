@@ -52,7 +52,7 @@
         "price": {
             "y": 11
         },
-        "value_change": {
+        "change_pct": {
             "x": "center",
             "y": 5
         },
