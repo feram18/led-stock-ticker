@@ -16,11 +16,13 @@ class Stock(Ticker):
         self.name = self.name\
             .replace('Company', '')\
             .replace('Corporation', '')\
+            .replace('Holdings', '')\
             .replace('Incorporated', '')\
-            .replace('Inc.', '')\
+            .replace('Inc', '')\
             .replace('.com', '')\
             .replace('(The)', '') \
             .rstrip('& ')\
+            .rstrip('. ')\
             .rstrip(', ')\
             .rstrip()
 
