@@ -10,7 +10,7 @@ from data.status import Status
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestCrypto:
     def setup_method(self):
-        self.crypto = Crypto('USD', 'ETH-USD')
+        self.crypto = Crypto('ETH-USD', 'USD')
 
     def teardown_method(self):
         del self.crypto
@@ -30,13 +30,13 @@ class TestCrypto:
         assert isinstance(current_price, float)
 
     def test_get_prev_close(self):
-        prev_close_price = self.crypto.get_prev_close(self.crypto.yf_ticker)
+        prev_close_price = self.crypto.get_prev_close()
         assert isinstance(prev_close_price, float)
 
     def test_get_chart_prices(self):
-        chart_prices = self.crypto.get_chart_prices(self.crypto.yf_ticker)
+        chart_prices = self.crypto.get_chart_prices()
         assert isinstance(chart_prices, list)
 
     def test_get_chart_prices_2(self):
-        chart_prices = self.crypto.get_chart_prices(self.crypto.yf_ticker)
+        chart_prices = self.crypto.get_chart_prices()
         assert len(chart_prices) > 0

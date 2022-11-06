@@ -25,5 +25,5 @@ class TestTickerRenderer:
         assert color == Color.RED
 
     def test_set_change_color_3(self):
-        color = TickerRenderer.set_change_color(0)
+        color = TickerRenderer.set_change_color(0.01)
         assert color == Color.GREEN

@@ -10,7 +10,7 @@ from data.stock import Stock
 @pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestStock:
     def setup_method(self):
-        self.stock = Stock('USD', 'AMZN')
+        self.stock = Stock('AMZN', 'USD')
 
     def teardown_method(self):
         del self.stock
@@ -30,13 +30,13 @@ class TestStock:
         assert isinstance(price, float)
 
     def test_get_prev_close(self):
-        prev_close = self.stock.get_prev_close(self.stock.yf_ticker)
+        prev_close = self.stock.get_prev_close()
         assert isinstance(prev_close, float)
 
     def test_get_chart_prices(self):
-        chart_prices = self.stock.get_chart_prices(self.stock.yf_ticker)
+        chart_prices = self.stock.get_chart_prices()
         assert isinstance(chart_prices, list)
 
     def test_get_chart_prices_2(self):
-        chart_prices = self.stock.get_chart_prices(self.stock.yf_ticker)
+        chart_prices = self.stock.get_chart_prices()
         assert len(chart_prices) > 0
