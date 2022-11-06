@@ -7,14 +7,15 @@ import yfinance as yf
 from PIL import Image
 from requests import Timeout
 
+from constants import DEFAULT_CURRENCY
 from data.status import Status
 from util.utils import convert_currency
 
 
 @dataclass
 class Ticker:
-    currency: str
     symbol: str
+    currency: str = DEFAULT_CURRENCY
     yf_ticker: yf.Ticker = field(init=False)
     name: str = field(init=False)
     price: float = field(init=False)
@@ -22,7 +23,7 @@ class Ticker:
     value_change: float = field(init=False)
     pct_change: str = field(init=False)
     chart_prices: List[float] = field(default_factory=list)
-    logo: Image = None
+    img: Image = None
     valid: bool = True
     status: Status = Status.SUCCESS
 
@@ -41,10 +42,10 @@ class Ticker:
             self.yf_ticker = yf.Ticker(self.symbol)
             self.name = self.yf_ticker.info['shortName']
             self.price = self.get_price(self.yf_ticker.info.get('regularMarketPrice', 0.00))
-            self.prev_close = self.get_prev_close(self.yf_ticker)
+            self.prev_close = self.get_prev_close()
             self.value_change = float(format((self.price - self.prev_close), '.2f'))
             self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'
-            self.chart_prices = self.get_chart_prices(self.yf_ticker)
+            self.chart_prices = self.get_chart_prices()
         except KeyError:
             logging.error(f'No data available for {self.symbol}.')
             self.valid = False
@@ -66,7 +67,7 @@ class Ticker:
             self.price = self.get_price(self.yf_ticker.info.get('regularMarketPrice', 0.00))
             self.value_change = float(format((self.price - self.prev_close), '.2f'))
             self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'
-            self.chart_prices = self.get_chart_prices(self.yf_ticker)
+            self.chart_prices = self.get_chart_prices()
             return Status.SUCCESS
         except Timeout:
             return Status.NETWORK_ERROR
@@ -83,10 +84,10 @@ class Ticker:
         return float(format(price, '.3f')) if price < 1.0 else float(format(price, '.2f'))
 
     @abstractmethod
-    def get_prev_close(self, ticker: yf.Ticker) -> float:
+    def get_prev_close(self) -> float:
         ...
 
-    def get_chart_prices(self, ticker: yf.Ticker) -> List[float]:
+    def get_chart_prices(self) -> List[float]:
         """
         Fetch historical market data for chart.
         :return: chart_prices: List of historical prices
@@ -94,7 +95,7 @@ class Ticker:
         period, attempts = 1, 0
         prices = []
         while len(prices) < 100 and attempts < 5:
-            prices = ticker.history(interval='1m', period=f'{period}d')['Close'].tolist()
+            prices = self.yf_ticker.history(interval='1m', period=f'{period}d')['Close'].tolist()
             period += 1  # Go back an additional day
             attempts += 1
         if not prices:

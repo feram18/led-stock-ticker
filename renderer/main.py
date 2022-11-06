@@ -2,6 +2,7 @@ from data.status import Status
 from renderer.clock import ClockRenderer
 from renderer.crypto import CryptoRenderer
 from renderer.error import ErrorRenderer
+from renderer.forex import ForexRenderer
 from renderer.renderer import Renderer
 from renderer.stock import StockRenderer
 
@@ -18,6 +19,7 @@ class MainRenderer(Renderer):
         clock (renderer.ClockRenderer):         Clock renderer instance
         stocks (renderer.StockRenderer):        Stocks renderer instance
         crypto (renderer.CryptoRenderer):       Crypto renderer instance
+        forex (renderer.ForexRenderer):         Forex renderer instance
         error (renderer.ErrorRenderer):         Error renderer instance
     """
 
@@ -28,6 +30,7 @@ class MainRenderer(Renderer):
         self.clock = ClockRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
         self.stocks = StockRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
         self.crypto = CryptoRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
+        self.forex = ForexRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
         self.error = ErrorRenderer(self.matrix, self.canvas, self.draw, self.config, self.data)
         self.render()
 
@@ -37,6 +40,7 @@ class MainRenderer(Renderer):
                 self.clock.render()
                 self.stocks.render()
                 self.crypto.render()
+                self.forex.render()
                 if self.data.should_update():
                     self.status = self.data.update()
                 self.data.update_clock()

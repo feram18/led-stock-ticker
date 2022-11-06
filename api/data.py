@@ -7,6 +7,7 @@ import multitasking
 
 from config.matrix_config import MatrixConfig
 from data.crypto import Crypto
+from data.forex import Forex
 from data.status import Status
 from data.stock import Stock
 from data.ticker import Ticker
@@ -22,12 +23,13 @@ class Data:
     market_status: MarketStatus = field(init=False)
     cryptos: List[Ticker] = field(default_factory=list)
     stocks: List[Ticker] = field(default_factory=list)
+    forex: List[Forex] = field(default_factory=list)
     valid_tickers: int = 0
     status: Status = Status.SUCCESS
     last_updated: float = None
 
     def __post_init__(self):
-        self.valid_tickers = len(self.config.stocks + self.config.cryptos)
+        self.valid_tickers = len(self.config.stocks + self.config.cryptos + self.config.forex)
         self.last_updated = time.time()
 
         threads = min([self.valid_tickers, multitasking.cpu_count() * 2])
@@ -45,11 +47,13 @@ class Data:
 
         self.market_status = market_status()
         for stock in self.config.stocks:  # Initialize stocks
-            self.fetch_stock(self.config.currency, stock)
+            self.fetch_stock(stock, self.config.currency)
         for crypto in self.config.cryptos:  # Initialize cryptos
-            self.fetch_crypto(self.config.currency, crypto)
+            self.fetch_crypto(crypto, self.config.currency)
+        for forex in self.config.forex:  # Initialize forex
+            self.fetch_forex(forex)
         # Wait until all tickers are initialized
-        while len(self.stocks + self.cryptos) < self.valid_tickers:
+        while len(self.stocks + self.cryptos + self.forex) < self.valid_tickers:
             time.sleep(0.1)
 
         self.date = self.get_date()
@@ -62,7 +66,7 @@ class Data:
         :return: status: (data.Status) Update status
         """
         logging.debug('Checking for update')
-        for ticker in self.stocks + self.cryptos:
+        for ticker in self.stocks + self.cryptos + self.forex:
             self.update_ticker(ticker)
         self.last_updated = time.time()
 
@@ -78,13 +82,13 @@ class Data:
         self.market_status = market_status()
 
     @multitasking.task
-    def fetch_stock(self, currency: str, symbol: str):
+    def fetch_stock(self, symbol: str, currency: str):
         """
         Fetch stock's data
         :param symbol: Stock symbol
         :param currency: Stock's prices currency
         """
-        stock = Stock(currency, symbol)
+        stock = Stock(symbol, currency)
         if stock.valid:
             self.stocks.append(stock)
         else:
@@ -92,18 +96,31 @@ class Data:
             logging.warning(f'Stock: {stock.symbol} is not valid.')
 
     @multitasking.task
-    def fetch_crypto(self, currency: str, symbol: str):
+    def fetch_crypto(self, symbol: str, currency: str):
         """
         Fetch crypto's data
         :param symbol: Crypto symbol
         :param currency: Crypto's prices currency
         """
-        crypto = Crypto(currency, symbol)
+        crypto = Crypto(symbol, currency)
         if crypto.valid:
             self.cryptos.append(crypto)
         else:
             self.valid_tickers -= 1
             logging.warning(f'Crypto: {crypto.symbol} is not valid.')
+
+    @multitasking.task
+    def fetch_forex(self, symbol: str):
+        """
+        Fetch forex rates
+        :param symbol: Forex pair
+        """
+        forex = Forex(symbol)
+        if forex.valid:
+            self.forex.append(forex)
+        else:
+            self.valid_tickers -= 1
+            logging.warning(f'Forex: {forex.symbol} is not valid.')
 
     @multitasking.task
     def update_ticker(self, ticker: Ticker):

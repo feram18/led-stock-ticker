@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-import yfinance as yf
 from pytz import timezone
 
+from constants import CRYPTO_LOGO_URL
 from data.ticker import Ticker
 from data.status import Status
 from util.utils import convert_currency
@@ -11,20 +11,22 @@ from util.utils import convert_currency
 
 @dataclass
 class Crypto(Ticker):
+    img_url: str = None
+
     def initialize(self):
         super(Crypto, self).initialize()
         self.name = self.name.replace(' USD', '')
+        self.img_url = CRYPTO_LOGO_URL.format(self.symbol.replace('-USD', '').lower())
 
-    def get_prev_close(self, ticker: yf.Ticker) -> float:
+    def get_prev_close(self) -> float:
         """
         Fetch the crypto's price 24h ago.
         If currency is not set to USD, convert value to user-selected currency.
-        :param ticker: Yfinance Ticker instance
         :return: prev_close: Previous day's close price
         :exception TypeError: Inappropriate argument type. Occurs when crypto is not valid.
         """
         try:
-            prices = ticker.history(interval='1m', period='2d')
+            prices = self.yf_ticker.history(interval='1m', period='2d')
             today = datetime.now(timezone('Europe/London'))  # Timezone used by yfinance library
             yesterday = today - timedelta(days=1)
             yesterday = yesterday.replace(second=0)

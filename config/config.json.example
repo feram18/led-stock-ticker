@@ -9,7 +9,12 @@
             "BTC",
             "ETH",
             "LTC"
-        ]
+        ],
+        "forex": [
+            "USD/EUR",
+            "EUR/JPY",
+            "GBP/USD"
+        ],
     },
     "options": {
         "currency": "USD",

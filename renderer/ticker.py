@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 
 from PIL import Image
@@ -42,18 +43,15 @@ class TickerRenderer(Renderer, ABC):
         else:
             self.draw.text((x, y), name, self.text_color, self.font)
 
-    @abstractmethod
-    def render_symbol(self, symbol: str):
-        pass
-
-    def render_price(self, price: str):
-        y = self.coords['price']['y']
+    def render_price(self, price: str, ticker_type: str):
+        y = self.coords[ticker_type]['price']['y']
         if off_screen(self.matrix.width, self.font.getsize(price)[0]):
             self.scroll_text(price, self.font, self.text_color, Color.BLACK, (1, y))
         else:
             x = align_text(self.font.getsize(price),
                            col_width=self.matrix.width,
-                           x=Position.CENTER)[0]
+                           x=Position(self.coords[ticker_type]['price']['x']))[0]
+            x += self.coords[ticker_type]['price']['offset']
             self.draw.text((x, y), price, self.text_color, self.font)
 
     def render_percentage_change(self, pct_change: str, value_change: float):
@@ -70,31 +68,34 @@ class TickerRenderer(Renderer, ABC):
         color = self.set_change_color(value_change)
 
         if prices:
-            min_p, max_p = min(prices), max(prices)
-            x_inc = len(prices) / self.matrix.width
+            try:
+                min_p, max_p = min(prices), max(prices)
+                x_inc = len(prices) / self.matrix.width
 
-            if prev_close < min_p:
-                prev_close_y = self.matrix.height - 1
-            elif prev_close > max_p or max_p == min_p:
-                prev_close_y = chart_top
-            else:
-                prev_close_y = int(chart_top + (max_p - prev_close) *
-                                   ((self.matrix.height - chart_top) / (max_p - min_p)))
-
-            for x in range(self.matrix.width):
-                p = prices[int(x * x_inc)]
-                if max_p == min_p:
-                    y = chart_top
+                if prev_close < min_p:
+                    prev_close_y = self.matrix.height - 1
+                elif prev_close > max_p or max_p == min_p:
+                    prev_close_y = chart_top
                 else:
-                    y = int(chart_top + (max_p - p) *
-                            ((self.matrix.height - chart_top) / (max_p - min_p)))
-                step = -1 if y > prev_close_y else 1
+                    prev_close_y = int(chart_top + (max_p - prev_close) *
+                                       ((self.matrix.height - chart_top) / (max_p - min_p)))
 
-                for ys in range(y, prev_close_y + step, step):
-                    self.draw.point((x, ys - 1), color)
-                self.draw.point((x, y - 1), color)
+                for x in range(self.matrix.width):
+                    p = prices[int(x * x_inc)]
+                    if max_p == min_p:
+                        y = chart_top
+                    else:
+                        y = int(chart_top + (max_p - p) *
+                                ((self.matrix.height - chart_top) / (max_p - min_p)))
+                    step = -1 if y > prev_close_y else 1
 
-    def render_logo(self, logo: Image):
+                    for ys in range(y, prev_close_y + step, step):
+                        self.draw.point((x, ys - 1), color)
+                    self.draw.point((x, y - 1), color)
+            except ValueError as e:
+                logging.warning('Unable to render chart', e)
+
+    def render_image(self, logo: Image):
         if logo:
             x, y = align_image(logo,
                                self.matrix.width,
@@ -122,4 +123,4 @@ class TickerRenderer(Renderer, ABC):
         Determines if value has increased or decreased, and returns Color object to match.
         :return: value_change_color: (tuple) Value change color
         """
-        return Color.RED if value_change < 0 else Color.GREEN
+        return Color.GREEN if value_change > 0.00 else Color.RED

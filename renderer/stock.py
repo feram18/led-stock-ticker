@@ -24,7 +24,7 @@ class StockRenderer(TickerRenderer):
 
         if self.config.layout.show_logos:
             for stock in self.stocks:
-                stock.logo = load_image_url(stock.logo_url, tuple(self.coords['logo']['size']))
+                stock.img = load_image_url(stock.logo_url, tuple(self.coords['stock']['logo']['size']))
 
     def render(self):
         for stock in self.stocks:
@@ -35,11 +35,11 @@ class StockRenderer(TickerRenderer):
             self.clear()
             if self.coords['options']['full_names']:
                 self.render_name(stock.name)
-            if self.coords['options']['logos'] and self.config.layout.show_logos:
-                self.render_logo(stock.logo)
+            if self.coords['options']['image'] and self.config.layout.show_logos:
+                self.render_image(stock.img)
             elif self.coords['options']['history_chart']:
                 self.render_chart(previous_close, stock.chart_prices, stock.value_change)
-            self.render_price(self.format_price(self.currency, stock.price))
+            self.render_price(self.format_price(self.currency, stock.price), 'stock')
             self.render_symbol(stock.symbol)
             self.render_market_status()
             self.render_percentage_change(stock.pct_change, stock.value_change)

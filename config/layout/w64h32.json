@@ -28,7 +28,7 @@
         "options": {
             "full_names": true,
             "history_chart": true,
-            "logos": true
+            "image": true
         },
         "stock": {
             "market_status": {
@@ -41,6 +41,14 @@
                 "x": "left",
                 "y": 6,
                 "offset": 3
+            },
+            "price": {
+                "x": "center",
+                "y": 12,
+                "offset": 0
+            },
+            "logo": {
+                "size": [64, 14]
             }
         },
         "crypto": {
@@ -48,10 +56,25 @@
                 "x": "left",
                 "y": 6,
                 "offset": 1
+            },
+            "price": {
+                "x": "center",
+                "y": 12,
+                "offset": 0
+            },
+            "logo": {
+                "size": [64, 14]
             }
         },
-        "price": {
-            "y": 12
+        "forex": {
+            "price": {
+                "x": "left",
+                "y": 6,
+                "offset": 1
+            },
+            "image": {
+                "size": [30, 20]
+            }
         },
         "change_pct": {
             "x": "right",
@@ -59,29 +82,6 @@
         },
         "chart": {
             "y": 18
-        },
-        "logo": {
-            "size": [64, 14]
-        }
-    },
-    "forex": {
-        "options": {
-            "image": true
-        },
-        "name": {
-            "y": 0
-        },
-        "price": {
-            "x": "left",
-            "y": 6,
-            "offset": 1
-        },
-        "pct_change": {
-            "x": "right",
-            "y": 6
-        },
-        "image": {
-            "size": [30, 20]
         }
     },
     "error": {

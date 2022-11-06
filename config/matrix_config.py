@@ -20,6 +20,7 @@ class MatrixConfig:
     config: dict = field(default_factory=dict)
     stocks: List[str] = field(default_factory=list)
     cryptos: List[str] = field(default_factory=list)
+    forex: List[str] = field(default_factory=list)
     currency: str = DEFAULT_CURRENCY
     clock_format: str = TWELVE_HOURS_FORMAT
     date_format: str = DEFAULT_DATE_FORMAT
@@ -39,6 +40,7 @@ class MatrixConfig:
             v.validate(self.config)
             self.stocks = self.config['tickers']['stocks']
             self.cryptos = self.format_cryptos(self.config['tickers']['cryptos'])
+            self.forex = self.format_forex(self.config['tickers']['forex'])
             self.currency = self.config['options']['currency']
             self.clock_format = self.set_time_format(self.config['options']['clock_format'])
             self.date_format = self.config['options']['date_format']
@@ -60,6 +62,14 @@ class MatrixConfig:
         :return: result: (list) Formatted list of cryptos
         """
         return [f'{crypto}-USD' for crypto in cryptos]
+
+    @staticmethod
+    def format_forex(forex: List[str]) -> list:
+        lst = []
+        for pair in forex:
+            currency_from, currency_to = pair.split('/')
+            lst.append(f'{currency_from}{currency_to}=X')
+        return lst
 
     @staticmethod
     def set_time_format(fmt: str) -> str:

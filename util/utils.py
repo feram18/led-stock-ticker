@@ -2,10 +2,11 @@
 import argparse
 import json
 import logging
+import operator
 import os
 from datetime import datetime
 from io import BytesIO
-from typing import Tuple
+from typing import Tuple, List
 
 import requests
 from PIL import Image, ImageFont, BdfFontFile
@@ -185,8 +186,29 @@ def load_image_url(url: str, size: Tuple[int, int]) -> Image:
             with Image.open(BytesIO(response.content)) as img:
                 img.thumbnail(size)
                 return img.convert('RGB')
-        logging.error(f'Could not get image at {url}')
-    logging.error('No url provided')
+        else:
+            logging.error(f'Could not get image at {url}')
+    else:
+        logging.error('No url provided')
+
+
+def build_forex_img(urls: List[str], size: Tuple[int, int]) -> Image:
+    """
+    Build image with flags of forex pair countries
+    :param urls: URLs to country flags
+    :param size: image size
+    :return: image: Image with flag of currency from/to
+    """
+    img = Image.new('RGB', size)
+    flag_size = round(0.67 * size[0])
+    flag_from = load_image_url(urls[0], (flag_size, flag_size))
+    flag_to = load_image_url(urls[1], (flag_size, flag_size))
+
+    if flag_from:
+        img.paste(flag_from)
+    if flag_to:
+        img.paste(flag_to, tuple(map(operator.sub, size, flag_to.size)))
+    return img
 
 
 @retry((Timeout, ConnectionError), total_tries=3)

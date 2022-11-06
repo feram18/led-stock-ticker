@@ -1,6 +1,5 @@
 import time
 
-from constants import CRYPTO_LOGO_URL
 from renderer.ticker import TickerRenderer
 from util.utils import convert_currency, load_image_url, align_text, Position
 
@@ -19,8 +18,7 @@ class CryptoRenderer(TickerRenderer):
 
         if self.config.layout.show_logos:
             for crypto in self.cryptos:
-                crypto.logo = load_image_url(CRYPTO_LOGO_URL.format(crypto.symbol.replace('-USD', '').lower()),
-                                             tuple(self.coords['logo']['size']))
+                crypto.img = load_image_url(crypto.img_url, tuple(self.coords['crypto']['logo']['size']))
 
     def render(self):
         for crypto in self.cryptos:
@@ -31,11 +29,11 @@ class CryptoRenderer(TickerRenderer):
             self.clear()
             if self.coords['options']['full_names']:
                 self.render_name(crypto.name)
-            if self.coords['options']['logos'] and self.config.layout.show_logos:
-                self.render_logo(crypto.logo)
+            if self.coords['options']['image'] and self.config.layout.show_logos:
+                self.render_image(crypto.img)
             elif self.coords['options']['history_chart']:
                 self.render_chart(previous_close, crypto.chart_prices, crypto.value_change)
-            self.render_price(self.format_price(self.currency, crypto.price))
+            self.render_price(self.format_price(self.currency, crypto.price), 'crypto')
             self.render_symbol(crypto.symbol.replace('-USD', ''))  # Remove currency exchange
             self.render_percentage_change(crypto.pct_change, crypto.value_change)
             self.matrix.SetImage(self.canvas)

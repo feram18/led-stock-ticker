@@ -6,7 +6,7 @@
   "properties": {
     "tickers": {
       "type": "object",
-      "required": ["stocks", "cryptos"],
+      "required": ["stocks", "cryptos", "forex"],
       "properties": {
         "stocks": {
           "type": "array",
@@ -23,6 +23,14 @@
           "minItems": 0,
           "uniqueItems": true,
           "default:": ["BTC", "ETH", "LTC"]
+        },
+        "forex":{
+          "type": "array",
+          "description": "List of forex pairs",
+          "pattern": "^([A-Z]{3})\/([A-Z]{3})$",
+          "minItems": 0,
+          "uniqueItems": true,
+          "default": ["USD/EUR", "EUR/JPY", "GBP/USD"]
         }
       },
       "additionalProperties": false

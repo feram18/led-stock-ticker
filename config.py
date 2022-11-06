@@ -5,7 +5,7 @@ import time
 
 import questionary
 
-from constants import CONFIG_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, CLOCK_FORMATS, DATE_FORMATS, \
+from constants import CONFIG_FILE, DEFAULT_STOCKS, DEFAULT_CRYPTOS, DEFAULT_FOREX, CLOCK_FORMATS, DATE_FORMATS, \
     DEFAULT_DATE_FORMAT, DEFAULT_ROTATION_RATE, DEFAULT_UPDATE_RATE
 from data.currency import CURRENCIES
 from util.utils import read_json, write_json
@@ -20,6 +20,7 @@ def get_current_preferences() -> dict:
     return {
         'stocks': ' '.join(preferences['tickers']['stocks']),
         'cryptos': ' '.join(preferences['tickers']['cryptos']),
+        'forex': ' '.join(preferences['tickers']['forex']),
         'currency': preferences['options']['currency'],
         'clock_format': preferences['options']['clock_format'],
         'date_format': preferences['options']['date_format'],
@@ -54,15 +55,27 @@ def get_cryptos(pref: str) -> list:
     return [i for n, i in enumerate(cryptos) if i not in cryptos[:n]]
 
 
+def get_forex(pref: str) -> list:
+    """
+    Get user's preferred forex pairs.
+    :param pref (str) Current preferred forex list
+    :return: forex: (list) List of forex
+    """
+    forex = questionary.text('Enter forex pairs:',
+                             default=' '.join(DEFAULT_FOREX) if len(pref) < 1 else pref,
+                             qmark='\U0001F4B1',
+                             instruction='(Separate each pair by a space)').ask().upper().split()
+    return [i for n, i in enumerate(forex) if i not in forex[:n]]
+
+
 def get_currency(pref: str) -> str:
     """
     Get user's preferred currency.
     :param pref (str) Current preferred currency
     :return: currency: (str) Currency
     """
-    choices = list(CURRENCIES.keys())
     return questionary.select('Select currency:',
-                              choices=choices,
+                              choices=list(CURRENCIES.keys()),
                               default='USD' if len(pref) < 1 else pref,
                               qmark='\U0001F4B2').ask()
 
@@ -149,12 +162,13 @@ def set_preferences(config: dict, current_config: dict) -> dict:
     """
     config['tickers']['stocks'] = get_stocks(current_config['stocks'])
     config['tickers']['cryptos'] = get_cryptos(current_config['cryptos'])
+    config['tickers']['forex'] = get_forex(current_config['forex'])
     config['options']['currency'] = get_currency(current_config['currency'])
     config['options']['clock_format'] = get_clock_format(current_config['clock_format'])
     config['options']['date_format'] = get_date_format(current_config['date_format'])
     config['options']['rotation_rate'] = get_rotation_rate(current_config['rotation_rate'])
-    config['options']['update_rate'] = get_update_rate(len(config['tickers']['stocks'] + config['tickers']['cryptos']),
-                                                       config['options']['rotation_rate'])
+    total_tickers = len(config['tickers']['stocks'] + config['tickers']['cryptos'] + config['tickers']['forex'])
+    config['options']['update_rate'] = get_update_rate(total_tickers, config['options']['rotation_rate'])
     config['options']['show_logos'] = get_show_logos(current_config['show_logos'])
     return config
 

@@ -33,12 +33,11 @@ TEXT_SCROLL_DELAY = 0.5  # seconds
 TEXT_SCROLL_SPEED = 0.3  # seconds
 
 # ExchangeRate API
-EXCHANGE_RATE_BASE_URL = 'https://api.exchangerate.host/'
-CURRENCY_EXCHANGE_URL = EXCHANGE_RATE_BASE_URL + 'convert?from={}&to={}&amount={}&places=2'
-FOREX_RATES_URL = EXCHANGE_RATE_BASE_URL + 'fluctuation?start_date={}&end_date={}&base={}&symbols={}&places=4'
+CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amount={}&places=2'
 
 # Image sources
 CRYPTO_LOGO_URL = 'https://cryptoicons.org/api/icon/{}/200'
+FLAG_URL = 'https://raw.githubusercontent.com/transferwise/currency-flags/master/src/flags/{}.png'
 
 # Date/Time Formatting
 DATE_FORMATS = [
