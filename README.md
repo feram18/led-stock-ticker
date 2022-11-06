@@ -14,18 +14,18 @@
   <img src="https://img.shields.io/github/release-date/feram18/led-stock-ticker" alt="Release Date" />
 </p>
 
-An LED display for real-time prices of stocks and cryptocurrencies. Requires a Raspberry Pi, and an LED board connected 
-to the Pi via the GPIO pins.
+An LED display for real-time prices of stocks, cryptocurrencies, and forex rates. Requires a Raspberry Pi, and an LED 
+board connected to the Pi via the GPIO pins.
 
 <p align="center">
-  <img src="assets/img/demo/v0.3.1/stock-chart.png" title="Stock Demo" width="32%" />
-  <img src="assets/img/demo/v0.3.1/stock-2-chart.png" title="Stock Demo #2" width="32%" />
-  <img src="assets/img/demo/v0.3.1/crypto-chart.png" title="Crypto Demo" width="32%" />
+  <img src="assets/img/demo/v0.3.x/stock-chart.png" title="Stock Demo" width="32%" />
+  <img src="assets/img/demo/v0.3.x/crypto-chart.png" title="Crypto Demo" width="32%" />
+  <img src="assets/img/demo/v0.3.x/forex-chart.png" title="Forex Demo" width="32%" />
 
-  <img src="assets/img/demo/v0.3.1/stock-logo.png" title="Stock (Logo) Demo" width="32%" />
-  <img src="assets/img/demo/v0.3.1/stock-2-logo.png" title="Stock (Logo) Demo #2" width="32%" />
-  <img src="assets/img/demo/v0.3.1/crypto-logo.png" title="Crypto (Logo) Demo" width="32%" />
-  <small>Version 0.3.1 (128×64)</small>
+  <img src="assets/img/demo/v0.3.x/stock-logo.png" title="Stock (Logo) Demo" width="32%" />
+  <img src="assets/img/demo/v0.3.x/crypto-logo.png" title="Crypto (Logo) Demo" width="32%" />
+  <img src="assets/img/demo/v0.3.x/forex-img.png" title="Forex (Logo) Demo" width="32%" />
+  <small>Version 0.3.2 (128×64)</small>
 </p>
 
 ## Table of Contents
@@ -44,7 +44,7 @@ to the Pi via the GPIO pins.
 * [License](#license)
 
 ## Features
-- **Real-time prices**. Real-time prices of your preferred stocks and cryptocurrencies.
+- **Real-time prices**. Real-time prices of your preferred stocks, cryptocurrencies, and forex rates.
 - **Market status indicator**. Displays the stock market's current status (Left of the stock symbol).
 - **History chart**. Ticker's value change over the past day.
 - **Company & Crypto Logos**. Display a logo in place of the history chart.
@@ -57,6 +57,7 @@ Materials needed:
 - [Raspberry Pi]
 - Adafruit RGB Matrix [HAT] or [Bonnet]
 - RGB LED Matrix. [Supported sizes](config/layout/README.md):
+  - 32×16
   - 64×32
   - 128×64
 
@@ -107,6 +108,8 @@ The `config.json` file follows the following format:
                                   Example: ["TSLA", "AMZN", "MSFT"]
     "cryptos"         Array       Pass an array of cryptocurrency symbols
                                   Example: ["BTC", "ETH", "LTC"]
+    "forex"           Array       Pass an array of forex pairs
+                                  Example: ["USD/EUR", "EUR/JPY", "GBP/USD"]
                                   
   "options":                      Other miscellaneous preferences
     "currency"        String      Currency in which to display prices
@@ -180,7 +183,7 @@ written to the `led-stock-ticker.log` file.
   - [X] 32×16
   - [X] 128×64
   - [ ] 128×32
-- [ ] Forex prices
+- [X] Forex prices
 - [ ] Configuration web interface
 - [ ] Board customization options
   - [X] Update rate
