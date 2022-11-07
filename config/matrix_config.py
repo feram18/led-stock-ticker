@@ -59,12 +59,17 @@ class MatrixConfig:
         """
         Append -USD postfix to cryptocurrencies.
         :param cryptos: (list) List of cryptos to format
-        :return: result: (list) Formatted list of cryptos
+        :return: result: (list) Formatted symbols
         """
         return [f'{crypto}-USD' for crypto in cryptos]
 
     @staticmethod
     def format_forex(forex: List[str]) -> list:
+        """
+        Format the forex symbol to the format needed for yfinance (i.e. USD/EUR -> USDEUR=X)
+        :param forex: list of forex symbols
+        :return: result: (list) Formatted symbols
+        """
         lst = []
         for pair in forex:
             currency_from, currency_to = pair.split('/')
