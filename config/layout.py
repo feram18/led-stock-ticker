@@ -11,10 +11,10 @@ class Layout:
     """Matrix Layout class"""
     width: int
     height: int
-    coords: dict = field(init=False)
-    font: ImageFont = field(init=False)
-    clock_font: ImageFont = field(init=False)
-    show_logos: bool = field(init=False)
+    coords: dict = field(default_factory=dict)
+    font: ImageFont = None
+    clock_font: ImageFont = None
+    show_logos: bool = False
 
     def __post_init__(self):
         self.coords = read_json(LAYOUT_FILE.format(self.width, self.height))
