@@ -204,11 +204,11 @@ def build_forex_img(urls: List[str], size: Tuple[int, int]) -> Image:
     flag_from = load_image_url(urls[0], (flag_size, flag_size))
     flag_to = load_image_url(urls[1], (flag_size, flag_size))
 
-    if flag_from:
+    if flag_from and flag_to:
         img.paste(flag_from)
-    if flag_to:
         img.paste(flag_to, tuple(map(operator.sub, size, flag_to.size)))
-    return img
+        return img
+    logging.warning('Unable to build forex image')
 
 
 @retry((Timeout, ConnectionError), total_tries=3)
