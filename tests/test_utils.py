@@ -106,7 +106,7 @@ class TestUtils:
 
     def test_convert_font(self):
         utils.convert_font('assets/fonts/tom-thumb.bdf')
-        assert os.path.isfile('tom-thumb.pil')
+        assert os.path.isfile('assets/fonts/tom-thumb.pil')
 
     def test_load_image(self):
         image = utils.load_image('assets/img/error.png', (15, 15))
