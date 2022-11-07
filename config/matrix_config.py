@@ -42,7 +42,7 @@ class MatrixConfig:
             self.cryptos = self.format_cryptos(self.config['tickers']['cryptos'])
             self.forex = self.format_forex(self.config['tickers']['forex'])
             self.currency = self.config['options']['currency']
-            self.clock_format = self.set_time_format(self.config['options']['clock_format'])
+            self.clock_format = self.get_time_format(self.config['options']['clock_format'])
             self.date_format = self.config['options']['date_format']
             self.rotation_rate = self.config['options']['rotation_rate']
             self.update_rate = self.config['options']['update_rate'] * 60  # convert to minutes
@@ -72,10 +72,10 @@ class MatrixConfig:
         return lst
 
     @staticmethod
-    def set_time_format(fmt: str) -> str:
+    def get_time_format(fmt: str) -> str:
         """
-        Determine if clock format is an accepted value (12h or 24h). Else, set to default value (12h).
-        :param fmt: format
+        Get the appropriate time format based on input (12h or 24h). Else, set to default value (12h).
+        :param fmt: format to get
         :return time_format: (str) Time format
         """
         return TWENTY_FOUR_HOURS_FORMAT if fmt == '24h' else TWELVE_HOURS_FORMAT
