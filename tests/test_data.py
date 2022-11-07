@@ -4,7 +4,6 @@ import pytest
 
 from api.data import Data
 from config.matrix_config import MatrixConfig
-from constants import DEFAULT_UPDATE_RATE
 
 
 class TestData:
@@ -16,7 +15,7 @@ class TestData:
 
     @pytest.mark.slow
     def test_should_update(self):
-        time.sleep(DEFAULT_UPDATE_RATE)
+        time.sleep(self.data.config.update_rate)
         assert self.data.should_update() is True
 
     def test_should_update_2(self):

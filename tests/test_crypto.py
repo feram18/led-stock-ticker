@@ -1,19 +1,19 @@
-import sys
 import logging
-
-import pytest
 
 from data.crypto import Crypto
 from data.status import Status
 
 
-@pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestCrypto:
     def setup_method(self):
         self.crypto = Crypto('ETH-USD', 'USD')
 
     def teardown_method(self):
         del self.crypto
+
+    def test_initialize(self):
+        # Tests that name no longer contains ' USD' suffix
+        assert ' USD' not in self.crypto.name
 
     def test_update(self):
         status = self.crypto.update()

@@ -9,7 +9,7 @@ from io import BytesIO
 from typing import Tuple, List
 
 import requests
-from PIL import Image, ImageFont, BdfFontFile
+from PIL import Image, ImageFont, BdfFontFile, UnidentifiedImageError
 from rgbmatrix import RGBMatrixOptions
 from pytz import timezone
 from requests import Timeout, RequestException, ConnectionError
@@ -183,11 +183,12 @@ def load_image_url(url: str, size: Tuple[int, int]) -> Image:
     if url:
         response = requests.get(url)
         if response.ok:
-            with Image.open(BytesIO(response.content)) as img:
-                img.thumbnail(size)
-                return img.convert('RGB')
-        else:
-            logging.error(f'Could not get image at {url}')
+            try:
+                with Image.open(BytesIO(response.content)) as img:
+                    img.thumbnail(size)
+                    return img.convert('RGB')
+            except UnidentifiedImageError:
+                logging.error(f'Could not get image at {url}')
     else:
         logging.error('No url provided')
 

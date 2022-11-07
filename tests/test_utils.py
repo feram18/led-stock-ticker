@@ -1,16 +1,14 @@
-import sys
 import logging
+import os
 
-import pytest
-from PIL import Image
-from PIL import ImageFont
+from PIL import Image, ImageFont
 
 import constants
 from util import utils
+from util.market_status import MarketStatus
 from util.position import Position
 
 
-@pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestUtils:
     def setup_method(self):
         self.font = utils.load_font('tom-thumb.pil')
@@ -78,6 +76,16 @@ class TestUtils:
         x, y = utils.align_image(img, 64, 32)
         assert (x, y) == (25, 11)
 
+    def test_align_image_2(self):
+        img = utils.load_image('assets/img/logo.png', (15, 15))
+        x = utils.align_image(img, 64, x=Position.LEFT)[0]
+        assert x == 0
+
+    def test_align_image_3(self):
+        img = utils.load_image('assets/img/logo.png', (15, 15))
+        x, y = utils.align_image(img, col_height=32, y=Position.CENTER)
+        assert y == 11
+
     def test_load_font(self):
         font = utils.load_font('tom-thumb.pil')
         assert isinstance(font, ImageFont.ImageFont)
@@ -96,6 +104,10 @@ class TestUtils:
             utils.load_font('invalid.pil')
         assert f"Couldn't find font {constants.FONTS_DIR}invalid.pil" in caplog.text
 
+    def test_convert_font(self):
+        utils.convert_font('assets/fonts/tom-thumb.bdf')
+        assert os.path.isfile('tom-thumb.pil')
+
     def test_load_image(self):
         image = utils.load_image('assets/img/error.png', (15, 15))
         assert isinstance(image, Image.Image)
@@ -108,11 +120,29 @@ class TestUtils:
         caplog.clear()
         with caplog.at_level(logging.ERROR):
             utils.load_image('invalid.png', (15, 15))
-        assert f"Couldn't find image invalid.png" in caplog.text
+        assert "Couldn't find image invalid.png" in caplog.text
 
     def test_load_image_4(self):
         image = utils.load_image('invalid.png', (15, 15))
         assert image is None
+
+    def test_load_image_url(self):
+        url = 'https://picsum.photos/200/300'
+        img = utils.load_image_url(url, (10, 10))
+        assert isinstance(img, Image.Image)
+
+    def test_load_image_url_2(self, caplog):
+        url = 'https://picsum.photos'
+        caplog.clear()
+        with caplog.at_level(logging.ERROR):
+            utils.load_image_url(url, (10, 10))
+        assert f'Could not get image at {url}' in caplog.text
+
+    def test_load_image_url_3(self, caplog):
+        caplog.clear()
+        with caplog.at_level(logging.ERROR):
+            utils.load_image_url(None, (10, 10))
+        assert 'No url provided' in caplog.text
 
     def test_convert_currency(self):
         result = utils.convert_currency('USD', 'EUR', 15.0)
@@ -125,6 +155,26 @@ class TestUtils:
     def test_convert_currency_3(self):
         result = utils.convert_currency('EUR', 'USD', None)
         assert result == 0.0
+
+    def test_build_forex_img(self):
+        urls = [
+            constants.FLAG_URL.format('cad'),
+            constants.FLAG_URL.format('eur')
+        ]
+        img = utils.build_forex_img(urls, (40, 20))
+        assert isinstance(img, Image.Image)
+
+    def test_build_forex_img_2(self, caplog):
+        urls = [
+            constants.FLAG_URL.format('invalid'),
+            constants.FLAG_URL.format('invalid')
+        ]
+        with caplog.at_level(logging.WARNING):
+            utils.build_forex_img(urls, (40, 20))
+        assert 'Unable to build forex image' in caplog.text
+
+    def test_market_status(self):
+        assert isinstance(utils.market_status(), MarketStatus)
 
     def test_after_hours(self):
         assert isinstance(utils.after_hours(), bool)

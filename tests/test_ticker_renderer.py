@@ -1,12 +1,7 @@
-import sys
-
-import pytest
-
 from renderer.ticker import TickerRenderer
 from util.color import Color
 
 
-@pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestTickerRenderer:
     def test_format_price(self):
         result = TickerRenderer.format_price('USD', 78.23)

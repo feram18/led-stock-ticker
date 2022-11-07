@@ -1,19 +1,29 @@
-import sys
 import logging
-
-import pytest
 
 from data.status import Status
 from data.stock import Stock
 
 
-@pytest.mark.skipif(not sys.platform.startswith('linux'), reason='Requires Linux')
 class TestStock:
     def setup_method(self):
         self.stock = Stock('AMZN', 'USD')
 
     def teardown_method(self):
         del self.stock
+
+    def test_initialize(self):
+        # Tests if name was simplified
+        removed = [
+            'Company',
+            'Corporation',
+            'Holdings',
+            'Incorporated',
+            'Inc',
+            '.com',
+            '(The)'
+        ]
+        for i in removed:
+            assert i not in self.stock.name
 
     def test_update(self):
         status = self.stock.update()
