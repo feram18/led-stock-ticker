@@ -14,7 +14,7 @@
             "USD/EUR",
             "EUR/JPY",
             "GBP/USD"
-        ],
+        ]
     },
     "options": {
         "currency": "USD",
