@@ -193,9 +193,10 @@ written to the `led-stock-ticker.log` file.
 
 ## Sources
 This project relies on the following:
-- [YFinance] library to retrieve the stock/cryptocurrency data.
-- [Exchange Rates] API for currency exchanges.
-- [rpi-rgb-led-matrix] library to make everything work with the LED board, included as a submodule.
+- [YFinance] library to retrieve the stock, cryptocurrency, and forex data & stock logos.
+- [exchangerate.host] API for currency exchanges.
+- [Crypto Icons] API for cryptocurrency logos.
+- [rpi-rgb-led-matrix] library to work with the LED board.
 
 ## Disclaimer
 This project is a work in progress (all feedback is appreciated!) and is dependent on the [YFinance] library & 
@@ -208,5 +209,6 @@ GNU General Public License v3.0
 [HAT]: <https://www.adafruit.com/product/2345>
 [Bonnet]: <https://www.adafruit.com/product/3211>
 [YFinance]: <https://github.com/ranaroussi/yfinance>
-[Exchange Rates]: <https://exchangerate.host/>
+[exchangerate.host]: <https://exchangerate.host/>
+[Crypto Icons]: <https://cryptoicons.org>
 [rpi-rgb-led-matrix]: <https://github.com/hzeller/rpi-rgb-led-matrix>
