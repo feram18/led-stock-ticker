@@ -185,6 +185,7 @@ written to the `led-stock-ticker.log` file.
   - [ ] 128×32
 - [X] Forex prices
 - [ ] Configuration web interface
+- [ ] Traditional scrolling tickers display
 - [ ] Board customization options
   - [X] Update rate
   - [X] Rotation rate
