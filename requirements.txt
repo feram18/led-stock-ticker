@@ -3,7 +3,7 @@ lxml>=4.5.1
 numpy>=1.16.6
 multitasking~=0.0.9
 pandas>=0.23.1
-pillow==9.2.0
+pillow==9.3.0
 pytz>=2021.1
 questionary>=1.10.0
 requests>=2.22.0
