@@ -1,8 +1,8 @@
 # User config file
-config/config.json
+matrix/config.json
 
 # User-customized layout files
-config/coords/*.json
+matrix/coords/*.json
 
 # Log Files
 *.log*

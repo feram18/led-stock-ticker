@@ -32,7 +32,7 @@ function createConfigFile() {
 
 # Checks if configuration file exists/requires update
 function checkConfigFile() {
-  cd "${ROOT_DIR}/config/" || exit
+  cd "${ROOT_DIR}/matrix/" || exit
   if [[ ! -e config.json ]]; then
     createConfigFile
   elif [[ -e config.json && config.json.example -nt config.json ]];then

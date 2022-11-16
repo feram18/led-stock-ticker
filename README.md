@@ -49,14 +49,14 @@ board connected to the Pi via the GPIO pins.
 - **History chart**. Ticker's value change over the past day.
 - **Company & Crypto Logos**. Display a logo in place of the history chart.
 - **Currency selection**. Select the currency you would like to see prices on. Check the list of supported currencies 
-[here](config/README.md).
+[here](matrix/README.md).
 
 ## Installation
 ### Hardware
 Materials needed:
 - [Raspberry Pi]
 - Adafruit RGB Matrix [HAT] or [Bonnet]
-- RGB LED Matrix. [Supported sizes](config/coords/README.md):
+- RGB LED Matrix. [Supported sizes](matrix/coords/README.md):
   - 32×16
   - 64×32
   - 128×64

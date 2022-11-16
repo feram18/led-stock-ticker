@@ -6,7 +6,7 @@ import multitasking
 from PIL import Image, ImageDraw, ImageFont
 from rgbmatrix import RGBMatrix
 
-from config.matrix_config import MatrixConfig
+from matrix.matrix_config import MatrixConfig
 from constants import TEXT_SCROLL_SPEED
 from util.color import Color
 from util.direction import Direction

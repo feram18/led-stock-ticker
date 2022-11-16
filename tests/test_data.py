@@ -3,7 +3,7 @@ import time
 import pytest
 
 from api.data import Data
-from config.matrix_config import MatrixConfig
+from matrix.matrix_config import MatrixConfig
 
 
 class TestData:

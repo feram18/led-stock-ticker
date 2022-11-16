@@ -32,7 +32,7 @@ install:
   - make build-python PYTHON="$(command -v python3)"
   - sudo make install-python PYTHON="$(command -v python3)"
   - cd ../
-  - cp config/config.json.example config/config.json
+  - cp matrix/config.json.example matrix/config.json
 
 script:
   - python3 -m pytest -m "not slow"

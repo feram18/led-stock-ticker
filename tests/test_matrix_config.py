@@ -1,5 +1,5 @@
 import constants
-from config.matrix_config import MatrixConfig
+from matrix.matrix_config import MatrixConfig
 
 
 class TestMatrixConfig:

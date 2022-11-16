@@ -5,7 +5,7 @@ from typing import List
 
 from jsonschema import Draft7Validator, ValidationError
 
-from config.layout import Layout
+from matrix.layout import Layout
 from constants import DEFAULT_CURRENCY, TWELVE_HOURS_FORMAT, DEFAULT_DATE_FORMAT, DEFAULT_ROTATION_RATE, \
     DEFAULT_UPDATE_RATE, CONFIG_SCHEMA, CONFIG_FILE, TWENTY_FOUR_HOURS_FORMAT
 from util.utils import read_json

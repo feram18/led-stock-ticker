@@ -1,9 +1,9 @@
 """Constants class"""
 
 # Directories & Files
-CONFIG_FILE = 'config/config.json'
-CONFIG_SCHEMA = 'config/config.schema.json'
-LAYOUT_FILE = 'config/coords/w{}h{}.json'
+CONFIG_FILE = 'matrix/config.json'
+CONFIG_SCHEMA = 'matrix/config.schema.json'
+LAYOUT_FILE = 'matrix/coords/w{}h{}.json'
 LOG_FILE = 'led-stock-ticker.log'
 LOADING_IMAGE = 'assets/img/logo.png'
 ERROR_IMAGE = 'assets/img/error.png'

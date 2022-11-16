@@ -5,7 +5,7 @@ from typing import List
 
 import multitasking
 
-from config.matrix_config import MatrixConfig
+from matrix.matrix_config import MatrixConfig
 from data.crypto import Crypto
 from data.forex import Forex
 from data.status import Status
