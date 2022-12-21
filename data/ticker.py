@@ -46,7 +46,7 @@ class Ticker:
             self.value_change = float(format((self.price - self.prev_close), '.2f'))
             self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'
             self.chart_prices = self.get_chart_prices()
-        except KeyError:
+        except (KeyError, TypeError):
             logging.error(f'No data available for {self.symbol}.')
             self.valid = False
             return Status.FAIL
