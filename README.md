@@ -94,8 +94,8 @@ dependencies.
 
 ## Usage
 ### Configuration
-A `config.json.example` file is included for reference in the `config` directory.  After installation has been 
-completed, run the configuration script to set your preferences.
+A `config.json.example` file is included for reference in the `matrix` directory. After installation has been completed, 
+run the configuration script to set your preferences.
 
 ```sh
 ./config.py
