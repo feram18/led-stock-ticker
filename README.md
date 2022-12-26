@@ -55,11 +55,11 @@ board connected to the Pi via the GPIO pins.
 ### Hardware
 Materials needed:
 - [Raspberry Pi]
-- Adafruit RGB Matrix [HAT] or [Bonnet]
 - RGB LED Matrix. [Supported sizes](matrix/coords/README.md):
   - 32×16
   - 64×32
   - 128×64
+- Adafruit RGB Matrix [HAT] or [Bonnet] (Optional. Matrix can be connected directly to GPIO pins)
 
 ### Software
 **Pre-requisites**
