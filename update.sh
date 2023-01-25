@@ -14,7 +14,7 @@ function updateRepository() {
   git reset --hard
   git pull origin master
   git fetch --tags -f
-  tag="$(git describe --abbrev=0)"
+  tag="$(git tag | sort -g | tail -1)"
   git checkout tags/"$tag"
 }
 
