@@ -26,7 +26,7 @@ class TestCrypto:
         assert f'Fetching new data for {self.crypto.symbol}.' in caplog.text
 
     def test_get_price(self):
-        current_price = self.crypto.get_price(self.crypto.yf_ticker.info['regularMarketPrice'])
+        current_price = self.crypto.get_price(self.crypto.yf_ticker.basic_info.last_price)
         assert isinstance(current_price, float)
 
     def test_get_prev_close(self):

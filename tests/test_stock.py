@@ -36,7 +36,7 @@ class TestStock:
         assert f'Fetching new data for {self.stock.symbol}.' in caplog.text
 
     def test_get_price(self):
-        price = self.stock.get_price(self.stock.yf_ticker.info['regularMarketPrice'])
+        price = self.stock.get_price(self.stock.yf_ticker.basic_info.last_price)
         assert isinstance(price, float)
 
     def test_get_prev_close(self):
