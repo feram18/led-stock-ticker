@@ -37,7 +37,7 @@ CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amo
 
 # Image sources
 CRYPTO_LOGO_URL = 'https://cryptoicons.org/api/icon/{}/200'
-FLAG_URL = 'https://raw.githubusercontent.com/transferwise/currency-flags/master/src/rectangular-flags/{}.png'
+FLAG_URL = 'https://raw.githubusercontent.com/vivekimsit/currency-flags/master/src/flags/{}.png'
 
 # Date/Time Formatting
 DATE_FORMATS = [
