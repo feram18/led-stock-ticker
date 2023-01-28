@@ -41,7 +41,7 @@ class Ticker:
         try:
             self.yf_ticker = yf.Ticker(self.symbol)
             self.name = self.yf_ticker.info['shortName']
-            self.price = self.get_price(self.yf_ticker.basic_info.last_price)
+            self.price = self.get_price(self.yf_ticker.fast_info.last_price)
             self.prev_close = self.get_prev_close()
             self.value_change = float(format((self.price - self.prev_close), '.2f'))
             self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'

@@ -31,7 +31,7 @@ class Stock(Ticker):
         :return: prev_close: Previous day's close price
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
-        prev_close = self.yf_ticker.basic_info.previous_close
+        prev_close = self.yf_ticker.fast_info.regular_market_previous_close
         if self.currency == 'USD':
             return prev_close
         return convert_currency('USD', self.currency, prev_close)

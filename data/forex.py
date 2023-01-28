@@ -21,4 +21,4 @@ class Forex(Ticker):
         :return: prev_close: Previous day's close price
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
-        return self.yf_ticker.basic_info.previous_close
+        return self.yf_ticker.fast_info.regular_market_previous_close
