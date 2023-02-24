@@ -6,7 +6,7 @@ from renderer.ticker import TickerRenderer
 from util.color import Color
 from util.market_status import MarketStatus
 from util.position import Position
-from util.utils import load_image_url, convert_currency, align_text
+from util.utils import load_image_url, align_text
 
 
 class StockRenderer(TickerRenderer):
@@ -28,17 +28,13 @@ class StockRenderer(TickerRenderer):
 
     def render(self):
         for stock in self.stocks:
-            previous_close = stock.prev_close
-            if self.currency != 'USD':  # Convert back to USD for chart calculations purposes
-                previous_close = convert_currency(self.currency, 'USD', stock.prev_close)
-
             self.clear()
             if self.coords['options']['full_names']:
                 self.render_name(stock.name)
             if self.coords['options']['image'] and self.config.layout.show_logos:
                 self.render_image(stock.img)
             elif self.coords['options']['history_chart']:
-                self.render_chart(previous_close, stock.chart_prices, stock.value_change)
+                self.render_chart(stock.prev_close, stock.chart_prices, stock.value_change)
             self.render_price(self.format_price(self.currency, stock.price), 'stock')
             self.render_symbol(stock.symbol)
             self.render_market_status()

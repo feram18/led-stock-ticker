@@ -1,7 +1,7 @@
 import time
 
 from renderer.ticker import TickerRenderer
-from util.utils import convert_currency, load_image_url, align_text, Position
+from util.utils import load_image_url, align_text, Position
 
 
 class CryptoRenderer(TickerRenderer):
@@ -22,17 +22,13 @@ class CryptoRenderer(TickerRenderer):
 
     def render(self):
         for crypto in self.cryptos:
-            previous_close = crypto.prev_close
-            if self.currency != 'USD':  # Convert back to USD for chart calculations purposes
-                previous_close = convert_currency(self.currency, 'USD', crypto.prev_close)
-
             self.clear()
             if self.coords['options']['full_names']:
                 self.render_name(crypto.name)
             if self.coords['options']['image'] and self.config.layout.show_logos:
                 self.render_image(crypto.img)
             elif self.coords['options']['history_chart']:
-                self.render_chart(previous_close, crypto.chart_prices, crypto.value_change)
+                self.render_chart(crypto.prev_close, crypto.chart_prices, crypto.value_change)
             self.render_price(self.format_price(self.currency, crypto.price), 'crypto')
             self.render_symbol(crypto.symbol.replace('-USD', ''))  # Remove currency exchange
             self.render_percentage_change(crypto.pct_change, crypto.value_change)
