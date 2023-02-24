@@ -22,12 +22,8 @@ class TestForex:
         assert f'Fetching new data for {self.forex.symbol}.' in caplog.text
 
     def test_get_price(self):
-        current_price = self.forex.get_price(self.forex.yf_ticker.basic_info.last_price)
+        current_price = self.forex.get_price(self.forex.quote.get('regularMarketPrice'))
         assert isinstance(current_price, float)
-
-    def test_get_prev_close(self):
-        prev_close_price = self.forex.get_prev_close()
-        assert isinstance(prev_close_price, float)
 
     def test_get_chart_prices(self):
         chart_prices = self.forex.get_chart_prices()
