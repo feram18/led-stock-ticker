@@ -54,7 +54,7 @@ board connected to the Pi via the GPIO pins.
 ## Installation
 ### Hardware
 Materials needed:
-- [Raspberry Pi]
+- Raspberry Pi (Tested on 3B+ and 4B, but should work in other models)
 - RGB LED Matrix. [Supported sizes](matrix/coords/README.md):
   - 32×16
   - 64×32
@@ -199,13 +199,12 @@ This project relies on the following:
 - [rpi-rgb-led-matrix] library to work with the LED board
 
 ## Disclaimer
-This project is a work in progress (all feedback is appreciated!) and is dependent on the [YFinance] library & 
-[Exchange Rates] API relaying accurate and updated data.
+This project is a work in progress (all feedback is appreciated!) and is dependent on the [Yahoo Query] library & 
+[exchangerate.host] API relaying accurate and updated data.
 
 ## License
 GNU General Public License v3.0
 
-[Raspberry Pi]: <https://www.raspberrypi.org/products/>
 [HAT]: <https://www.adafruit.com/product/2345>
 [Bonnet]: <https://www.adafruit.com/product/3211>
 [Yahoo Query]: <https://github.com/dpguthrie/yahooquery>
