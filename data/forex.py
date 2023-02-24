@@ -13,12 +13,3 @@ class Forex(Ticker):
         super(Forex, self).initialize()
         if self.valid:
             self.img_url = [FLAG_URL.format(i) for i in self.name.lower().split('/')]
-
-    def get_prev_close(self) -> float:
-        """
-        Fetch the stock's previous close price.
-        If currency is not set to USD, convert value to user-selected currency.
-        :return: prev_close: Previous day's close price
-        :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
-        """
-        return self.yf_ticker.fast_info.regular_market_previous_close

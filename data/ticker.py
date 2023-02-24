@@ -1,9 +1,8 @@
 import logging
-from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import List
 
-import yfinance as yf
+import yahooquery
 from PIL import Image
 from requests import Timeout
 
@@ -16,7 +15,8 @@ from util.utils import convert_currency
 class Ticker:
     symbol: str
     currency: str = DEFAULT_CURRENCY
-    yf_ticker: yf.Ticker = field(init=False)
+    yq_ticker: yahooquery.Ticker = field(init=False)
+    quote: dict = field(init=False)
     name: str = field(init=False)
     price: float = field(init=False)
     prev_close: float = field(init=False)
@@ -39,12 +39,13 @@ class Ticker:
         """
         logging.debug(f'Fetching initial data for {self.symbol}.')
         try:
-            self.yf_ticker = yf.Ticker(self.symbol)
-            self.name = self.yf_ticker.info['shortName']
-            self.price = self.get_price(self.yf_ticker.fast_info.last_price)
-            self.prev_close = self.get_prev_close()
-            self.value_change = float(format((self.price - self.prev_close), '.2f'))
-            self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'
+            self.yq_ticker = yahooquery.Ticker(self.symbol, status_forcelist=[404, 429, 500, 502, 503, 504])
+            self.quote = self.yq_ticker.quotes.get(self.symbol.upper())
+            self.name = self.quote.get('shortName')
+            self.price = self.get_price(self.quote.get('regularMarketPrice'))
+            self.prev_close = self.quote.get('regularMarketPreviousClose')
+            self.value_change = float(format(self.quote.get('regularMarketChange'), '.2f'))
+            self.pct_change = f'{float(self.quote.get("regularMarketChangePercent")):.2f}%'
             self.chart_prices = self.get_chart_prices()
         except (KeyError, TypeError):
             logging.error(f'No data available for {self.symbol}.')
@@ -63,10 +64,10 @@ class Ticker:
         logging.debug(f'Fetching new data for {self.symbol}.')
 
         try:
-            self.yf_ticker = yf.Ticker(self.symbol)
-            self.price = self.get_price(self.yf_ticker.basic_info.last_price)
-            self.value_change = float(format((self.price - self.prev_close), '.2f'))
-            self.pct_change = f'{100 * (self.value_change / abs(self.prev_close)):.2f}%'
+            self.quote = self.yq_ticker.quotes.get(self.symbol.upper())
+            self.price = self.get_price(self.quote.get('regularMarketPrice'))
+            self.value_change = float(format(self.quote.get('regularMarketChange'), '.2f'))
+            self.pct_change = f'{float(self.quote.get("regularMarketChangePercent")):.2f}%'
             self.chart_prices = self.get_chart_prices()
             return Status.SUCCESS
         except Timeout:
@@ -83,10 +84,6 @@ class Ticker:
             price = convert_currency('USD', self.currency, price)
         return float(format(price, '.3f')) if price < 1.0 else float(format(price, '.2f'))
 
-    @abstractmethod
-    def get_prev_close(self) -> float:
-        ...
-
     def get_chart_prices(self) -> List[float]:
         """
         Fetch historical market data for chart.
@@ -95,7 +92,7 @@ class Ticker:
         period, attempts = 1, 0
         prices = []
         while len(prices) < 100 and attempts < 5:
-            prices = self.yf_ticker.history(interval='1m', period=f'{period}d')['Close'].tolist()
+            prices = self.yq_ticker.history(interval='1m', period=f'{period}d')['close'].tolist()
             period += 1  # Go back an additional day
             attempts += 1
         if not prices:
