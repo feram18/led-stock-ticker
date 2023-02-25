@@ -37,7 +37,6 @@ CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amo
 
 # Image sources
 STOCK_LOGO_URL = 'https://logo.clearbit.com/{}'
-CRYPTO_LOGO_URL = 'https://cryptoicons.org/api/icon/{}/200'
 FLAG_URL = 'https://raw.githubusercontent.com/vivekimsit/currency-flags/master/src/flags/{}.png'
 
 # Date/Time Formatting
