@@ -28,9 +28,16 @@ class Ticker:
     status: Status = Status.SUCCESS
 
     def __post_init__(self):
-        self.initialize()
+        try:
+            self.initialize()
+        except (AttributeError, KeyError, TypeError):
+            logging.error(f'No data available for {self.symbol}.')
+            self.valid = False
+            return Status.FAIL
+        except Timeout:
+            return Status.NETWORK_ERROR
 
-    def initialize(self) -> Status:
+    def initialize(self):
         """
         Setup ticker's initial data.
         :return status: Update status
@@ -38,21 +45,16 @@ class Ticker:
         :exception Timeout: If the request timed out
         """
         logging.debug(f'Fetching initial data for {self.symbol}.')
-        try:
-            self.yq_ticker = yahooquery.Ticker(self.symbol, status_forcelist=[404, 429, 500, 502, 503, 504])
-            self.quote = self.yq_ticker.quotes.get(self.symbol.upper())
-            self.name = self.quote.get('shortName')
-            self.price = self.get_price(self.quote.get('regularMarketPrice'))
-            self.prev_close = self.quote.get('regularMarketPreviousClose')
-            self.value_change = float(format(self.quote.get('regularMarketChange'), '.2f'))
-            self.pct_change = f'{float(self.quote.get("regularMarketChangePercent")):.2f}%'
-            self.chart_prices = self.get_chart_prices()
-        except (KeyError, TypeError):
-            logging.error(f'No data available for {self.symbol}.')
-            self.valid = False
-            return Status.FAIL
-        except Timeout:
-            return Status.NETWORK_ERROR
+        self.yq_ticker = yahooquery.Ticker(self.symbol,
+                                           status_forcelist=[404, 429, 500, 502, 503, 504],
+                                           validate=True)
+        self.quote = self.yq_ticker.quotes.get(self.symbol.upper())
+        self.name = self.quote.get('shortName')
+        self.price = self.get_price(self.quote.get('regularMarketPrice'))
+        self.prev_close = self.quote.get('regularMarketPreviousClose')
+        self.value_change = float(format(self.quote.get('regularMarketChange'), '.2f'))
+        self.pct_change = f'{float(self.quote.get("regularMarketChangePercent")):.2f}%'
+        self.chart_prices = self.get_chart_prices()
 
     def update(self) -> Status:
         """
