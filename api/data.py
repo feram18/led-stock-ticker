@@ -93,7 +93,7 @@ class Data:
             self.stocks.append(stock)
         else:
             self.valid_tickers -= 1
-            logging.warning(f'Stock: {stock.symbol} is not valid.')
+            logging.warning(f'Stock: {stock.symbol} may not be valid.')
 
     @multitasking.task
     def fetch_crypto(self, symbol: str, currency: str):
@@ -107,7 +107,7 @@ class Data:
             self.cryptos.append(crypto)
         else:
             self.valid_tickers -= 1
-            logging.warning(f'Crypto: {crypto.symbol} is not valid.')
+            logging.warning(f'Crypto: {crypto.symbol} may not be valid.')
 
     @multitasking.task
     def fetch_forex(self, symbol: str):
@@ -120,7 +120,7 @@ class Data:
             self.forex.append(forex)
         else:
             self.valid_tickers -= 1
-            logging.warning(f'Forex: {forex.symbol} is not valid.')
+            logging.warning(f'Forex: {forex.symbol} may not be valid.')
 
     @multitasking.task
     def update_ticker(self, ticker: Ticker):
