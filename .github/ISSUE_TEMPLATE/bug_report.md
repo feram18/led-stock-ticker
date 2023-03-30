@@ -16,7 +16,7 @@ A clear and concise description of what the bug is.
  - LED Matrix Size: [Supported Sizes: (32×16), (64×32), (128×64)]
  - Display Adapter: [e.g. Adafruit RGB Matrix HAT, Bonnet, etc.]
  - Python Version: [Python 3.7 or newer is required]
- - Arguments/Flags used on to run script: 
+ - Arguments/Flags used to execute script: 
 
 **Screenshots/Logs**
 If applicable, add screenshots or logs to help explain your problem.
