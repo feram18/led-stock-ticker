@@ -87,15 +87,15 @@ class TestUtils:
         assert y == 11
 
     def test_load_font(self):
-        font = utils.load_font('tom-thumb.pil')
+        font = utils.load_font('tom-thumb.pil', 6)
         assert isinstance(font, ImageFont.ImageFont)
 
     def test_load_font_2(self):
-        font = utils.load_font('tom-thumb.pil')
+        font = utils.load_font('tom-thumb.pil', 6)
         assert font.getsize(' ')[0], 4
 
     def test_load_font_3(self):
-        font = utils.load_font('tom-thumb.pil')
+        font = utils.load_font('tom-thumb.pil', 6)
         assert font.getsize(' ')[1], 6
 
     def test_load_font_4(self, caplog):
@@ -103,10 +103,6 @@ class TestUtils:
         with caplog.at_level(logging.WARNING):
             utils.load_font('invalid.pil')
         assert f"Couldn't find font {constants.FONTS_DIR}invalid.pil" in caplog.text
-
-    def test_convert_font(self):
-        utils.convert_font('assets/fonts/tom-thumb.bdf')
-        assert os.path.isfile('assets/fonts/tom-thumb.pil')
 
     def test_load_image(self):
         image = utils.load_image('assets/img/error.png', (15, 15))

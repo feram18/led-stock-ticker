@@ -9,7 +9,7 @@ from io import BytesIO
 from typing import Tuple, List
 
 import requests
-from PIL import Image, ImageFont, BdfFontFile, UnidentifiedImageError
+from PIL import Image, ImageFont, UnidentifiedImageError
 from rgbmatrix import RGBMatrixOptions
 from pytz import timezone
 from requests import Timeout, RequestException, ConnectionError
@@ -118,31 +118,17 @@ def align_image(image: Image,
     return x, y
 
 
-def load_font(filename: str) -> ImageFont:
+def load_font(filename: str, size: int) -> ImageFont:
     """
     Return ImageFont object from given font name
     :param filename: Font filename
+    :param size: Font size
     :return: font: ImageFont object
     """
     path = constants.FONTS_DIR + filename
     if os.path.isfile(path):
-        return ImageFont.load(path)
+        return ImageFont.truetype(path, size)
     logging.error(f"Couldn't find font {path}.")
-
-
-def convert_font(filename: str) -> str:
-    """
-    Convert from BDF to PIL font
-    :param filename: Font filename
-    :return name: Font name
-    """
-    name = filename\
-        .replace(f'{constants.FONTS_DIR}', '') \
-        .replace('.bdf', '')
-    with open(filename, 'rb') as fp:
-        p = BdfFontFile.BdfFontFile(fp)
-        p.save(constants.FONTS_DIR + name)
-        return name
 
 
 def load_image(filename: str,

@@ -1,7 +1,13 @@
 {
     "fonts": {
-        "primary": "7x13.pil",
-        "clock": "10x20.pil"
+        "primary": {
+            "path": "7x13.ttf",
+            "size": 13
+        },
+        "clock": {
+            "path": "10x20.ttf",
+            "size": 20
+        }
     },
     "loading": {
         "image": {

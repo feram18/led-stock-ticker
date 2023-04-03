@@ -1,6 +1,9 @@
 {
     "fonts": {
-        "primary": "tom-thumb.pil"
+        "primary": {
+            "path": "tom-thumb.ttf",
+            "size": 6
+        }
     },
     "loading": {
         "image": {

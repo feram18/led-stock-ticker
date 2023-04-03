@@ -18,7 +18,7 @@ class Layout:
 
     def __post_init__(self):
         self.coords = read_json(LAYOUT_FILE.format(self.width, self.height))
-        self.font = load_font(self.coords['fonts']['primary'])
+        self.font = load_font(self.coords['fonts']['primary']['path'], self.coords['fonts']['primary']['size'])
         clock_font = self.coords.get('fonts').get('clock', None)
-        self.clock_font = load_font(clock_font) if clock_font else self.font
+        self.clock_font = load_font(clock_font['path'], clock_font['size']) if clock_font else self.font
         self.show_logos = False

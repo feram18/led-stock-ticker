@@ -1,7 +1,13 @@
 {
     "fonts": {
-        "primary": "tom-thumb.pil",
-        "clock": "cherry-10-b.pil"
+        "primary": {
+            "path": "tom-thumb.ttf",
+            "size": 6
+        },
+        "clock": {
+            "path": "cherry-10-b.ttf",
+            "size": 10
+        }
     },
     "loading": {
         "image": {
