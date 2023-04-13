@@ -11,8 +11,6 @@ from data.forex import Forex
 from data.status import Status
 from data.stock import Stock
 from data.ticker import Ticker
-from util.market_status import MarketStatus
-from util.utils import market_status
 
 
 @dataclass
@@ -20,7 +18,6 @@ class Data:
     config: MatrixConfig
     date: str = field(init=False)
     time: str = field(init=False)
-    market_status: MarketStatus = field(init=False)
     cryptos: List[Ticker] = field(default_factory=list)
     stocks: List[Ticker] = field(default_factory=list)
     forex: List[Forex] = field(default_factory=list)
@@ -45,7 +42,6 @@ class Data:
         """
         logging.info('Initializing data...')
 
-        self.market_status = market_status()
         for stock in self.config.stocks:  # Initialize stocks
             self.fetch_stock(stock, self.config.currency)
         for crypto in self.config.cryptos:  # Initialize cryptos
@@ -76,10 +72,6 @@ class Data:
         """Update date & time"""
         self.date = self.get_date()
         self.time = self.get_time()
-
-    def update_market_status(self):
-        """Update market status"""
-        self.market_status = market_status()
 
     @multitasking.task
     def fetch_stock(self, symbol: str, currency: str):

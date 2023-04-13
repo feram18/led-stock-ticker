@@ -4,7 +4,6 @@ from PIL import Image, ImageFont
 
 import constants
 from util import utils
-from util.market_status import MarketStatus
 from util.position import Position
 
 
@@ -167,15 +166,3 @@ class TestUtils:
         with caplog.at_level(logging.WARNING):
             utils.build_forex_img(urls, (40, 20))
         assert 'Unable to build forex image' in caplog.text
-
-    def test_market_status(self):
-        assert isinstance(utils.market_status(), MarketStatus)
-
-    def test_after_hours(self):
-        assert isinstance(utils.after_hours(), bool)
-
-    def test_weekend(self):
-        assert isinstance(utils.weekend(), bool)
-
-    def test_holiday(self):
-        assert isinstance(utils.holiday(), bool)

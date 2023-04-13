@@ -37,7 +37,7 @@ class StockRenderer(TickerRenderer):
                 self.render_chart(stock.prev_close, stock.chart_prices, stock.value_change)
             self.render_price(self.format_price(self.currency, stock.price), 'stock')
             self.render_symbol(stock.symbol)
-            self.render_market_status()
+            self.render_market_status(stock.market_status)
             self.render_percentage_change(stock.pct_change, stock.value_change)
             self.matrix.SetImage(self.canvas)
             time.sleep(self.config.rotation_rate)
@@ -52,8 +52,8 @@ class StockRenderer(TickerRenderer):
         y = self.coords['stock']['symbol']['y']
         self.draw.text((x, y), symbol, self.text_color, self.font)
 
-    def render_market_status(self):
+    def render_market_status(self, status: MarketStatus):
         ms_coords = self.coords['stock']['market_status']
-        color = Color.RED if self.data.market_status is MarketStatus.CLOSED else Color.GREEN
+        color = Color.RED if status is MarketStatus.CLOSED else Color.GREEN
         x = self.symbol_x + ms_coords['offset']
         self.draw.line(((x, ms_coords['top']), (x, ms_coords['bottom'])), color, ms_coords['width'])

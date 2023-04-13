@@ -4,20 +4,16 @@ import json
 import logging
 import operator
 import os
-from datetime import datetime
 from io import BytesIO
 from typing import Tuple, List
 
 import requests
 from PIL import Image, ImageFont, UnidentifiedImageError
 from rgbmatrix import RGBMatrixOptions
-from pytz import timezone
 from requests import Timeout, RequestException, ConnectionError
 
 import constants
-from util.market_status import MarketStatus
 from util.color import Color
-from util.holiday_calendar import MarketHolidayCalendar
 from util.position import Position
 from util.retry import retry
 
@@ -220,47 +216,6 @@ def convert_currency(currency_from: str, currency_to: str, amount: float) -> flo
     except RequestException:
         logging.error('Encountered an unknown error while converting currency. Returning original value.')
         return amount
-
-
-def market_status() -> MarketStatus:
-    """
-    Determine if the stock market is closed.
-    :return: market_closed: (MarketStatus)
-    """
-    return MarketStatus.CLOSED if holiday() or after_hours() else MarketStatus.OPEN
-
-
-def after_hours() -> bool:
-    """
-    Determine if current time is after hours.
-    i.e. Current time is not between 09:30 AM and 04:00 PM EST (Regular stock market hours), or it is a weekend.
-    :return: after_hours: (bool)
-    """
-    current_time = datetime.now(timezone('US/Eastern'))  # Current time in EST
-    open_market = current_time.replace(hour=9, minute=30, second=0, microsecond=0)  # 09:30 AM EST
-    close_market = current_time.replace(hour=16, minute=0, second=0, microsecond=0)  # 04:00 PM EST
-    return current_time < open_market or current_time > close_market or weekend()
-
-
-def weekend() -> bool:
-    """
-    Determine if today is a weekend day.
-    :return: weekend: (bool)
-    """
-    week_day_no = datetime.today().weekday()
-    return week_day_no > 4  # 5 Sat, 6 Sun
-
-
-def holiday() -> bool:
-    """
-    Determine if today is an NYSE-observed US federal holiday.
-    :return: holiday: (bool)
-    """
-    today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    sdt = today.replace(month=1, day=1)  # Year start-date
-    edt = today.replace(month=12, day=31)  # Year end-date
-    holidays = MarketHolidayCalendar().holidays(start=sdt, end=edt).to_pydatetime()
-    return today in holidays
 
 
 def args() -> argparse.Namespace:
