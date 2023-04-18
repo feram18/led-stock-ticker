@@ -44,7 +44,6 @@ class MainRenderer(Renderer):
                 if self.data.should_update():
                     self.status = self.data.update()
                 self.data.update_clock()
-                self.data.update_market_status()
             except KeyboardInterrupt as e:
                 raise SystemExit(' Exiting...') from e
         self.error.render()
