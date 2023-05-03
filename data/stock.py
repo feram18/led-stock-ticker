@@ -33,3 +33,7 @@ class Stock(Ticker):
             .rstrip('. ')\
             .rstrip(', ')\
             .rstrip()
+        
+    def update(self):
+        super(Stock, self).update()
+        self.market_status = MarketStatus.OPEN if self.quote.get('marketState') == 'REGULAR' else MarketStatus.CLOSED
