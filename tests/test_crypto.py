@@ -26,7 +26,7 @@ class TestCrypto:
         assert f'Fetching new data for {self.crypto.symbol}.' in caplog.text
 
     def test_get_price(self):
-        current_price = self.crypto.get_price(self.crypto.quote.get('regularMarketPrice'))
+        current_price = self.crypto.get_price(self.crypto.price_data.get('regularMarketPrice'))
         assert isinstance(current_price, float)
 
     def test_get_chart_prices(self):

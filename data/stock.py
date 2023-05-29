@@ -14,13 +14,14 @@ class Stock(Ticker):
 
     def initialize(self):
         super(Stock, self).initialize()
-        if self.quote.get('quoteType') == QuoteType.EQUITY.name:
+        if self.price_data.get('quoteType') == QuoteType.EQUITY.name:
             self.logo_url = STOCK_LOGO_URL.format(self.yq_ticker.summary_profile
                                                   .get(self.symbol.upper())
                                                   .get('website'))
         else:
             logging.warning(f'Unable to get logo for {self.symbol}.')
-        self.market_status = MarketStatus.OPEN if self.quote.get('marketState') == 'REGULAR' else MarketStatus.CLOSED
+        self.market_status = MarketStatus.OPEN if self.price_data.get('marketState') == 'REGULAR' \
+            else MarketStatus.CLOSED
         self.name = self.name\
             .replace('Company', '')\
             .replace('Corporation', '')\
@@ -36,4 +37,5 @@ class Stock(Ticker):
         
     def update(self):
         super(Stock, self).update()
-        self.market_status = MarketStatus.OPEN if self.quote.get('marketState') == 'REGULAR' else MarketStatus.CLOSED
+        self.market_status = MarketStatus.OPEN if self.price_data.get('marketState') == 'REGULAR' \
+            else MarketStatus.CLOSED

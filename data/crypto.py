@@ -10,4 +10,4 @@ class Crypto(Ticker):
     def initialize(self):
         super(Crypto, self).initialize()
         self.name = self.name.replace(' USD', '')
-        self.img_url = self.quote.get('logoUrl')
+        self.img_url = self.price_data.get('logoUrl')

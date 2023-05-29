@@ -16,7 +16,7 @@ class Ticker:
     symbol: str
     currency: str = DEFAULT_CURRENCY
     yq_ticker: yahooquery.Ticker = field(init=False)
-    quote: dict = field(init=False)
+    price_data: dict = field(init=False)
     name: str = field(init=False)
     price: float = field(init=False)
     prev_close: float = field(init=False)
@@ -47,13 +47,14 @@ class Ticker:
         logging.debug(f'Fetching initial data for {self.symbol}.')
         self.yq_ticker = yahooquery.Ticker(self.symbol,
                                            status_forcelist=[404, 429, 500, 502, 503, 504],
+                                           timeout=5,
                                            validate=True)
-        self.quote = self.yq_ticker.quotes.get(self.symbol.upper())
-        self.name = self.quote.get('shortName')
-        self.price = self.get_price(self.quote.get('regularMarketPrice'))
-        self.prev_close = self.quote.get('regularMarketPreviousClose')
-        self.value_change = float(format(self.quote.get('regularMarketChange'), '.2f'))
-        self.pct_change = f'{float(self.quote.get("regularMarketChangePercent")):.2f}%'
+        self.price_data = self.yq_ticker.price.get(self.symbol.upper())
+        self.name = self.price_data.get('shortName')
+        self.price = self.get_price(self.price_data.get('regularMarketPrice'))
+        self.prev_close = self.price_data.get('regularMarketPreviousClose')
+        self.value_change = float(format(self.price_data.get('regularMarketChange'), '.2f'))
+        self.pct_change = f'{float(self.price_data.get("regularMarketChangePercent")) * 100:.2f}%'
         self.chart_prices = self.get_chart_prices()
 
     def update(self) -> Status:
@@ -66,10 +67,10 @@ class Ticker:
         logging.debug(f'Fetching new data for {self.symbol}.')
 
         try:
-            self.quote = self.yq_ticker.quotes.get(self.symbol.upper())
-            self.price = self.get_price(self.quote.get('regularMarketPrice'))
-            self.value_change = float(format(self.quote.get('regularMarketChange'), '.2f'))
-            self.pct_change = f'{float(self.quote.get("regularMarketChangePercent")):.2f}%'
+            self.price_data = self.yq_ticker.quotes.get(self.symbol.upper())
+            self.price = self.get_price(self.price_data.get('regularMarketPrice'))
+            self.value_change = float(format(self.price_data.get('regularMarketChange'), '.2f'))
+            self.pct_change = f'{float(self.price_data.get("regularMarketChangePercent")) * 100:.2f}%'
             self.chart_prices = self.get_chart_prices()
             return Status.SUCCESS
         except Timeout:
