@@ -114,8 +114,8 @@ class TickerRenderer(Renderer, ABC):
         :return: price: (str) Formatted price string
         """
         if currency in CURRENCIES:
-            return f'{CURRENCIES.get(currency)}{price}'
-        return str(price)
+            return f'{CURRENCIES.get(currency)}{price:.2f}'
+        return f'{price:.2f}'
 
     @staticmethod
     def set_change_color(value_change: float) -> tuple:
