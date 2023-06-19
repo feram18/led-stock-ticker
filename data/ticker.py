@@ -67,7 +67,7 @@ class Ticker:
         logging.debug(f'Fetching new data for {self.symbol}.')
 
         try:
-            self.price_data = self.yq_ticker.quotes.get(self.symbol.upper())
+            self.price_data = self.yq_ticker.price.get(self.symbol.upper())
             self.price = self.get_price(self.price_data.get('regularMarketPrice'))
             self.value_change = float(format(self.price_data.get('regularMarketChange'), '.2f'))
             self.pct_change = f'{float(self.price_data.get("regularMarketChangePercent")) * 100:.2f}%'
