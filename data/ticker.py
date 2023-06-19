@@ -72,7 +72,6 @@ class Ticker:
             self.value_change = float(format(self.price_data.get('regularMarketChange'), '.2f'))
             self.pct_change = f'{float(self.price_data.get("regularMarketChangePercent")) * 100:.2f}%'
             self.chart_prices = self.get_chart_prices()
-            return Status.SUCCESS
         except Timeout:
             return Status.NETWORK_ERROR
 

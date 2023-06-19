@@ -2,6 +2,7 @@ import logging
 from dataclasses import dataclass
 
 from data.quote import QuoteType
+from data.status import Status
 from data.ticker import Ticker
 from constants import STOCK_LOGO_URL
 from util.market_status import MarketStatus
@@ -35,7 +36,8 @@ class Stock(Ticker):
             .rstrip(', ')\
             .rstrip()
         
-    def update(self):
+    def update(self) -> Status:
         super(Stock, self).update()
         self.market_status = MarketStatus.OPEN if self.price_data.get('marketState') == 'REGULAR' \
             else MarketStatus.CLOSED
+        return Status.SUCCESS

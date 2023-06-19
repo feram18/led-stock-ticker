@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 from constants import FLAG_URL
+from data.status import Status
 from data.ticker import Ticker
 
 
@@ -13,3 +14,7 @@ class Forex(Ticker):
         super(Forex, self).initialize()
         if self.valid:
             self.img_url = [FLAG_URL.format(i) for i in self.name.lower().split('/')]
+
+    def update(self) -> Status:
+        super(Forex, self).update()
+        return Status.SUCCESS
