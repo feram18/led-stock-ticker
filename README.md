@@ -171,6 +171,8 @@ sudo python3 main.py --led-gpio-mapping="adafruit-hat" --led-slowdown-gpio=2
 Modify and include [flags](#Flags) as needed for your particular setup. Running as root is necessary in order for the 
 matrix to render. Privileges are dropped after initialization.
 
+Additionally, you can [create a `systemd` service](https://github.com/feram18/led-stock-ticker/wiki/Create-Systemd-Service) to manage the application.
+
 ### Debug
 If you are experiencing issues, enable debug messages by appending the `--debug` flag to your execution command, logs are 
 written to the `led-stock-ticker.log` file.
