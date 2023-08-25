@@ -65,33 +65,26 @@ class TickerRenderer(Renderer, ABC):
 
     def render_chart(self, prev_close: float, prices: list, value_change: float):
         chart_top = self.coords['chart']['y']
+        chart_height = self.matrix.height - chart_top - 1
         color = self.set_change_color(value_change)
 
         if prices:
             try:
-                min_p, max_p = min(prices), max(prices)
-                x_inc = len(prices) / self.matrix.width
+                max_price = max(prices)
+                min_price = min(prices)
+                price_range = max_price - min_price
 
-                if prev_close < min_p:
-                    prev_close_y = self.matrix.height - 1
-                elif prev_close > max_p or max_p == min_p:
-                    prev_close_y = chart_top
-                else:
-                    prev_close_y = int(chart_top + (max_p - prev_close) *
-                                       ((self.matrix.height - chart_top) / (max_p - min_p)))
+                num_points = len(prices)
+                x_step = self.matrix.width / (num_points - 1)
 
-                for x in range(self.matrix.width):
-                    p = prices[int(x * x_inc)]
-                    if max_p == min_p:
-                        y = chart_top
-                    else:
-                        y = int(chart_top + (max_p - p) *
-                                ((self.matrix.height - chart_top) / (max_p - min_p)))
-                    step = -1 if y > prev_close_y else 1
+                line_points = [(i * x_step, chart_top + chart_height * (1 - (price - min_price) / price_range))
+                               for i, price in enumerate(prices)]
 
-                    for ys in range(y, prev_close_y + step, step):
-                        self.draw.point((x, ys - 1), color)
-                    self.draw.point((x, y - 1), color)
+                fill_points = ([(0, chart_top + chart_height)] + line_points +
+                               [(self.matrix.width, chart_top + chart_height), (0, chart_top + chart_height)])
+
+                self.draw.polygon(fill_points, fill=color)
+                self.draw.line(line_points, fill=color, width=1)
             except ValueError as e:
                 logging.warning('Unable to render chart', e)
 
