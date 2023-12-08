@@ -32,8 +32,8 @@ DEFAULT_ROTATION_RATE = 10  # seconds
 TEXT_SCROLL_DELAY = 0.5  # seconds
 TEXT_SCROLL_SPEED = 0.3  # seconds
 
-# ExchangeRate API
-CURRENCY_EXCHANGE_URL = 'https://api.exchangerate.host/convert?from={}&to={}&amount={}&places=2'
+# Exchange Rate API
+CURRENCY_EXCHANGE_URL = 'https://open.er-api.com/v6/latest/USD'
 
 # Image sources
 STOCK_LOGO_URL = 'https://logo.clearbit.com/{}'

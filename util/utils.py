@@ -195,27 +195,34 @@ def build_forex_img(urls: List[str], size: Tuple[int, int]) -> Image:
 
 
 @retry((Timeout, ConnectionError), total_tries=3)
-def convert_currency(currency_from: str, currency_to: str, amount: float) -> float:
+def fetch_exchange_rate(currency_to: str) -> float:
     """
-    Convert a value from one currency to another.
-    :param currency_from: (str) Currency to convert from
+    Fetch
     :param currency_to: (str) Currency to convert to
-    :param amount: (float) Amount to convert
     :return: result: (float) Converted amount
-    :exception TypeError: If incorrect data type is provided as an argument
     :exception Timeout: If the request timed out
     :exception ConnectionError: If a connection error occurred
     :exception RequestException: If an ambiguous exception that occurred
     """
     try:
-        url = constants.CURRENCY_EXCHANGE_URL.format(currency_from, currency_to, amount)
-        response = requests.get(url).json()
-        return float(response['result'])
+        response = requests.get(constants.CURRENCY_EXCHANGE_URL).json()
+        return float(response['rates'][currency_to])
+    except RequestException:
+        logging.error('Encountered an unknown error while fetching exchange rates.')
+        return 1
+
+
+def convert_currency(exchange_rate: float, amount: float) -> float:
+    """
+    Convert a value from one currency to another using given rate
+    :param exchange_rate: value to use for conversion
+    :param amount: amount to convert
+    :exception TypeError: If incorrect data type is provided as an argument
+    """
+    try:
+        return exchange_rate * amount
     except TypeError:
         return 0.0
-    except RequestException:
-        logging.error('Encountered an unknown error while converting currency. Returning original value.')
-        return amount
 
 
 def args() -> argparse.Namespace:

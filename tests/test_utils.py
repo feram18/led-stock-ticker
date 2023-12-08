@@ -139,15 +139,15 @@ class TestUtils:
         assert 'No url provided' in caplog.text
 
     def test_convert_currency(self):
-        result = utils.convert_currency('USD', 'EUR', 15.0)
+        result = utils.convert_currency(1, 15.0)
         assert isinstance(result, float)
 
     def test_convert_currency_2(self):
-        result = utils.convert_currency('INVALID_CURR', 'INVALID_CURR_2', 45.4)
+        result = utils.convert_currency('13.1', 45.4)
         assert result == 0.0
 
     def test_convert_currency_3(self):
-        result = utils.convert_currency('EUR', 'USD', None)
+        result = utils.convert_currency(1.23, None)
         assert result == 0.0
 
     def test_build_forex_img(self):

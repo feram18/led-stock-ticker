@@ -15,6 +15,7 @@ from util.utils import convert_currency
 class Ticker:
     symbol: str
     currency: str = DEFAULT_CURRENCY
+    currency_exchange_rate: float = 1
     yq_ticker: yahooquery.Ticker = field(init=False)
     price_data: dict = field(init=False)
     name: str = field(init=False)
@@ -80,7 +81,7 @@ class Ticker:
         :exception KeyError: If incorrect data type is provided as an argument. Can occur when a ticker is not valid.
         """
         if self.currency != 'USD':
-            price = convert_currency('USD', self.currency, price)
+            price = convert_currency(self.currency_exchange_rate, price)
         return float(format(price, '.3f')) if price < 1.0 else float(format(price, '.2f'))
 
     def get_chart_prices(self) -> List[float]:

@@ -197,12 +197,12 @@ written to the `led-stock-ticker.log` file.
 ## Sources
 This project relies on the following:
 - [Yahoo Query] library to retrieve the stock, cryptocurrency, and forex data
-- [exchangerate.host] API for currency exchanges
+- Rates By [Exchange Rate API]
 - [rpi-rgb-led-matrix] library to work with the LED board
 
 ## Disclaimer
 This project is a work in progress (all feedback is appreciated!) and is dependent on the [Yahoo Query] library & 
-[exchangerate.host] API relaying accurate and updated data.
+[Exchange Rate API] relaying accurate and updated data.
 
 ## License
 GNU General Public License v3.0
@@ -210,5 +210,5 @@ GNU General Public License v3.0
 [HAT]: <https://www.adafruit.com/product/2345>
 [Bonnet]: <https://www.adafruit.com/product/3211>
 [Yahoo Query]: <https://github.com/dpguthrie/yahooquery>
-[exchangerate.host]: <https://exchangerate.host/>
+[Exchange Rate API]: <https://www.exchangerate-api.com>
 [rpi-rgb-led-matrix]: <https://github.com/hzeller/rpi-rgb-led-matrix>

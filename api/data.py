@@ -5,12 +5,14 @@ from typing import List
 
 import multitasking
 
+from constants import DEFAULT_CURRENCY
 from matrix.matrix_config import MatrixConfig
 from data.crypto import Crypto
 from data.forex import Forex
 from data.status import Status
 from data.stock import Stock
 from data.ticker import Ticker
+from util.utils import fetch_exchange_rate
 
 
 @dataclass
@@ -21,11 +23,15 @@ class Data:
     cryptos: List[Ticker] = field(default_factory=list)
     stocks: List[Ticker] = field(default_factory=list)
     forex: List[Forex] = field(default_factory=list)
+    currency: str = DEFAULT_CURRENCY
+    currency_exchange_rate: float = 1
     valid_tickers: int = 0
     status: Status = Status.SUCCESS
     last_updated: float = None
 
     def __post_init__(self):
+        self.currency = self.config.currency
+        self.currency_exchange_rate = fetch_exchange_rate(self.currency)
         self.valid_tickers = len(self.config.stocks + self.config.cryptos + self.config.forex)
         self.last_updated = time.time()
 
@@ -43,9 +49,9 @@ class Data:
         logging.info('Initializing data...')
 
         for stock in self.config.stocks:  # Initialize stocks
-            self.fetch_stock(stock, self.config.currency)
+            self.fetch_stock(stock, self.currency, self.currency_exchange_rate)
         for crypto in self.config.cryptos:  # Initialize cryptos
-            self.fetch_crypto(crypto, self.config.currency)
+            self.fetch_crypto(crypto, self.currency, self.currency_exchange_rate)
         for forex in self.config.forex:  # Initialize forex
             self.fetch_forex(forex)
         # Wait until all tickers are initialized
@@ -62,7 +68,10 @@ class Data:
         :return: status: (data.Status) Update status
         """
         logging.debug('Checking for update')
+        if time.time() - self.last_updated >= 3600:
+            self.currency_exchange_rate = fetch_exchange_rate(self.currency)
         for ticker in self.stocks + self.cryptos + self.forex:
+            ticker.currency_exchange_rate = self.currency_exchange_rate
             self.update_ticker(ticker)
         self.last_updated = time.time()
 
@@ -74,13 +83,14 @@ class Data:
         self.time = self.get_time()
 
     @multitasking.task
-    def fetch_stock(self, symbol: str, currency: str):
+    def fetch_stock(self, symbol: str, currency: str, exchange_rate: float):
         """
         Fetch stock's data
         :param symbol: Stock symbol
         :param currency: Stock's prices currency
+        :param exchange_rate: Exchange rate to use for currency conversion
         """
-        stock = Stock(symbol, currency)
+        stock = Stock(symbol, currency, exchange_rate)
         if stock.valid:
             self.stocks.append(stock)
         else:
@@ -88,13 +98,14 @@ class Data:
             logging.warning(f'Stock: {stock.symbol} may not be valid.')
 
     @multitasking.task
-    def fetch_crypto(self, symbol: str, currency: str):
+    def fetch_crypto(self, symbol: str, currency: str, exchange_rate: float):
         """
         Fetch crypto's data
         :param symbol: Crypto symbol
         :param currency: Crypto's prices currency
+        :param exchange_rate: Exchange rate to use for currency conversion
         """
-        crypto = Crypto(symbol, currency)
+        crypto = Crypto(symbol, currency, exchange_rate)
         if crypto.valid:
             self.cryptos.append(crypto)
         else:
