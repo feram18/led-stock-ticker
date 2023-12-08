@@ -45,10 +45,7 @@ class Ticker:
         :exception Timeout: If the request timed out
         """
         logging.debug(f'Fetching initial data for {self.symbol}.')
-        self.yq_ticker = yahooquery.Ticker(self.symbol,
-                                           status_forcelist=[404, 429, 500, 502, 503, 504],
-                                           timeout=5,
-                                           validate=True)
+        self.yq_ticker = yahooquery.Ticker(self.symbol, timeout=5, validate=True)
         self.price_data = self.yq_ticker.price.get(self.symbol.upper())
         self.name = self.price_data.get('shortName')
         self.price = self.get_price(self.price_data.get('regularMarketPrice'))
