@@ -64,7 +64,7 @@ Materials needed:
 ### Software
 **Pre-requisites**
 
-You'll need to make sure Git and PIP are installed on your Raspberry Pi, as well as Python 3.7+.
+You'll need to make sure Git and PIP are installed on your Raspberry Pi, as well as Python 3.9+.
 
 ```sh
 sudo apt-get update
