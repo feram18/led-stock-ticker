@@ -8,4 +8,4 @@ pytz==2023.3
 questionary==1.10.0
 requests==2.31.0
 wheel==0.38.1
-yahooquery==2.3.5
+yahooquery==2.3.7
