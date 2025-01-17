@@ -82,7 +82,7 @@ class Ticker:
         """
         if self.currency != 'USD':
             price = convert_currency(self.currency_exchange_rate, price)
-        return float(format(price, '.5f')) if price < 1.0 else float(format(price, '.2f'))
+        return float(format(price, '.6f')) if price < 1.0 else float(format(price, '.2f'))
 
     def get_chart_prices(self) -> List[float]:
         """

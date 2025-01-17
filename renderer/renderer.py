@@ -32,7 +32,7 @@ class Renderer(ABC):
         self.draw: ImageDraw = draw
         self.config: MatrixConfig = config
         self.font: ImageFont = self.config.layout.font
-        self.text_color: ImageFont = Color.WHITE
+        self.text_color: ImageFont = Color.BLUE
 
     @abstractmethod
     def render(self):

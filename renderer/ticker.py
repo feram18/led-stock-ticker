@@ -107,8 +107,8 @@ class TickerRenderer(Renderer, ABC):
         :return: price: (str) Formatted price string
         """
         if currency in CURRENCIES:
-            return f'{CURRENCIES.get(currency)}{price:.5f}'.rstrip('0').rstrip('.')
-        return f'{price:.5f}'.rstrip('0').rstrip('.')
+            return f'{CURRENCIES.get(currency)}{price:.6f}'.rstrip('0').rstrip('.')
+        return f'{price:.6f}'.rstrip('0').rstrip('.')
 
     @staticmethod
     def set_change_color(value_change: float) -> tuple:
@@ -116,4 +116,4 @@ class TickerRenderer(Renderer, ABC):
         Determines if value has increased or decreased, and returns Color object to match.
         :return: value_change_color: (tuple) Value change color
         """
-        return Color.GREEN if value_change > 0.00 else Color.RED
+        return Color.RED if value_change < 0.00 else Color.GREEN
