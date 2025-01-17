@@ -11,23 +11,20 @@ FONTS_DIR = 'assets/fonts/'
 
 # Software Defaults
 DEFAULT_STOCKS = [
-    'TSLA',
-    'AMZN',
-    'MSFT'
+    'TSLA'
 ]
 DEFAULT_CRYPTOS = [
     'BTC',
     'ETH',
-    'LTC'
+    'VET',
+    'KLV'
 ]
 DEFAULT_FOREX = [
-    'USD/EUR',
-    'EUR/JPY',
-    'GBP/USD'
+    
 ]
 DEFAULT_CURRENCY = 'USD'
 DEFAULT_DATE_FORMAT = '%a, %b %d'  # eg. Sun, Jan 5
-DEFAULT_UPDATE_RATE = 10 * 60  # 10 minutes
+DEFAULT_UPDATE_RATE = 5 * 60  # 5 minutes
 DEFAULT_ROTATION_RATE = 10  # seconds
 TEXT_SCROLL_DELAY = 0.5  # seconds
 TEXT_SCROLL_SPEED = 0.3  # seconds
