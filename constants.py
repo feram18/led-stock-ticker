@@ -17,6 +17,8 @@ DEFAULT_CRYPTOS = [
     'BTC',
     'ETH',
     'VET',
+    'DOGE',
+    'TRX',
     'KLV'
 ]
 DEFAULT_FOREX = [
