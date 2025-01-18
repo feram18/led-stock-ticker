@@ -9,6 +9,7 @@ from requests import Timeout
 from constants import DEFAULT_CURRENCY
 from data.status import Status
 from util.utils import convert_currency
+from util.color import Color
 
 
 @dataclass
@@ -72,6 +73,8 @@ class Ticker:
             self.chart_prices = self.get_chart_prices()
         except Timeout:
             return Status.NETWORK_ERROR
+        
+            return Color.RED if value_change < 0.00 else Color.GREEN
 
     def get_price(self, price: float) -> float:
         """
