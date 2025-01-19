@@ -9,14 +9,14 @@ function clean() {
   sudo rm -rf "__pycache__"
 }
 
-#function updateRepository() {
-#  printf "Updating repository...\n"
-#  git reset --hard
-#  git pull origin master
-#  git fetch --tags -f
-#  tag="$(git describe --tags --abbrev=0)"
-#  git checkout tags/"$tag"
-#}
+function updateRepository() {
+  printf "Updating repository...\n"
+  git reset --hard
+  git pull origin master
+  git fetch --tags -f
+  tag="$(git describe --tags --abbrev=0)"
+  git checkout tags/"$tag"
+}
 
 function installDependencies(){
   printf "\nInstalling dependencies...\n"
