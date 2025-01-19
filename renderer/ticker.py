@@ -116,4 +116,4 @@ class TickerRenderer(Renderer, ABC):
         Determines if value has increased or decreased, and returns Color object to match.
         :return: value_change_color: (tuple) Value change color
         """
-        return Color.RED if value_change < 0.00 else Color.GREEN
+        return Color.GREEN if value_change > 0.00 else Color.RED
