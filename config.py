@@ -127,9 +127,9 @@ def get_update_rate(total_tickers: int, rotation_rate: int) -> int:
     :return: update_rate: (int) update rate in seconds
     """
     # Ensure a full rotation is complete before an update is requested
-    min_rate = math.ceil((total_tickers * rotation_rate) + rotation_rate) // 60  # in minutes
+    min_rate = math.ceil((total_tickers * rotation_rate) * 0.5) // 60  # in minutes
 
-    choices = ['5', '10', '15', '20']
+    choices = ['1', '5', '10', '15', '20']
     if 1 < min_rate < 5:
         choices.insert(0, str(min_rate))
     elif 5 < min_rate < 10:
