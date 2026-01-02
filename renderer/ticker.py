@@ -72,7 +72,7 @@ class TickerRenderer(Renderer, ABC):
             try:
                 max_price = max(prices)
                 min_price = min(prices)
-                price_range = max_price - min_price
+                price_range = max_price - min_price or 1 # Avoid div by zero (1st of the year bug)
 
                 num_points = len(prices)
                 x_step = self.matrix.width / (num_points - 1)
